@@ -1,0 +1,406 @@
+{
+  "checked": "2026-11-13",
+  "method": "Each entry was confirmed by reading the cited page on 2026-11-13. Web search was unavailable, so sources are statute pages and agency/university pages fetched directly. Where only the enabling law could be confirmed and no published count of zoned counties was found, pattern is 'unknown' and the note states the legal mechanism.",
+  "states": {
+    "AL": {
+      "pattern": "unknown",
+      "note": "Statewide rule not confirmed. Baldwin County zones only planning districts whose voters opt in by election; the county notes unzoned communities exist.",
+      "unzoned_estimate": null,
+      "source_url": "https://baldwincountyal.gov/services/planning-zoning/zoning-elections",
+      "source_name": "Baldwin County, AL - Planning and Zoning District Elections",
+      "source_date": "2026"
+    },
+    "AK": {
+      "pattern": "mixed",
+      "note": "First and second class boroughs must provide areawide planning and land use regulation. Land outside organized boroughs forms one unorganized borough with no borough government.",
+      "unzoned_estimate": null,
+      "source_url": "https://codes.findlaw.com/ak/title-29-municipal-government/ak-st-sect-29-40-010/",
+      "source_name": "Alaska Stat. 29.40.010; AS 29.03.010",
+      "source_date": "2025"
+    },
+    "AZ": {
+      "pattern": "unknown",
+      "note": "Every county must adopt a comprehensive plan (A.R.S. 11-804); zoning is permissive ('may', A.R.S. 11-811). Count of zoned counties not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://www.azleg.gov/ars/11/00811.htm",
+      "source_name": "Arizona Revised Statutes 11-804 and 11-811",
+      "source_date": "2025"
+    },
+    "AR": {
+      "pattern": "unknown",
+      "note": "County planning boards may prepare a zoning ordinance for all or part of the unincorporated area; no mandate. Count of zoned counties not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://codes.findlaw.com/ar/title-14-local-government/ar-code-sect-14-17-209/",
+      "source_name": "Ark. Code 14-17-209",
+      "source_date": "2024"
+    },
+    "CA": {
+      "pattern": "unknown",
+      "note": "Every county must adopt a general plan (Gov. Code 65300); zoning ordinances are permissive (65850). Count of zoned counties not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://california.public.law/codes/ca_gov't_code_section_65300",
+      "source_name": "Cal. Gov. Code 65300 and 65850",
+      "source_date": "2025"
+    },
+    "CO": {
+      "pattern": "unknown",
+      "note": "County planning commissions have a duty to adopt a master plan (30-28-106); zoning plans are permissive unless the board orders one (30-28-111). Count not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://content.leg.colorado.gov/sites/default/files/images/olls/crs2024-title-30.pdf",
+      "source_name": "Colorado Revised Statutes 2024, Title 30, 30-28-106 and 30-28-111",
+      "source_date": "2024"
+    },
+    "CT": {
+      "pattern": "municipal",
+      "note": "No county government. Any town or city may adopt the zoning chapter by vote and act through a zoning commission. Share of rural towns without zoning not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://codes.findlaw.com/ct/title-8-zoning-planning-housing-and-economic-and-community-development/ct-gen-st-sect-8-1/",
+      "source_name": "Conn. Gen. Stat. 8-1",
+      "source_date": "2025"
+    },
+    "DE": {
+      "pattern": "all_zoned",
+      "note": "Each of the three counties has its own zoning chapter in Title 9 (ch. 26 New Castle, ch. 49 Kent, ch. 69 Sussex).",
+      "unzoned_estimate": "0 of 3",
+      "source_url": "https://delcode.delaware.gov/title9/index.html",
+      "source_name": "Delaware Code Title 9 (Counties), chapter list",
+      "source_date": "2025"
+    },
+    "FL": {
+      "pattern": "all_zoned",
+      "note": "Every county must maintain a comprehensive plan (163.3167) and must adopt land development regulations implementing it (163.3202).",
+      "unzoned_estimate": "0 of 67",
+      "source_url": "http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0163/Sections/0163.3202.html",
+      "source_name": "Fla. Stat. 163.3167 and 163.3202",
+      "source_date": "2025"
+    },
+    "GA": {
+      "pattern": "unknown",
+      "note": "State law recognizes local governments' zoning power and sets procedures; it does not require zoning. Planning updates are required only for state funding eligibility. Count not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://codes.findlaw.com/ga/title-36-local-government/ga-code-sect-36-66-2/",
+      "source_name": "Ga. Code 36-66-2 (Zoning Procedures Law); Georgia DCA Local Planning page",
+      "source_date": "2025"
+    },
+    "HI": {
+      "pattern": "all_zoned",
+      "note": "The state Land Use Commission places all land in the state in urban, rural, agricultural or conservation districts (HRS 205-2); counties zone within that (HRS 46-4).",
+      "unzoned_estimate": "0 of 4",
+      "source_url": "https://codes.findlaw.com/hi/division-1-government/hi-rev-st-sect-205-2/",
+      "source_name": "Haw. Rev. Stat. 205-2 and 46-4",
+      "source_date": "2025"
+    },
+    "ID": {
+      "pattern": "all_zoned",
+      "note": "Each governing board shall by ordinance establish zoning districts consistent with its comprehensive plan (Local Land Use Planning Act).",
+      "unzoned_estimate": "0 of 44",
+      "source_url": "https://legislature.idaho.gov/statutesrules/idstat/title67/t67ch65/sect67-6511/",
+      "source_name": "Idaho Code 67-6511",
+      "source_date": "2025"
+    },
+    "IL": {
+      "pattern": "unknown",
+      "note": "County boards have power to zone land outside municipalities; no mandate, and agricultural land is largely exempt from permits. Count of zoned counties not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://codes.findlaw.com/il/chapter-55-counties/il-st-sect-55-5-5-12001/",
+      "source_name": "55 ILCS 5/5-12001",
+      "source_date": "2025"
+    },
+    "IN": {
+      "pattern": "unknown",
+      "note": "The county legislative body has exclusive authority to adopt a zoning ordinance, only after a comprehensive plan; no mandate. Count of zoned counties not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://codes.findlaw.com/in/title-36-local-government/in-code-sect-36-7-4-601/",
+      "source_name": "Ind. Code 36-7-4-601",
+      "source_date": "2025"
+    },
+    "IA": {
+      "pattern": "unknown",
+      "note": "Boards of supervisors may zone land outside city limits; farms and farm buildings are exempt (335.2). Count of zoned counties not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://www.legis.iowa.gov/docs/code/335.3.pdf",
+      "source_name": "Iowa Code 335.2 and 335.3",
+      "source_date": "2025"
+    },
+    "KS": {
+      "pattern": "unknown",
+      "note": "K.S.A. 12-741 is enabling legislation for city and county planning and zoning; adoption is optional. Count of zoned counties not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://www.ksrevisor.gov/statutes/chapters/ch12/012_007_0041.html",
+      "source_name": "K.S.A. 12-741",
+      "source_date": "2025"
+    },
+    "KY": {
+      "pattern": "unknown",
+      "note": "Zoning requires a planning unit and adopted comprehensive plan first; then fiscal courts 'may' enact zoning (KRS 100.113, 100.201). Count not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://apps.legislature.ky.gov/law/statutes/statute.aspx?id=26717",
+      "source_name": "KRS 100.113 and 100.201",
+      "source_date": "2025"
+    },
+    "LA": {
+      "pattern": "unknown",
+      "note": "Parish governing authorities are authorized, not required, to zone; four parishes are excluded from the general act. Count of zoned parishes not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://codes.findlaw.com/la/revised-statutes/la-rev-stat-tit-33-sect-4780-40/",
+      "source_name": "La. R.S. 33:4780.40",
+      "source_date": "2023"
+    },
+    "ME": {
+      "pattern": "municipal",
+      "note": "Municipalities may enact zoning (30-A M.R.S. 4352). The state Land Use Planning Commission sets land use districts and standards for the unorganized territory (12 M.R.S. 685-A).",
+      "unzoned_estimate": null,
+      "source_url": "https://legislature.maine.gov/statutes/12/title12sec685-A.html",
+      "source_name": "30-A M.R.S. 4352; 12 M.R.S. 685-A",
+      "source_date": "2025"
+    },
+    "MD": {
+      "pattern": "unknown",
+      "note": "State policy is that planning and zoning controls are implemented by local government (Land Use 4-101); legislative bodies 'may' regulate land use (4-102). County count not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=glu&section=4-102&enactments=false",
+      "source_name": "Md. Code, Land Use 4-101 and 4-102",
+      "source_date": "2025"
+    },
+    "MA": {
+      "pattern": "municipal",
+      "note": "Zoning is defined as ordinances and bylaws adopted by cities and towns; counties play no role. Share of rural towns without zoning not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleVII/Chapter40A/Section1A",
+      "source_name": "Mass. Gen. Laws c. 40A, s. 1A",
+      "source_date": "2025"
+    },
+    "MI": {
+      "pattern": "municipal",
+      "note": "Townships, cities, villages and counties may zone; a township with its own ordinance is exempt from county zoning (MCL 125.3209). Share of rural townships without zoning not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-125-3201",
+      "source_name": "Michigan Zoning Enabling Act, MCL 125.3201 and 125.3209",
+      "source_date": "2025"
+    },
+    "MN": {
+      "pattern": "unknown",
+      "note": "Counties are authorized to plan and zone (394.21). If a county fails to adopt a shoreland ordinance the state imposes a model one (103F.215). Count of general zoning not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://www.revisor.mn.gov/statutes/cite/394.21",
+      "source_name": "Minn. Stat. 394.21 and 103F.215",
+      "source_date": "2025"
+    },
+    "MS": {
+      "pattern": "unknown",
+      "note": "County governing authorities may, in their discretion, regulate land use in unincorporated areas; agriculture and forestry need no permits. Count not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://codes.findlaw.com/ms/title-17-local-government-provisions-common-to-counties-and-municipalities/ms-code-sect-17-1-3/",
+      "source_name": "Miss. Code 17-1-3",
+      "source_date": "2025"
+    },
+    "MO": {
+      "pattern": "unknown",
+      "note": "County zoning may start only after voters approve the ballot question 'Shall county zoning be adopted?' (RSMo 64.845). Count of zoned counties not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://revisor.mo.gov/main/OneSection.aspx?section=64.845",
+      "source_name": "RSMo 64.845",
+      "source_date": "2025"
+    },
+    "MT": {
+      "pattern": "unknown",
+      "note": "A board that has adopted a growth policy is authorized, not required, to zone all or part of its jurisdictional area (MCA 76-2-201). Count not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://mca.legmt.gov/bills/mca/title_0760/chapter_0020/part_0020/section_0010/0760-0020-0020-0010.html",
+      "source_name": "Mont. Code Ann. 76-2-201",
+      "source_date": "2025"
+    },
+    "NE": {
+      "pattern": "unknown",
+      "note": "County boards have power to adopt a zoning resolution, only after a comprehensive development plan (23-114, 23-114.03); no mandate. Count not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://nebraskalegislature.gov/laws/statutes.php?statute=23-114",
+      "source_name": "Neb. Rev. Stat. 23-114 and 23-114.03",
+      "source_date": "2025"
+    },
+    "NV": {
+      "pattern": "unknown",
+      "note": "Planning commissions shall prepare a master plan (NRS 278.150); governing bodies 'may' divide the county into zoning districts (278.250). Count not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://www.leg.state.nv.us/nrs/nrs-278.html",
+      "source_name": "Nev. Rev. Stat. 278.150 and 278.250",
+      "source_date": "2025"
+    },
+    "NH": {
+      "pattern": "municipal",
+      "note": "Cities and towns are authorized to adopt zoning; counties only for unincorporated places. Share of rural towns without zoning not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://gc.nh.gov/rsa/html/LXIV/674/674-16.htm",
+      "source_name": "N.H. RSA 674:16",
+      "source_date": "2025"
+    },
+    "NJ": {
+      "pattern": "municipal",
+      "note": "The municipal governing body may adopt a zoning ordinance after the planning board adopts the master plan's land use element; counties do not zone.",
+      "unzoned_estimate": null,
+      "source_url": "https://codes.findlaw.com/nj/title-40-municipalities-and-counties/nj-st-sect-40-55d-62/",
+      "source_name": "N.J.S.A. 40:55D-62 (Municipal Land Use Law)",
+      "source_date": "2024"
+    },
+    "NM": {
+      "pattern": "unknown",
+      "note": "A county zoning authority may regulate land use and divide its territory into districts; no mandate. Count of zoned counties not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://codes.findlaw.com/nm/chapter-3-municipalities/nm-st-sect-3-21-1/",
+      "source_name": "N.M. Stat. 3-21-1",
+      "source_date": "2025"
+    },
+    "NY": {
+      "pattern": "municipal",
+      "note": "Town boards are empowered to zone the part of the town outside villages; counties do not zone. Share of rural towns without zoning not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://www.nysenate.gov/legislation/laws/TWN/261",
+      "source_name": "N.Y. Town Law 261",
+      "source_date": "2025"
+    },
+    "NC": {
+      "pattern": "mixed",
+      "note": "Counties may zone under G.S. 160D. UNC survey: 79 of 100 counties had adopted zoning (countywide or partial) by 2012; all counties with over 50,000 unincorporated residents zone.",
+      "unzoned_estimate": "about 21 of 100 (2012)",
+      "source_url": "https://www.sog.unc.edu/sites/www.sog.unc.edu/files/reports/pzlb20.pdf",
+      "source_name": "UNC School of Government, 2012 Zoning Survey Report (Owens and Batten)",
+      "source_date": "2012"
+    },
+    "ND": {
+      "pattern": "unknown",
+      "note": "Boards of county commissioners may regulate the location and use of buildings and land (NDCC 11-33-01); no mandate. Count of zoned counties not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://ndlegis.gov/cencode/t11c33.pdf",
+      "source_name": "N.D. Cent. Code ch. 11-33",
+      "source_date": "2025"
+    },
+    "OH": {
+      "pattern": "municipal",
+      "note": "Zoning outside cities is by township (ORC 519.02); county rural zoning applies only in townships whose voters approve it (303.11). Share of unzoned townships not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://codes.ohio.gov/ohio-revised-code/section-303.11",
+      "source_name": "Ohio Rev. Code 303.02, 303.11 and 519.02",
+      "source_date": "2025"
+    },
+    "OK": {
+      "pattern": "unknown",
+      "note": "County planning and zoning requires a board resolution and a majority vote of county electors (19 O.S. 865.52); covers unincorporated areas only. Count not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://www.oscn.net/applications/oscn/DeliverDocument.asp?CiteID=68211",
+      "source_name": "19 O.S. 865.51-865.53",
+      "source_date": "2025"
+    },
+    "OR": {
+      "pattern": "all_zoned",
+      "note": "Each city and county shall adopt a comprehensive plan meeting statewide goals and enact land use regulations to implement it.",
+      "unzoned_estimate": "0 of 36",
+      "source_url": "https://oregon.public.law/statutes/ors_197.175",
+      "source_name": "ORS 197.175",
+      "source_date": "2025"
+    },
+    "PA": {
+      "pattern": "municipal",
+      "note": "Zoning is by municipality; county zoning applies only to land in municipalities with no zoning ordinance of their own (MPC s. 602). Share of unzoned rural municipalities not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://www.palegis.us/statutes/unconsolidated/law-information/view-statute?SESSYR=1968&SESSIND=0&ACTNUM=247&SMTHLWIND=&CHPT=6&SCTN=2&SUBSCTN=",
+      "source_name": "Pennsylvania Municipalities Planning Code (Act 247 of 1968), s. 602",
+      "source_date": "2025"
+    },
+    "RI": {
+      "pattern": "municipal",
+      "note": "No county government. Zoning ordinances are adopted by cities and towns under Title 45, ch. 24.",
+      "unzoned_estimate": null,
+      "source_url": "https://webserver.rilegislature.gov/Statutes/TITLE45/45-24/45-24-30.htm",
+      "source_name": "R.I. Gen. Laws 45-24-30",
+      "source_date": "2025"
+    },
+    "SC": {
+      "pattern": "unknown",
+      "note": "County councils may create planning commissions and may adopt zoning after a comprehensive plan (6-29-320, 6-29-720); no mandate. Count not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://www.scstatehouse.gov/code/t06c029.php",
+      "source_name": "S.C. Code Title 6, ch. 29 (Comprehensive Planning Enabling Act)",
+      "source_date": "2025"
+    },
+    "SD": {
+      "pattern": "unknown",
+      "note": "The board of county commissioners may adopt a zoning ordinance (SDCL 11-2-13); no mandate. Count of zoned counties not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://sdlegislature.gov/api/Statutes/11-2-13.html",
+      "source_name": "SDCL 11-2-13",
+      "source_date": "2025"
+    },
+    "TN": {
+      "pattern": "unknown",
+      "note": "County legislative bodies are authorized to regulate land outside municipalities (T.C.A. 13-7-101); permissive. Count of zoned counties not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://www.ctas.tennessee.edu/eli/zoning-regulation",
+      "source_name": "Tennessee CTAS e-Li, Zoning Regulation (T.C.A. 13-7-101)",
+      "source_date": "2025"
+    },
+    "TX": {
+      "pattern": "none_statewide",
+      "note": "Counties have no general zoning power. Chapter 231 gives narrow exceptions: Padre Island (Cameron, Willacy), Amistad area of Val Verde County, named lake areas, Falcon Lake, Lake Somerville, military zones.",
+      "unzoned_estimate": "254 of 254",
+      "source_url": "https://texas.public.law/statutes/tex._local_gov't_code_title_7_subtitle_b_chapter_231",
+      "source_name": "Texas Local Government Code ch. 231 (County Zoning Authority)",
+      "source_date": "2025"
+    },
+    "UT": {
+      "pattern": "all_zoned",
+      "note": "Each county shall adopt a general plan (17-27a-401) and the legislative body shall adopt a land use regulation creating zoning districts and their allowed uses (17-27a-501).",
+      "unzoned_estimate": "0 of 29",
+      "source_url": "https://codes.findlaw.com/ut/title-17-counties/ut-code-sect-17-27a-501/",
+      "source_name": "Utah Code 17-27a-401 and 17-27a-501",
+      "source_date": "2025"
+    },
+    "VT": {
+      "pattern": "municipal",
+      "note": "A municipality may regulate land development through zoning bylaws in conformance with its plan; counties do not zone. Share of towns without zoning not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://legislature.vermont.gov/statutes/section/24/117/04411",
+      "source_name": "24 V.S.A. 4411",
+      "source_date": "2025"
+    },
+    "VA": {
+      "pattern": "unknown",
+      "note": "Every locality shall adopt a comprehensive plan (15.2-2223); zoning is permissive ('any locality may', 15.2-2280). Count of zoned counties not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://law.lis.virginia.gov/vacode/title15.2/chapter22/section15.2-2280/",
+      "source_name": "Va. Code 15.2-2223 and 15.2-2280",
+      "source_date": "2025"
+    },
+    "WA": {
+      "pattern": "unknown",
+      "note": "Fast-growing counties must plan and adopt development regulations under the GMA; every county must adopt critical-areas regulations (36.70A.060). Count of zoned counties not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://app.leg.wa.gov/rcw/default.aspx?cite=36.70A.040",
+      "source_name": "RCW 36.70A.040 and 36.70A.060",
+      "source_date": "2025"
+    },
+    "WV": {
+      "pattern": "unknown",
+      "note": "County commissions 'may' adopt a zoning ordinance (8A-7-1); a petition by 10 percent of voters forces an election on it (8A-7-7). Count of zoned counties not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://code.wvlegislature.gov/8A-7-1/",
+      "source_name": "W. Va. Code 8A-7-1 and 8A-7-7",
+      "source_date": "2025"
+    },
+    "WI": {
+      "pattern": "mixed",
+      "note": "Every county must zone its unincorporated shorelands (59.692). General county zoning takes effect in a town only after the town board approves it (59.69(5)(c)). Town-level share not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://docs.legis.wisconsin.gov/document/statutes/59.69(5)(c)",
+      "source_name": "Wis. Stat. 59.69(5)(c) and 59.692",
+      "source_date": "2025"
+    },
+    "WY": {
+      "pattern": "unknown",
+      "note": "Each board of county commissioners 'may' regulate land use in the unincorporated area (W.S. 18-5-201); no mandate. Count of zoned counties not confirmed.",
+      "unzoned_estimate": null,
+      "source_url": "https://wyoleg.gov/statutes/compress/title18.pdf",
+      "source_name": "Wyo. Stat. 18-5-201 and 18-5-202",
+      "source_date": "2025"
+    }
+  }
+}
