@@ -396,7 +396,8 @@ def add_zoning(c):
                 if any(k in n for k in ("not named", "not on state list", "unverif", "no county website", "not listed", "unreachable")):
                     row["zoning"] = "verify"
         else:
-            row["zoning_level"] = "state_pattern"; row["zoning_source"] = sp.get("source_url"); row["zoning_note"] = sp.get("note")
+            # the state's note and source live once in the states block, not on every county row
+            row["zoning_level"] = "state_pattern"; row["zoning_source"] = None; row["zoning_note"] = None
             if pat == "none_statewide": row["zoning"] = "none"
             elif pat == "all_zoned": row["zoning"] = "county"
             elif pat == "municipal": row["zoning"] = "municipal"
