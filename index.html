@@ -334,7 +334,7 @@
           <section class="rank card" aria-label="Ranked counties">
             <h2>Best matches</h2>
             <p class="sub" id="rankSub"></p>
-            <table><thead><tr><th>#</th><th>County</th><th>Score</th><th class="hide-sm">Zoning</th><th class="hide-sm">Land $/acre</th><th class="hide-sm">Nearest town</th></tr></thead><tbody id="rankBody"></tbody></table>
+            <table><thead><tr><th>#</th><th>County</th><th>Score</th><th id="fromYouHead" hidden>From you</th><th class="hide-sm">Zoning</th><th class="hide-sm">Land $/acre</th><th class="hide-sm">Nearest town of 5,000+<br><small style="font-weight:400;text-transform:none;letter-spacing:0">from the county's center</small></th></tr></thead><tbody id="rankBody"></tbody></table>
             <div class="more"><button class="btn ghost" id="moreBtn" type="button">Show 25 more</button><span class="note" id="moreNote"></span></div>
           </section>
           <section class="detail card" id="detail" aria-live="polite"><div class="empty">Pick a county on the map or in the list to see its facts and links.</div></section>
@@ -443,15 +443,17 @@
   function renderRank() {
     const v = visible(); const body = $('#rankBody');
     $('#count').textContent = `${v.length.toLocaleString()} counties scored`;
-    $('#rankSub').textContent = near ? `Within ${nearMiles} miles of ${near.label}, ranked by your sliders.` : 'All 50 states and DC, ranked by your sliders.';
+    $('#rankSub').textContent = near ? `Within ${nearMiles} miles of ${near.label}, ranked by your sliders. Miles are straight-line from ${near.label} to the county's center.` : 'All 50 states and DC, ranked by your sliders.';
+    $('#fromYouHead').hidden = !near;
     body.innerHTML = v.slice(0, showN).map((r, i) => {
       const s = scores.get(r.fips).score;
       return `<tr class="row ${r.fips === selected ? 'sel' : ''}" data-fips="${r.fips}" tabindex="0">
         <td>${i + 1}</td><td><span class="nm">${esc(r.name)}</span> <span class="st">${r.st}</span></td>
         <td><div style="display:flex;gap:8px;align-items:center"><div class="barwrap"><div class="bar" style="width:${s}%"></div></div><span class="sc">${s}</span></div></td>
+        ${near ? `<td class="fact">${Math.round(hav(near.lat, near.lon, r.lat, r.lon))} mi</td>` : ''}
         <td class="hide-sm fact">${zoningWord(r)}</td><td class="hide-sm fact">${r.farm_value_acre == null ? '–' : '$' + Math.round(r.farm_value_acre).toLocaleString()}</td>
         <td class="hide-sm fact">${r.town5k_name ? esc(r.town5k_name) + ' · ' + Math.round(r.town5k_mi) + ' mi' : '–'}</td></tr>`;
-    }).join('') || `<tr><td colspan="6" class="empty">No counties match. Widen the circle or turn a slider off.</td></tr>`;
+    }).join('') || `<tr><td colspan="7" class="empty">No counties match. Widen the circle or turn a slider off.</td></tr>`;
     body.querySelectorAll('tr.row').forEach(tr => {
       tr.addEventListener('click', () => select(tr.dataset.fips, true));
       tr.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(tr.dataset.fips, true); } });
@@ -516,7 +518,7 @@
       </ul>
       <h3>Elbow room and access</h3>
       <ul class="facts">
-        ${fact('Nearest town of 5,000+', r.town5k_name ? `${esc(r.town5k_name)} <span class="src">${fmt(r.town5k_mi, 0)} mi</span>` : fmt(null), 'Census places and ACS 2023, from county center')}
+        ${fact('Nearest town of 5,000+', r.town5k_name ? `${esc(r.town5k_name)} <span class="src">${fmt(r.town5k_mi, 0)} mi from the county's center</span>` : fmt(null), 'Census places and ACS 2023; straight-line from the county center, not road miles')}
         ${fact('Nearest city of 50,000+', r.city50k_name ? `${esc(r.city50k_name)} <span class="src">${fmt(r.city50k_mi, 0)} mi</span>` : fmt(null), 'Census places and ACS 2023, from county center')}
         ${fact('Nearest hospital', r.hosp_name ? `${esc(r.hosp_name)} <span class="src">${fmt(r.hosp_mi, 0)} mi</span>` : fmt(null), 'HIFLD hospitals, general and critical access')}
         ${fact('Homes with cable, fiber or DSL', fmt(r.broadband_pct, 0, '%'), 'Census ACS 2023 (subscriptions, not FCC coverage)')}
