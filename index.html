@@ -422,6 +422,7 @@
     $('#zout').onclick = () => svg.transition().call(zoom.scaleBy, 1 / 1.8);
     $('#zreset').onclick = () => svg.transition().call(zoom.transform, d3.zoomIdentity);
     window.__redraw = paint;
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paint);
   }
   const RAMP = ['--s1', '--s2', '--s3', '--s4', '--s5', '--s6'];
   const binOf = s => s == null ? -1 : Math.min(5, Math.floor(s / 100 * 6));
