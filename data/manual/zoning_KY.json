@@ -1,0 +1,971 @@
+{
+  "state": "KY",
+  "checked": "2026-11-13",
+  "state_list_source": {
+    "name": "Kentucky Transportation Cabinet, Planning Units 2010 (statewide list of planning units with zoning/subdivision status by county)",
+    "url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+    "date": "2010-03-31"
+  },
+  "counties": [
+    {
+      "fips": "21001",
+      "county": "Adair",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: only City of Columbia P&Z (citywide)"
+    },
+    {
+      "fips": "21003",
+      "county": "Allen",
+      "zoning": "partial",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Scottsville-Allen County PC; zoning citywide, subdivision regs countywide"
+    },
+    {
+      "fips": "21005",
+      "county": "Anderson",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Lawrenceburg-Anderson County Joint PC, zoning countywide"
+    },
+    {
+      "fips": "21007",
+      "county": "Ballard",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: LaCenter city commission inactive; no county unit"
+    },
+    {
+      "fips": "21009",
+      "county": "Barren",
+      "zoning": "partial",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Joint City-County PC of Barren County; zoning citywide, subregs countywide"
+    },
+    {
+      "fips": "21011",
+      "county": "Bath",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: only Owingsville city P&Z"
+    },
+    {
+      "fips": "21013",
+      "county": "Bell",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Middlesboro and Pineville city commissions only"
+    },
+    {
+      "fips": "21015",
+      "county": "Boone",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "County site read; Boone County PC page unavailable"
+    },
+    {
+      "fips": "21017",
+      "county": "Bourbon",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Bourbon/Paris Joint PC, countywide"
+    },
+    {
+      "fips": "21019",
+      "county": "Boyd",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://boydcountyky.gov/239/County-Ordinances",
+      "note": "County ordinance list has no zoning; Ashland, Catlettsburg zone"
+    },
+    {
+      "fips": "21021",
+      "county": "Boyle",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.boyleplanning.org/",
+      "note": "Danville-Boyle County P&Z Commission; zoning ordinance"
+    },
+    {
+      "fips": "21023",
+      "county": "Bracken",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Bracken County Joint PC, Zoning: No"
+    },
+    {
+      "fips": "21025",
+      "county": "Breathitt",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Jackson city P&Z only"
+    },
+    {
+      "fips": "21027",
+      "county": "Breckinridge",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE at county; Cloverport/Hardinsburg/Irvington city units"
+    },
+    {
+      "fips": "21029",
+      "county": "Bullitt",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Bullitt County Joint PC, countywide"
+    },
+    {
+      "fips": "21031",
+      "county": "Butler",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Morgantown city PC only"
+    },
+    {
+      "fips": "21033",
+      "county": "Caldwell",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Princeton city PC only"
+    },
+    {
+      "fips": "21035",
+      "county": "Calloway",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Murray city PC; zoning citywide, subregs city + part of county"
+    },
+    {
+      "fips": "21037",
+      "county": "Campbell",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.campbellcountyky.gov/departments/planning-zoning-and-building-inspections/",
+      "note": "County P&Z zones unincorporated area; cities zone separately"
+    },
+    {
+      "fips": "21039",
+      "county": "Carlisle",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE"
+    },
+    {
+      "fips": "21041",
+      "county": "Carroll",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Carrollton and Ghent city units only"
+    },
+    {
+      "fips": "21043",
+      "county": "Carter",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Grayson and Olive Hill city units only"
+    },
+    {
+      "fips": "21045",
+      "county": "Casey",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Liberty city P&Z only"
+    },
+    {
+      "fips": "21047",
+      "county": "Christian",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://comdev-services.com/",
+      "note": "CDS serves whole county; district-based regs; coverage not stated explicitly"
+    },
+    {
+      "fips": "21049",
+      "county": "Clark",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Winchester-Clark County Joint PC, countywide"
+    },
+    {
+      "fips": "21051",
+      "county": "Clay",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Manchester city P&Z only"
+    },
+    {
+      "fips": "21053",
+      "county": "Clinton",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: not listed (no unit)"
+    },
+    {
+      "fips": "21055",
+      "county": "Crittenden",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Marion city PC only"
+    },
+    {
+      "fips": "21057",
+      "county": "Cumberland",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Burkesville city PC only"
+    },
+    {
+      "fips": "21059",
+      "county": "Daviess",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "http://www.iompc.org/",
+      "note": "OMPC zoning for Owensboro, Whitesville and Daviess County"
+    },
+    {
+      "fips": "21061",
+      "county": "Edmonson",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Edmonson County PC, Zoning: No"
+    },
+    {
+      "fips": "21063",
+      "county": "Elliott",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE"
+    },
+    {
+      "fips": "21065",
+      "county": "Estill",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Irvine city P&Z only"
+    },
+    {
+      "fips": "21067",
+      "county": "Fayette",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.lexingtonky.gov/departments/planning",
+      "note": "LFUCG zoning ordinance, merged city-county"
+    },
+    {
+      "fips": "21069",
+      "county": "Fleming",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Fleming County Municipal PC, zoning citywide"
+    },
+    {
+      "fips": "21071",
+      "county": "Floyd",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Prestonsburg city P&Z only"
+    },
+    {
+      "fips": "21073",
+      "county": "Franklin",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.franklincounty.ky.gov/",
+      "note": "County P&Z dept; county map portal includes zoning"
+    },
+    {
+      "fips": "21075",
+      "county": "Fulton",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Fulton and Hickman city units only"
+    },
+    {
+      "fips": "21077",
+      "county": "Gallatin",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Gallatin County P&Z, countywide"
+    },
+    {
+      "fips": "21079",
+      "county": "Garrard",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Lancaster city P&Z only"
+    },
+    {
+      "fips": "21081",
+      "county": "Grant",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "County P&Z page read; coverage not stated"
+    },
+    {
+      "fips": "21083",
+      "county": "Graves",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "County site lists no P&Z dept; Mayfield zones"
+    },
+    {
+      "fips": "21085",
+      "county": "Grayson",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE at county; Leitchfield city PC"
+    },
+    {
+      "fips": "21087",
+      "county": "Green",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Greensburg city PC only"
+    },
+    {
+      "fips": "21089",
+      "county": "Greenup",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.greenupcountyky.gov/joint-planning-commission",
+      "note": "Joint PC advises fiscal court on county zoning text and map"
+    },
+    {
+      "fips": "21091",
+      "county": "Hancock",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://hancockky.us/services/planning-zoning/",
+      "note": "Hancock County Urban PC; zoning regs for county, Hawesville, Lewisport"
+    },
+    {
+      "fips": "21093",
+      "county": "Hardin",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "HCPDC zones county with exceptions; county site read, not explicit"
+    },
+    {
+      "fips": "21095",
+      "county": "Harlan",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Benham/Cumberland/Lynch city units only"
+    },
+    {
+      "fips": "21097",
+      "county": "Harrison",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Cynthiana-Harrison County-Berry Joint PC, countywide"
+    },
+    {
+      "fips": "21099",
+      "county": "Hart",
+      "zoning": "partial",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Hart County PC; zoning citywide, subregs countywide"
+    },
+    {
+      "fips": "21101",
+      "county": "Henderson",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "http://www.hendersoncountyky.gov/149/Codes",
+      "note": "Henderson County Zoning Ordinance; city-county PC"
+    },
+    {
+      "fips": "21103",
+      "county": "Henry",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://henrycounty.ky.gov/Departments/Pages/Planning-Zoning.aspx",
+      "note": "Henry County P&Z Commission; setbacks, land use"
+    },
+    {
+      "fips": "21105",
+      "county": "Hickman",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE"
+    },
+    {
+      "fips": "21107",
+      "county": "Hopkins",
+      "zoning": "partial",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "Hopkins County Joint PC; county page does not state zoning coverage"
+    },
+    {
+      "fips": "21109",
+      "county": "Jackson",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE"
+    },
+    {
+      "fips": "21111",
+      "county": "Jefferson",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Louisville Metro PC, countywide"
+    },
+    {
+      "fips": "21113",
+      "county": "Jessamine",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://jessamineky.gov/jc-department/planning-zoning/",
+      "note": "Jessamine County-Wilmore joint planning; zoning in unincorporated area; Nicholasville separate"
+    },
+    {
+      "fips": "21115",
+      "county": "Johnson",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Paintsville city zoning only"
+    },
+    {
+      "fips": "21117",
+      "county": "Kenton",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.pdskc.org/",
+      "note": "Kenton County Planning Commission; PDS administers zoning ordinances"
+    },
+    {
+      "fips": "21119",
+      "county": "Knott",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE"
+    },
+    {
+      "fips": "21121",
+      "county": "Knox",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Barbourville city P&Z only"
+    },
+    {
+      "fips": "21123",
+      "county": "Larue",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://laruecountyky.gov/departments/planning-zoning/",
+      "note": "Land of Lincoln P&Z; county zoning ordinance rev. 2025"
+    },
+    {
+      "fips": "21125",
+      "county": "Laurel",
+      "zoning": "partial",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "London PC page does not state county coverage"
+    },
+    {
+      "fips": "21127",
+      "county": "Lawrence",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010 list claims county zoning board; county site shows none; unverified"
+    },
+    {
+      "fips": "21129",
+      "county": "Lee",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Beattyville/Lee County PC, Zoning: No"
+    },
+    {
+      "fips": "21131",
+      "county": "Leslie",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE"
+    },
+    {
+      "fips": "21133",
+      "county": "Letcher",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Whitesburg zoning board only, Zoning: No"
+    },
+    {
+      "fips": "21135",
+      "county": "Lewis",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Lewis County Municipal PC, zoning citywide"
+    },
+    {
+      "fips": "21137",
+      "county": "Lincoln",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Lincoln County/Cedar Creek PC countywide; Stanford separate"
+    },
+    {
+      "fips": "21139",
+      "county": "Livingston",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: not listed (no unit)"
+    },
+    {
+      "fips": "21141",
+      "county": "Logan",
+      "zoning": "partial",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Joint Logan Cities/County PC; zoning citywide, subregs countywide"
+    },
+    {
+      "fips": "21143",
+      "county": "Lyon",
+      "zoning": "partial",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Joint Lyon County/Eddyville/Kuttawa PC; zoning citywide, subregs countywide"
+    },
+    {
+      "fips": "21145",
+      "county": "McCracken",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://mccrackencountyky.gov/planning-zoning/",
+      "note": "McCracken County PC zoning ordinance and map; Paducah separate"
+    },
+    {
+      "fips": "21147",
+      "county": "McCreary",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE"
+    },
+    {
+      "fips": "21149",
+      "county": "McLean",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: McLean City-County PC, countywide"
+    },
+    {
+      "fips": "21151",
+      "county": "Madison",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://madisoncountyky.gov/planning/applications-regulations/",
+      "note": "County PC and BoA; land use regs; Richmond, Berea separate"
+    },
+    {
+      "fips": "21153",
+      "county": "Magoffin",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE"
+    },
+    {
+      "fips": "21155",
+      "county": "Marion",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE at county; Lebanon, Bradfordsville city units"
+    },
+    {
+      "fips": "21157",
+      "county": "Marshall",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.marshallcountyky.gov/188/Building-Office",
+      "note": "County Building Office lists zoning compliance; coverage not stated"
+    },
+    {
+      "fips": "21159",
+      "county": "Martin",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE"
+    },
+    {
+      "fips": "21161",
+      "county": "Mason",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.masoncountykentucky.us/departments/building_inspection_.php",
+      "note": "County requires zoning permits; Mason County Joint PC"
+    },
+    {
+      "fips": "21163",
+      "county": "Meade",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Meade County P&Z countywide; Brandenburg, Muldraugh separate"
+    },
+    {
+      "fips": "21165",
+      "county": "Menifee",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE"
+    },
+    {
+      "fips": "21167",
+      "county": "Mercer",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Greater Harrodsburg/Mercer County P&Z, countywide"
+    },
+    {
+      "fips": "21169",
+      "county": "Metcalfe",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Edmonton city PC formed 2009, no zoning info"
+    },
+    {
+      "fips": "21171",
+      "county": "Monroe",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Tompkinsville city PC, Zoning: No"
+    },
+    {
+      "fips": "21173",
+      "county": "Montgomery",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Mount Sterling city P&Z only"
+    },
+    {
+      "fips": "21175",
+      "county": "Morgan",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: West Liberty city PC only"
+    },
+    {
+      "fips": "21177",
+      "county": "Muhlenberg",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "County site lists no P&Z; joint PC had no zoning in 2010"
+    },
+    {
+      "fips": "21179",
+      "county": "Nelson",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "http://www.ncpz.com/",
+      "note": "Joint City-County PC serves Nelson County and cities; zoning regs"
+    },
+    {
+      "fips": "21181",
+      "county": "Nicholas",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Carlisle city PC only"
+    },
+    {
+      "fips": "21183",
+      "county": "Ohio",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Hartford/Beaver Dam city P&Z only"
+    },
+    {
+      "fips": "21185",
+      "county": "Oldham",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.oldhamcountyky.gov/planningdevelopment",
+      "note": "Oldham County Comprehensive Zoning Ordinance"
+    },
+    {
+      "fips": "21187",
+      "county": "Owen",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Owenton city PC only"
+    },
+    {
+      "fips": "21189",
+      "county": "Owsley",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE"
+    },
+    {
+      "fips": "21191",
+      "county": "Pendleton",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://pendletoncounty.ky.gov/Government/Pages/Planning-and-Zoning.aspx",
+      "note": "Pendleton County Joint PC; zoning ordinance for unincorporated area and Falmouth"
+    },
+    {
+      "fips": "21193",
+      "county": "Perry",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "County site lists no P&Z dept; Hazard zones"
+    },
+    {
+      "fips": "21195",
+      "county": "Pike",
+      "zoning": "partial",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Pikeville-Pike Co.-Elkhorn City Joint PC; zoning citywide, subregs countywide"
+    },
+    {
+      "fips": "21197",
+      "county": "Powell",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Stanton city PC only"
+    },
+    {
+      "fips": "21199",
+      "county": "Pulaski",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.pulaskigov.com/ordinances/",
+      "note": "County ordinance index has no zoning ordinance; Somerset, Burnside zone"
+    },
+    {
+      "fips": "21201",
+      "county": "Robertson",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE"
+    },
+    {
+      "fips": "21203",
+      "county": "Rockcastle",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE"
+    },
+    {
+      "fips": "21205",
+      "county": "Rowan",
+      "zoning": "partial",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Morehead-Rowan County-Lakeview Heights PC; zoning citywide, subregs countywide"
+    },
+    {
+      "fips": "21207",
+      "county": "Russell",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "County site lists no P&Z dept; Russell Springs zones"
+    },
+    {
+      "fips": "21209",
+      "county": "Scott",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.gscplanning.com/",
+      "note": "Georgetown-Scott County PC; Scott County Zoning Ordinance"
+    },
+    {
+      "fips": "21211",
+      "county": "Shelby",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Triple S PC, countywide"
+    },
+    {
+      "fips": "21213",
+      "county": "Simpson",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://simpsoncountyky.gov/planning-and-zoning/",
+      "note": "County P&Z dept; 2026 zone regulations"
+    },
+    {
+      "fips": "21215",
+      "county": "Spencer",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://spencercountyky.gov/",
+      "note": "County P&Z Commission; zoning regulations posted"
+    },
+    {
+      "fips": "21217",
+      "county": "Taylor",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "County site lists no P&Z dept; Campbellsville zones city and nearby area"
+    },
+    {
+      "fips": "21219",
+      "county": "Todd",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Elkton, Guthrie, Trenton city units only"
+    },
+    {
+      "fips": "21221",
+      "county": "Trigg",
+      "zoning": "partial",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "Cadiz-Trigg County PC page does not state zoning coverage"
+    },
+    {
+      "fips": "21223",
+      "county": "Trimble",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://trimblecountyky.gov/planning-zoning/",
+      "note": "Trimble County Zoning Ordinance; adopted since 2010 list"
+    },
+    {
+      "fips": "21225",
+      "county": "Union",
+      "zoning": "partial",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Union County PC; zoning citywide, subregs countywide"
+    },
+    {
+      "fips": "21227",
+      "county": "Warren",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.warrenpc.org/",
+      "note": "City-County Planning Commission of Warren County"
+    },
+    {
+      "fips": "21229",
+      "county": "Washington",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "County planning coordinator; no zoning referenced; Springfield zones"
+    },
+    {
+      "fips": "21231",
+      "county": "Wayne",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: not listed (no unit)"
+    },
+    {
+      "fips": "21233",
+      "county": "Webster",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Providence, Sebree city units only"
+    },
+    {
+      "fips": "21235",
+      "county": "Whitley",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "County site lists no P&Z dept; Corbin, Williamsburg zone"
+    },
+    {
+      "fips": "21237",
+      "county": "Wolfe",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: NONE"
+    },
+    {
+      "fips": "21239",
+      "county": "Woodford",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://transportation.ky.gov/Planning/Documents/Planning%20Units%202010%20ALL%20Lists.pdf",
+      "note": "2010: Versailles-Midway-Woodford County Joint PC, countywide"
+    }
+  ]
+}

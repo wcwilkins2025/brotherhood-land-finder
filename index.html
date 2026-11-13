@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Brotherhood Land Finder</title>
+<meta name="description" content="Every US county scored for a self-sustaining life on the land, with the records links you need before you sign. Free, no login, no tracking.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js" integrity="sha512-vc58qvvBdrDR4etbxMdlTt4GBQk1qjvyORR2nrsPsFPyrs+/u5c3+1Ct6upOgdZoIl7eq6k3a1UPDSNAQi/32A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+  /* Same range-country palette and type as the Brotherhood Post Finder. */
+  :root {
+    --bg: #f3f1ec; --surface: #ffffff; --fg: #1f2328; --muted: #5c6369; --rule: #d6d2c8;
+    --accent: #8a4b1f; --accent-ink: #ffffff; --accent-hover: #6e3a16;
+    --band: #22302e; --band-fg: #f3f1ec; --step: #2f5d4a; --warn: #9a3b1f;
+    --map-empty: #e6e2d9; --map-stroke: #f3f1ec; --map-select: #1f2328;
+    --s1: #dfeae4; --s2: #b9d3c6; --s3: #8fb9a6; --s4: #5f9a82; --s5: #3d7a62; --s6: #2f5d4a;
+    --font-display: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
+    --font-body: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15191b; --surface: #1d2224; --fg: #e8e5de; --muted: #a09c93; --rule: #343b3e;
+      --accent: #d98a4f; --accent-ink: #15191b; --accent-hover: #e9a068;
+      --band: #0f1514; --band-fg: #e8e5de; --step: #7fc3a4; --warn: #e58a6a;
+      --map-empty: #2a3134; --map-stroke: #15191b; --map-select: #f3f1ec;
+      --s1: #2a4a3c; --s2: #3a6d57; --s3: #58907a; --s4: #7fb49b; --s5: #a8d2bf; --s6: #cfe6da;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15191b; --surface: #1d2224; --fg: #e8e5de; --muted: #a09c93; --rule: #343b3e;
+    --accent: #d98a4f; --accent-ink: #15191b; --accent-hover: #e9a068;
+    --band: #0f1514; --band-fg: #e8e5de; --step: #7fc3a4; --warn: #e58a6a;
+    --map-empty: #2a3134; --map-stroke: #15191b; --map-select: #f3f1ec;
+    --s1: #2a4a3c; --s2: #3a6d57; --s3: #58907a; --s4: #7fb49b; --s5: #a8d2bf; --s6: #cfe6da;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 17px; line-height: 1.5; }
+  .wrap { max-width: 1120px; margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 24px; }
+  header { background: var(--band); color: var(--band-fg); }
+  header .wrap { padding-block: 32px 28px; display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: flex-end; justify-content: space-between; }
+  h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(38px, 8vw, 56px); line-height: .95; text-transform: uppercase; margin: 0 0 10px; text-wrap: balance; }
+  .lede { font-size: 19px; margin: 0; max-width: 620px; }
+  h2 { font-family: var(--font-display); font-weight: 700; font-size: 28px; line-height: 1; text-transform: uppercase; margin: 0 0 6px; }
+  h3 { font-family: var(--font-display); font-weight: 600; font-size: 21px; line-height: 1.05; text-transform: uppercase; margin: 18px 0 6px; color: var(--step); }
+  .sub { color: var(--muted); margin: 0 0 14px; font-size: 15px; }
+  .card { background: var(--surface); border: 1px solid var(--rule); padding: 18px 20px; }
+  .steps ol { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 10px; }
+  .steps li { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; }
+  .steps .n { font-family: var(--font-display); font-size: 28px; font-weight: 700; line-height: 1; color: var(--step); padding-top: 2px; }
+  .btn { display: inline-block; background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: 17px; text-decoration: none;
+    padding: 12px 16px; border-radius: 6px; min-height: 46px; line-height: 1.15; border: 2px solid transparent; cursor: pointer; font-family: inherit; }
+  .btn:hover { background: var(--accent-hover); }
+  .btn:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--step); outline-offset: 2px; }
+  .btn small { display: block; font-weight: 400; font-size: 12.5px; opacity: .85; margin-top: 2px; }
+  .btn.ghost { background: transparent; color: var(--fg); border-color: var(--rule); }
+  .btn.ghost:hover { border-color: var(--fg); background: transparent; }
+  .theme { background: transparent; color: var(--band-fg); border: 1px solid rgba(255,255,255,.35); border-radius: 6px; padding: 8px 12px; font: inherit; font-size: 14px; cursor: pointer; min-height: 44px; }
+
+  /* layout */
+  .grid { display: grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+  .controls { position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow: auto; }
+  @media (max-width: 860px) { .controls { position: static; max-height: none; } }
+  .group { padding: 12px 0; border-top: 1px solid var(--rule); }
+  .group:first-child { border-top: 0; padding-top: 0; }
+  .group h4 { margin: 0 0 8px; font-family: var(--font-display); font-weight: 600; font-size: 18px; text-transform: uppercase; letter-spacing: .02em; color: var(--muted); }
+  .factor { display: grid; grid-template-columns: 1fr 120px 58px; gap: 8px; align-items: center; min-height: 36px; font-size: 15px; }
+  .factor label { cursor: pointer; }
+  .factor input[type=range] { width: 100%; accent-color: var(--step); margin: 0; height: 32px; }
+  .factor .lvl { color: var(--muted); font-size: 13px; text-align: right; }
+  .near input[type=text] { width: 100%; font: inherit; font-size: 17px; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 6px; background: var(--bg); color: var(--fg); min-height: 46px; }
+  .near .row { display: flex; gap: 8px; align-items: center; margin-top: 8px; font-size: 15px; flex-wrap: wrap; }
+  .near .row input[type=range] { flex: 1; min-width: 120px; accent-color: var(--step); }
+  .near .pt { font-size: 14px; color: var(--muted); margin-top: 6px; }
+  .near .pt b { color: var(--fg); }
+  .linkish { background: none; border: 0; color: var(--accent); text-decoration: underline; cursor: pointer; font: inherit; font-size: 14px; padding: 0; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: var(--muted); }
+
+  /* map */
+  .mapbox { background: var(--surface); border: 1px solid var(--rule); position: relative; }
+  .mapbox svg { display: block; width: 100%; height: auto; touch-action: none; }
+  .mapbox path.county { stroke: var(--map-stroke); stroke-width: .35; cursor: pointer; vector-effect: non-scaling-stroke; }
+  .mapbox path.county:hover { stroke: var(--map-select); stroke-width: 1.2; }
+  .mapbox path.county.sel { stroke: var(--map-select); stroke-width: 1.6; }
+  .mapbox path.state { fill: none; stroke: var(--map-stroke); stroke-width: .9; pointer-events: none; vector-effect: non-scaling-stroke; }
+  .legend { display: flex; align-items: center; gap: 6px; padding: 8px 12px; font-size: 13px; color: var(--muted); flex-wrap: wrap; border-top: 1px solid var(--rule); }
+  .legend .sw { display: inline-block; width: 26px; height: 12px; border-radius: 2px; }
+  .tip { position: absolute; pointer-events: none; background: var(--fg); color: var(--bg); padding: 6px 9px; border-radius: 4px; font-size: 13.5px; line-height: 1.3; white-space: nowrap; display: none; z-index: 2; }
+  .mapbtns { position: absolute; top: 8px; right: 8px; display: flex; gap: 6px; }
+  .mapbtns button { background: var(--surface); color: var(--fg); border: 1px solid var(--rule); border-radius: 6px; min-width: 40px; min-height: 40px; font: inherit; font-size: 15px; cursor: pointer; }
+  .mapbtns button:hover { border-color: var(--fg); }
+  .pin { fill: var(--accent); stroke: var(--surface); stroke-width: 1.5; pointer-events: none; }
+
+  /* ranking */
+  .rank { margin-top: 20px; }
+  .rank table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .rank th { text-align: left; font-weight: 600; color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .03em; padding: 6px 8px; border-bottom: 1px solid var(--rule); }
+  .rank td { padding: 8px 8px; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+  .rank tr.row { cursor: pointer; }
+  .rank tr.row:hover td { background: color-mix(in srgb, var(--step) 10%, transparent); }
+  .rank tr.sel td { background: color-mix(in srgb, var(--step) 18%, transparent); }
+  .rank .nm { font-weight: 600; }
+  .rank .st { color: var(--muted); font-weight: 400; }
+  .rank .bar { height: 8px; background: var(--s6); border-radius: 0 4px 4px 0; }
+  .rank .barwrap { background: color-mix(in srgb, var(--rule) 60%, transparent); border-radius: 4px; width: 100%; min-width: 60px; }
+  .rank .sc { font-variant-numeric: tabular-nums; font-weight: 600; width: 44px; text-align: right; }
+  .rank .fact { color: var(--muted); font-size: 14px; white-space: nowrap; }
+  @media (max-width: 600px) { .rank .hide-sm { display: none; } }
+  .more { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+  /* detail */
+  .detail { margin-top: 20px; }
+  .detail .head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; align-items: baseline; }
+  .detail .score { font-family: var(--font-display); font-size: 44px; font-weight: 700; line-height: 1; color: var(--step); }
+  .detail .score small { font-size: 16px; font-family: var(--font-body); font-weight: 400; color: var(--muted); margin-left: 6px; }
+  .facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px 18px; margin: 8px 0 0; padding: 0; list-style: none; }
+  .facts li { border-top: 1px solid var(--rule); padding-top: 6px; font-size: 15px; }
+  .facts .k { color: var(--muted); font-size: 13px; }
+  .facts .v { font-weight: 600; }
+  .facts .v .na { color: var(--muted); font-weight: 400; }
+  .facts .src { color: var(--muted); font-size: 12.5px; }
+  .flag { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 12.5px; font-weight: 600; background: color-mix(in srgb, var(--step) 18%, transparent); color: var(--fg); }
+  .flag.warn { background: color-mix(in srgb, var(--warn) 18%, transparent); }
+  .buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+  .note { font-size: 14px; color: var(--muted); margin: 8px 0 0; }
+  .empty { color: var(--muted); padding: 30px 0; text-align: center; }
+
+  /* read before you sign */
+  .sign { margin-top: 28px; }
+  .sign .steps li div { font-size: 16px; }
+  .cautions { display: grid; gap: 12px; margin-top: 16px; }
+  .caution { border-left: 4px solid var(--warn); padding: 8px 14px; background: color-mix(in srgb, var(--warn) 8%, var(--surface)); font-size: 16px; }
+  .caution strong { display: block; font-family: var(--font-display); font-size: 20px; text-transform: uppercase; line-height: 1.1; margin-bottom: 4px; }
+  details summary { cursor: pointer; font-weight: 600; margin-top: 10px; }
+  footer { color: var(--muted); font-size: 14.5px; border-top: 1px solid var(--rule); margin-top: 28px; }
+  footer .wrap { padding-block: 20px; }
+  footer a, .detail a:not(.btn), .note a, .sub a { color: var(--accent); }
+  .sr { position: absolute; left: -9999px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  .loading { text-align: center; padding: 40px 0; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div>
+      <h1>Brotherhood<br>Land Finder</h1>
+      <p class="lede">Every county in the United States, scored for a self-sustaining life on the land. Move the sliders to say what matters to you, then open a county for the facts and the records links.</p>
+    </div>
+    <button class="theme" id="themeBtn" type="button" aria-label="Switch light or dark">Light / dark</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="card steps">
+    <h2>How to use it</h2>
+    <ol>
+      <li><span class="n">1</span><div><strong>Type your town or ZIP</strong> if you want to stay within driving distance of somewhere. Leave it blank to search the whole country.</div></li>
+      <li><span class="n">2</span><div><strong>Set the sliders.</strong> Each one is Off, Low, Medium or High. Zoning, land price, rain and water are already turned up because they matter to most men.</div></li>
+      <li><span class="n">3</span><div><strong>Click a county</strong> on the map or in the list. You get the facts, where each one came from, and buttons to the assessor, deeds, GIS map, health department and listings.</div></li>
+    </ol>
+  </div>
+
+  <div id="app" class="loading">Loading county data…</div>
+
+  <section class="sign" id="sign">
+    <h2>Read this before you sign</h2>
+    <p class="sub">A score tells you where to look. It does not tell you what a particular piece of ground is. Do these six things, in this order, on any parcel you are serious about.</p>
+    <div class="card steps">
+      <ol>
+        <li><span class="n">1</span><div><strong>Pull the property card.</strong> At the county assessor or appraisal district, look up the parcel. Confirm the acreage, the owner's name, the legal description and whether it says agricultural use. Print it.</div></li>
+        <li><span class="n">2</span><div><strong>Read the deed and the plat.</strong> At the register of deeds or county clerk, find the current deed and any recorded plat or survey. Look for easements, mineral reservations, right-of-way, and whether the seller actually holds title alone.</div></li>
+        <li><span class="n">3</span><div><strong>Check for taxes owed.</strong> The tax collector will tell you if back taxes or liens ride with the land. They become yours at closing if nobody clears them.</div></li>
+        <li><span class="n">4</span><div><strong>Ask about ag-use rules and rollback.</strong> If the land is taxed at an agricultural rate, find out what you must do to keep it (acres, livestock, hay, a lease) and what the rollback tax is if you lose it. In some states the rollback is five years of back taxes plus interest.</div></li>
+        <li><span class="n">5</span><div><strong>Wells and septic.</strong> Ask the county health department what a septic permit requires on that soil, and ask neighbors or the state well database how deep the wells run. A perc test before closing is cheap compared to a lot you cannot build on.</div></li>
+        <li><span class="n">6</span><div><strong>Attorney last, not never.</strong> A local real-estate attorney reads the title commitment and the contract for a few hundred dollars. Do it after you have done the first five, so you are paying for judgment and not for homework.</div></li>
+      </ol>
+    </div>
+    <div class="cautions">
+      <div class="caution"><strong>No zoning does not mean no rules.</strong> An unzoned county still issues septic permits, enforces state well and floodplain rules, and may have subdivision or road regulations. Call the health department before you assume anything.</div>
+      <div class="caution"><strong>Finder's fees are brokerage in most states.</strong> Being paid to find land for someone else is licensed real-estate activity almost everywhere. Help a brother for free, or refer him to a licensed agent. Do not take a fee you are not licensed to take.</div>
+      <div class="caution"><strong>One deed, several unrelated names, is how men lose land and friends.</strong> Going in together feels like brotherhood until one man divorces, dies or needs out. Buy separately, or form an entity with a written operating agreement and a buyout clause before any money moves.</div>
+    </div>
+  </section>
+
+  <details>
+    <summary>How the score works</summary>
+    <p class="note">Each factor is turned into a 0 to 1 score for every county (for example, land under $2,000 an acre scores 1, land over $10,000 scores 0, in between on a log curve). Your slider sets the weight: Off 0, Low 1, Medium 2, High 3. The county score is the weighted average times 100. A factor with no data for a county is left out of that county's average instead of counting as zero, and the detail panel says so. Nothing is estimated: where a source has no figure, you see "no data".</p>
+    <p class="note" id="zoneNote">Zoning is scored three ways. Counties confirmed from the county's own website or an official state list carry a checkmark. Counties in a state where the law settles it (Texas counties cannot zone; Oregon and Washington require it everywhere) carry the statute. Everything else is marked "verify" and scored from the state's general pattern. Always confirm zoning with the county before you buy.</p>
+  </details>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Free forever. No login, no tracking, nothing stored about you. Built by a Brotherhood member for the Brotherhood. Every number comes from a public dataset and every county panel names its source. Full list, dates and download links: <a href="https://github.com/wcwilkins2025/brotherhood-land-finder/blob/main/data/sources.md" target="_blank" rel="noopener">data/sources.md</a>. Found a county with wrong information? <a href="https://github.com/wcwilkins2025/brotherhood-land-finder/issues" target="_blank" rel="noopener">Tell us here</a>.</p>
+    <p id="built"></p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  // ---------- theme
+  const root = document.documentElement;
+  try { const t = localStorage.getItem('theme'); if (t) root.dataset.theme = t; } catch (e) {}
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark';
+    try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+    if (window.__redraw) window.__redraw();
+  });
+
+  // ---------- factor definitions
+  const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
+  const lin = (v, zero, one) => v == null ? null : clamp((v - zero) / (one - zero), 0, 1);
+  const LVL = ['Off', 'Low', 'Medium', 'High'];
+  const FACTORS = [
+    { key: 'zoning', group: 'Rules', label: 'No county zoning', dflt: 3,
+      score: (r, S) => {
+        if (r.zoning === 'none') return 1;
+        if (r.zoning === 'partial') return 0.6;
+        if (r.zoning === 'municipal') return 0.5;
+        if (r.zoning === 'county') return 0;
+        const p = r.zoning_pattern;
+        return p === 'mostly_none' ? 0.7 : p === 'mixed' ? 0.45 : p === 'mostly_zoned' ? 0.2 : 0.4;
+      } },
+    { key: 'farm_value_acre', group: 'Land and water', label: 'Cheap land', dflt: 2,
+      score: r => r.farm_value_acre == null ? null : clamp((Math.log(10000) - Math.log(Math.max(r.farm_value_acre, 100))) / (Math.log(10000) - Math.log(2000)), 0, 1) },
+    { key: 'precip_in', group: 'Land and water', label: 'Rain (40 in. or more is full marks)', dflt: 2, score: r => lin(r.precip_in, 15, 40) },
+    { key: 'growing_days', group: 'Land and water', label: 'Long growing season', dflt: 2, score: r => lin(r.growing_days, 120, 220) },
+    { key: 'well_depth_med_ft', group: 'Land and water', label: 'Shallow well water', dflt: 2, score: r => r.well_depth_med_ft == null ? null : lin(-r.well_depth_med_ft, -600, -100) },
+    { key: 'prime_pct', group: 'Land and water', label: 'Good soil (prime farmland)', dflt: 1, score: r => r.prime_pct == null ? null : lin(r.prime_pct + 0.5 * (r.prime_cond_pct || 0), 0, 50) },
+    { key: 'public_land_pct', group: 'Land and water', label: 'Public land to hunt and roam', dflt: 0, score: r => lin(r.public_land_pct, 0, 30) },
+    { key: 'density', group: 'Elbow room and access', label: 'Elbow room (few people)', dflt: 2, score: r => r.density == null ? null : lin(-Math.log(Math.max(r.density, 0.1)), -Math.log(200), -Math.log(10)) },
+    { key: 'town5k_mi', group: 'Elbow room and access', label: 'Town of 5,000+ within reach', dflt: 2, score: r => r.town5k_mi == null ? null : lin(-r.town5k_mi, -60, -10) },
+    { key: 'hosp_mi', group: 'Elbow room and access', label: 'Hospital within reach', dflt: 2, score: r => r.hosp_mi == null ? null : lin(-r.hosp_mi, -60, -15) },
+    { key: 'broadband_pct', group: 'Elbow room and access', label: 'Wired internet in homes', dflt: 1, score: r => lin(r.broadband_pct, 30, 80) },
+    { key: 'plain_districts_40mi', group: 'Elbow room and access', label: 'Amish or Mennonite nearby', dflt: 1, score: r => r.plain_districts_40mi == null ? null : clamp(Math.sqrt(r.plain_districts_40mi / 12), 0, 1) },
+    { key: 'tax_rate_pct', group: 'Money', label: 'Low property tax', dflt: 1, score: r => r.tax_rate_pct == null ? null : lin(-r.tax_rate_pct, -2, -0.5) },
+    { key: 'income_tax', group: 'Money', label: 'Low or no state income tax', dflt: 1, state: true,
+      score: (r, S) => S.income_tax_top_rate == null ? null : lin(-S.income_tax_top_rate, -0.13, 0) },
+    { key: 'risk_score', group: 'Natural hazards', label: 'Low overall disaster risk', dflt: 2, score: r => r.risk_score == null ? null : 1 - r.risk_score / 100 },
+    { key: 'tornado', group: 'Natural hazards', label: 'Low tornado risk', dflt: 0, score: r => r.tornado == null ? null : 1 - r.tornado / 100 },
+    { key: 'wildfire', group: 'Natural hazards', label: 'Low wildfire risk', dflt: 0, score: r => r.wildfire == null ? null : 1 - r.wildfire / 100 },
+    { key: 'flood_inland', group: 'Natural hazards', label: 'Low flood risk', dflt: 0, score: r => r.flood_inland == null ? null : 1 - r.flood_inland / 100 },
+    { key: 'homeschool', group: 'State law', label: 'Homeschool freedom', dflt: 1, state: true,
+      score: (r, S) => ({ none: 1, low: 0.75, moderate: 0.4, high: 0 })[S.homeschool] ?? null },
+    { key: 'carry', group: 'State law', label: 'Permitless carry', dflt: 1, state: true,
+      score: (r, S) => ({ permitless: 1, shall_issue: 0.5, may_issue: 0 })[S.carry] ?? null },
+    { key: 'rainwater', group: 'State law', label: 'Rainwater catchment allowed', dflt: 0, state: true,
+      score: (r, S) => ({ allowed: 1, allowed_limited: 0.5, regulated: 0 })[S.rainwater] ?? null },
+  ];
+  const NEAR = { key: 'near', label: 'Closer to my spot', dflt: 2 };
+
+  // ---------- state
+  let D, F, rows, states, geo, byFips = new Map(), weights = {}, near = null, nearMiles = 150, nearOnly = true, nearW = NEAR.dflt;
+  let selected = null, showN = 25, scores = new Map(), places = null, zips = null;
+  FACTORS.forEach(f => weights[f.key] = f.dflt);
+  const $ = (s, el = document) => el.querySelector(s);
+  const fmt = (v, d = 0, suf = '') => v == null ? '<span class="na">no data</span>' : (typeof v === 'number' ? v.toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d }) : v) + suf;
+  const money = v => v == null ? '<span class="na">no data</span>' : '$' + Math.round(v).toLocaleString('en-US');
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const hav = (a, b, c, d) => { const R = 3958.8, p = Math.PI / 180, x = Math.sin((c - a) * p / 2) ** 2 + Math.cos(a * p) * Math.cos(c * p) * Math.sin((d - b) * p / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(x)); };
+
+  // ---------- scoring
+  function computeScores() {
+    scores = new Map();
+    for (const r of rows) {
+      const S = states[r.st] || {};
+      let num = 0, den = 0, missing = [];
+      for (const f of FACTORS) {
+        const w = weights[f.key]; if (!w) continue;
+        const s = f.score(r, S);
+        if (s == null) { missing.push(f.label); continue; }
+        num += w * s; den += w;
+      }
+      if (near && nearW) {
+        const d = hav(near.lat, near.lon, r.lat, r.lon);
+        num += nearW * clamp(1 - d / nearMiles, 0, 1); den += nearW;
+      }
+      scores.set(r.fips, { score: den ? Math.round(100 * num / den) : null, missing });
+    }
+  }
+  function visible() {
+    let v = rows;
+    if (near && nearOnly) v = v.filter(r => hav(near.lat, near.lon, r.lat, r.lon) <= nearMiles);
+    return v.filter(r => scores.get(r.fips).score != null).sort((a, b) => scores.get(b.fips).score - scores.get(a.fips).score);
+  }
+
+  // ---------- build UI
+  function build() {
+    const app = $('#app'); app.className = '';
+    const groups = [...new Set(FACTORS.map(f => f.group))];
+    app.innerHTML = `
+      <div class="grid">
+        <aside class="controls card" aria-label="Search settings">
+          <div class="group near">
+            <h4>Near me</h4>
+            <input type="text" id="nearIn" list="placeList" placeholder="Town, ST or ZIP code" autocomplete="off" aria-label="Town or ZIP">
+            <datalist id="placeList"></datalist>
+            <div class="pt" id="nearPt">Blank means the whole country.</div>
+            <div class="row" id="nearRow" hidden>
+              <label for="nearMi">Within</label><input type="range" id="nearMi" min="25" max="500" step="25" value="150"><span id="nearMiV">150 mi</span>
+            </div>
+            <div class="row" id="nearRow2" hidden>
+              <label><input type="checkbox" id="nearOnly" checked> Only show counties inside that circle</label>
+            </div>
+            <div class="factor" id="nearWRow" hidden>
+              <label for="w_near">${NEAR.label}</label>
+              <input type="range" id="w_near" min="0" max="3" step="1" value="${NEAR.dflt}"><span class="lvl" id="l_near">${LVL[NEAR.dflt]}</span>
+            </div>
+          </div>
+          ${groups.map(g => `<div class="group"><h4>${g}</h4>${FACTORS.filter(f => f.group === g).map(f => `
+            <div class="factor"><label for="w_${f.key}">${f.label}</label>
+              <input type="range" id="w_${f.key}" data-key="${f.key}" min="0" max="3" step="1" value="${f.dflt}" aria-label="${f.label} weight">
+              <span class="lvl" id="l_${f.key}">${LVL[f.dflt]}</span></div>`).join('')}</div>`).join('')}
+          <div class="group"><button class="linkish" id="resetW" type="button">Reset sliders to the defaults</button></div>
+        </aside>
+        <div>
+          <div class="toolbar"><span id="count"></span><span>Darker green is a higher score. Click a county.</span></div>
+          <div class="mapbox">
+            <svg id="map" viewBox="0 0 975 610" role="img" aria-label="Map of US counties colored by score"></svg>
+            <div class="mapbtns"><button type="button" id="zin" aria-label="Zoom in">+</button><button type="button" id="zout" aria-label="Zoom out">−</button><button type="button" id="zreset">Reset</button></div>
+            <div class="tip" id="tip"></div>
+            <div class="legend" id="legend"></div>
+          </div>
+          <section class="rank card" aria-label="Ranked counties">
+            <h2>Best matches</h2>
+            <p class="sub" id="rankSub"></p>
+            <table><thead><tr><th>#</th><th>County</th><th>Score</th><th class="hide-sm">Zoning</th><th class="hide-sm">Land $/acre</th><th class="hide-sm">Nearest town</th></tr></thead><tbody id="rankBody"></tbody></table>
+            <div class="more"><button class="btn ghost" id="moreBtn" type="button">Show 25 more</button><span class="note" id="moreNote"></span></div>
+          </section>
+          <section class="detail card" id="detail" aria-live="polite"><div class="empty">Pick a county on the map or in the list to see its facts and links.</div></section>
+        </div>
+      </div>`;
+    document.querySelectorAll('input[data-key]').forEach(inp => inp.addEventListener('input', e => {
+      weights[inp.dataset.key] = +inp.value; $('#l_' + inp.dataset.key).textContent = LVL[+inp.value]; refresh();
+    }));
+    $('#resetW').addEventListener('click', () => { FACTORS.forEach(f => { weights[f.key] = f.dflt; $('#w_' + f.key).value = f.dflt; $('#l_' + f.key).textContent = LVL[f.dflt]; }); refresh(); });
+    $('#w_near').addEventListener('input', e => { nearW = +e.target.value; $('#l_near').textContent = LVL[nearW]; refresh(); });
+    $('#nearMi').addEventListener('input', e => { nearMiles = +e.target.value; $('#nearMiV').textContent = nearMiles + ' mi'; refresh(); });
+    $('#nearOnly').addEventListener('change', e => { nearOnly = e.target.checked; refresh(); });
+    $('#moreBtn').addEventListener('click', () => { showN += 25; renderRank(); });
+    setupNear(); setupMap(); refresh();
+  }
+
+  // ---------- near me
+  async function loadPlaces() {
+    if (places) return places;
+    const d = await (await fetch('data/places.json')).json();
+    places = d.rows.map(r => ({ name: r[0], st: r[1], lat: r[2], lon: r[3], pop: r[4], key: (r[0] + ', ' + r[1]).toLowerCase() }));
+    return places;
+  }
+  async function loadZips() { if (!zips) zips = await (await fetch('data/zips.json')).json(); return zips; }
+  function setupNear() {
+    const inp = $('#nearIn'), list = $('#placeList');
+    inp.addEventListener('focus', () => { loadPlaces(); });
+    let timer;
+    inp.addEventListener('input', () => {
+      clearTimeout(timer);
+      const q = inp.value.trim();
+      if (!q) { near = null; refresh(); showNear(); return; }
+      timer = setTimeout(async () => {
+        if (/^\d{5}$/.test(q)) {
+          const z = await loadZips(); const p = z[q];
+          if (p) { near = { lat: p[0], lon: p[1], label: 'ZIP ' + q }; showNear(); refresh(); }
+          else { near = null; $('#nearPt').textContent = 'ZIP not found.'; refresh(); }
+          return;
+        }
+        const P = await loadPlaces(); const ql = q.toLowerCase();
+        const hits = P.filter(p => p.key.startsWith(ql) || p.name.toLowerCase().startsWith(ql)).sort((a, b) => b.pop - a.pop).slice(0, 8);
+        list.innerHTML = hits.map(h => `<option value="${esc(h.name + ', ' + h.st)}"></option>`).join('');
+        const exact = P.find(p => p.key === ql) || (hits.length === 1 ? hits[0] : null);
+        if (exact) { near = { lat: exact.lat, lon: exact.lon, label: exact.name + ', ' + exact.st }; showNear(); refresh(); }
+      }, 180);
+    });
+    inp.addEventListener('change', async () => {
+      const q = inp.value.trim().toLowerCase(); if (!q || /^\d{5}$/.test(q)) return;
+      const P = await loadPlaces(); const exact = P.find(p => p.key === q);
+      if (exact) { near = { lat: exact.lat, lon: exact.lon, label: exact.name + ', ' + exact.st }; showNear(); refresh(); }
+    });
+  }
+  function showNear() {
+    const on = !!near;
+    $('#nearRow').hidden = !on; $('#nearRow2').hidden = !on; $('#nearWRow').hidden = !on;
+    $('#nearPt').innerHTML = on ? `Searching around <b>${esc(near.label)}</b>.` : 'Blank means the whole country.';
+  }
+
+  // ---------- map
+  let svg, gCounties, zoom, path, projection, tipEl;
+  function setupMap() {
+    svg = d3.select('#map'); tipEl = $('#tip');
+    projection = d3.geoAlbersUsa().fitSize([975, 610], geo);
+    path = d3.geoPath(projection);
+    const gRoot = svg.append('g').attr('id', 'root');
+    gCounties = gRoot.append('g');
+    gCounties.selectAll('path').data(geo.features).join('path')
+      .attr('class', 'county').attr('d', path).attr('data-fips', d => d.id)
+      .on('click', (e, d) => select(d.id, false))
+      .on('pointermove', (e, d) => {
+        const r = byFips.get(d.id); if (!r) return;
+        const s = scores.get(d.id); const box = $('.mapbox').getBoundingClientRect();
+        tipEl.style.display = 'block'; tipEl.innerHTML = `<b>${esc(r.name)}, ${r.st}</b><br>Score ${s && s.score != null ? s.score : '–'}`;
+        let x = e.clientX - box.left + 12, y = e.clientY - box.top + 12;
+        if (x + 180 > box.width) x -= 200; tipEl.style.left = x + 'px'; tipEl.style.top = y + 'px';
+      })
+      .on('pointerleave', () => tipEl.style.display = 'none');
+    // state outlines from county borders: a mesh of shared edges between different states
+    const stateMesh = { type: 'MultiLineString', coordinates: [] };
+    gRoot.append('path').attr('class', 'state').attr('id', 'states');
+    gRoot.append('g').attr('id', 'pinLayer');
+    zoom = d3.zoom().scaleExtent([1, 10]).on('zoom', e => gRoot.attr('transform', e.transform));
+    svg.call(zoom);
+    $('#zin').onclick = () => svg.transition().call(zoom.scaleBy, 1.8);
+    $('#zout').onclick = () => svg.transition().call(zoom.scaleBy, 1 / 1.8);
+    $('#zreset').onclick = () => svg.transition().call(zoom.transform, d3.zoomIdentity);
+    window.__redraw = paint;
+  }
+  const RAMP = ['--s1', '--s2', '--s3', '--s4', '--s5', '--s6'];
+  const binOf = s => s == null ? -1 : Math.min(5, Math.floor(s / 100 * 6));
+  function paint() {
+    const cs = getComputedStyle(root); const cols = RAMP.map(v => cs.getPropertyValue(v).trim());
+    const vis = new Set(visible().map(r => r.fips));
+    gCounties.selectAll('path').attr('fill', d => {
+      if (!vis.has(d.id)) return cs.getPropertyValue('--map-empty').trim();
+      const b = binOf(scores.get(d.id)?.score); return b < 0 ? cs.getPropertyValue('--map-empty').trim() : cols[b];
+    }).classed('sel', d => d.id === selected);
+    $('#legend').innerHTML = `<span>Score</span>` + cols.map((c, i) => `<span class="sw" style="background:${c}" title="${i * 100 / 6 | 0}–${(i + 1) * 100 / 6 | 0}"></span>`).join('') +
+      `<span>0 → 100</span><span class="sw" style="background:${cs.getPropertyValue('--map-empty').trim()}; margin-left:10px"></span><span>${near && nearOnly ? 'outside your circle' : 'no score'}</span>`;
+    const pin = d3.select('#pinLayer').selectAll('circle').data(near ? [near] : []);
+    pin.join('circle').attr('class', 'pin').attr('r', 5).attr('cx', d => (projection([d.lon, d.lat]) || [-99, -99])[0]).attr('cy', d => (projection([d.lon, d.lat]) || [-99, -99])[1]);
+  }
+
+  // ---------- ranking
+  function renderRank() {
+    const v = visible(); const body = $('#rankBody');
+    $('#count').textContent = `${v.length.toLocaleString()} counties scored`;
+    $('#rankSub').textContent = near ? `Within ${nearMiles} miles of ${near.label}, ranked by your sliders.` : 'All 50 states and DC, ranked by your sliders.';
+    body.innerHTML = v.slice(0, showN).map((r, i) => {
+      const s = scores.get(r.fips).score;
+      return `<tr class="row ${r.fips === selected ? 'sel' : ''}" data-fips="${r.fips}" tabindex="0">
+        <td>${i + 1}</td><td><span class="nm">${esc(r.name)}</span> <span class="st">${r.st}</span></td>
+        <td><div style="display:flex;gap:8px;align-items:center"><div class="barwrap"><div class="bar" style="width:${s}%"></div></div><span class="sc">${s}</span></div></td>
+        <td class="hide-sm fact">${zoningWord(r)}</td><td class="hide-sm fact">${r.farm_value_acre == null ? '–' : '$' + Math.round(r.farm_value_acre).toLocaleString()}</td>
+        <td class="hide-sm fact">${r.town5k_name ? esc(r.town5k_name) + ' · ' + Math.round(r.town5k_mi) + ' mi' : '–'}</td></tr>`;
+    }).join('') || `<tr><td colspan="6" class="empty">No counties match. Widen the circle or turn a slider off.</td></tr>`;
+    body.querySelectorAll('tr.row').forEach(tr => {
+      tr.addEventListener('click', () => select(tr.dataset.fips, true));
+      tr.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(tr.dataset.fips, true); } });
+    });
+    $('#moreBtn').hidden = showN >= v.length; $('#moreNote').textContent = v.length > showN ? `Showing ${Math.min(showN, v.length)} of ${v.length}.` : '';
+  }
+  function zoningWord(r) {
+    const w = { none: 'None', partial: 'Partial', county: 'County zoning', municipal: 'Town level', verify: 'Verify' }[r.zoning] || 'Verify';
+    return r.zoning_level === 'state_pattern' && r.zoning === 'verify' ? 'Verify' : w;
+  }
+
+  // ---------- detail
+  function select(fips, scrollMap) {
+    selected = fips; showN = Math.max(showN, 25);
+    try { history.replaceState(null, '', '#county=' + fips); } catch (e) {}
+    paint(); renderRank(); renderDetail();
+    $('#detail').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  const ddg = q => 'https://duckduckgo.com/?q=' + encodeURIComponent(q);
+  function slug(s) { return s.toLowerCase().replace(/['’.]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+  function renderDetail() {
+    const r = byFips.get(selected); if (!r) return;
+    const S = states[r.st] || {}; const sc = scores.get(r.fips);
+    const cname = r.name; // e.g. "Fannin County", "Acadia Parish", "Richmond city"
+    const base = cname.replace(/ (County|Parish|Borough|Census Area|Municipality|City and Borough|city)$/i, '');
+    const stName = S.name || r.st;
+    const unit = /Parish$/.test(cname) ? 'parish' : 'county';
+    const lf = `https://www.landandfarm.com/search/${slug(stName)}/${slug(base)}-${unit}-land-for-sale/`;
+    const netr = `https://publicrecords.netronline.com/state/${r.st}/county/${slug(base)}`;
+    const zflag = r.zoning_level === 'county_site' ? `<span class="flag">✔ confirmed on county site</span>` :
+                  r.zoning_level === 'state_list' ? `<span class="flag">✔ official state list</span>` :
+                  r.zoning_level === 'third_party_list' ? `<span class="flag warn">third-party list, verify</span>` :
+                  (r.zoning === 'none' || r.zoning === 'county') && r.zoning_level === 'state_pattern' ? `<span class="flag">state law</span>` : `<span class="flag warn">verify with the county</span>`;
+    const zword = { none: 'No county zoning', partial: 'Partial zoning', county: 'County-wide zoning', municipal: 'Zoning is done by towns, not the county', verify: 'Unknown, verify' }[r.zoning] || 'Unknown';
+    const fact = (k, v, src) => `<li><div class="k">${k}</div><div class="v">${v}</div>${src ? `<div class="src">${src}</div>` : ''}</li>`;
+    const miss = sc.missing.length ? `<p class="note">Left out of this county's score for lack of data: ${sc.missing.map(esc).join(', ')}.</p>` : '';
+    const dist = near ? `<p class="note">${Math.round(hav(near.lat, near.lon, r.lat, r.lon))} miles from ${esc(near.label)} (center to center).</p>` : '';
+    $('#detail').innerHTML = `
+      <div class="head"><div><h2>${esc(cname)}, ${esc(stName)}</h2><p class="sub">Population ${fmt(r.pop)} · ${fmt(r.density, 0)} people per square mile · ${fmt(r.land_sqmi, 0)} square miles</p></div>
+        <div class="score">${sc.score ?? '–'}<small>out of 100 on your sliders</small></div></div>
+      ${dist}${miss}
+      <h3>Rules</h3>
+      <ul class="facts">
+        ${fact('County zoning', `${zword} ${zflag}${r.zoning_note ? `<div class="src">${esc(r.zoning_note)}</div>` : ''}`,
+          r.zoning_source ? `<a href="${esc(r.zoning_source)}" target="_blank" rel="noopener">Source</a>` : (S.zoning_note ? esc(S.zoning_note) : ''))}
+        ${fact('State pattern', esc(S.zoning_note || 'no data') + (S.zoning_estimate ? ` (${esc(S.zoning_estimate)} unzoned)` : ''), S.zoning_source ? `<a href="${esc(S.zoning_source)}" target="_blank" rel="noopener">${esc(S.zoning_source_name || 'Source')}</a>` : '')}
+        ${fact('Homeschool', `${esc(S.homeschool || 'no data')}${S.homeschool_note ? ` <span class="src">${esc(S.homeschool_note)}</span>` : ''}`, 'HSLDA state law summary')}
+        ${fact('Carry', `${esc((S.carry || 'no data').replace('_', ' '))}${S.carry_note ? ` <span class="src">${esc(S.carry_note)}</span>` : ''}`, 'State statute via handgunlaw.us')}
+        ${fact('Right to farm', `${S.right_to_farm ? 'Yes' : 'No data'}${S.right_to_farm_note ? ` <span class="src">${esc(S.right_to_farm_note)}</span>` : ''}`, 'National Agricultural Law Center')}
+        ${fact('Rainwater and off-grid', `${esc((S.rainwater || 'no data').replace('_', ' '))}${S.rainwater_note ? ` <span class="src">${esc(S.rainwater_note)}</span>` : ''}${S.offgrid_note ? `<div class="src">${esc(S.offgrid_note)}</div>` : ''}`, 'State sources; see sources.md')}
+        ${fact('State income tax, top rate', S.income_tax_top_rate == null ? fmt(null) : (S.income_tax_top_rate === 0 ? 'None' : (100 * S.income_tax_top_rate).toFixed(2) + '%'), 'Tax Foundation 2026')}
+      </ul>
+      <h3>Land and water</h3>
+      <ul class="facts">
+        ${fact('Farm land value', money(r.farm_value_acre) + (r.farm_value_acre != null ? ' per acre' : ''), 'USDA Census of Agriculture 2022, land and buildings')}
+        ${fact('Rain per year', fmt(r.precip_in, 1, ' in.'), 'NOAA nClimDiv county, 1991–2020 average')}
+        ${fact('Growing season', fmt(r.growing_days, 0, ' frost-free days'), r.growing_station ? `NOAA 1991–2020 normals, ${esc(r.growing_station)} (${r.growing_station_mi} mi)` : 'NOAA 1991–2020 normals')}
+        ${fact('Average temperature / January low', `${fmt(r.tavg_f, 1, '°F')} / ${fmt(r.jan_tmin_f, 1, '°F')}`, 'NOAA nClimDiv county, 1991–2020')}
+        ${fact('Well depth, median', fmt(r.well_depth_med_ft, 0, ' ft') + (r.well_n ? ` <span class="src">(${r.well_n} USGS wells)</span>` : ''), 'USGS NWIS well inventory')}
+        ${fact('Prime farmland', r.prime_pct == null ? fmt(null) : `${fmt(r.prime_pct, 0, '%')} <span class="src">+ ${fmt(r.prime_cond_pct, 0, '%')} if drained or irrigated</span>`, 'USDA NRCS SSURGO soil survey')}
+        ${fact('Public land', fmt(r.public_land_pct, 1, '% of county'), 'USGS PAD-US 4.1')}
+      </ul>
+      <h3>Elbow room and access</h3>
+      <ul class="facts">
+        ${fact('Nearest town of 5,000+', r.town5k_name ? `${esc(r.town5k_name)} <span class="src">${fmt(r.town5k_mi, 0)} mi</span>` : fmt(null), 'Census places and ACS 2023, from county center')}
+        ${fact('Nearest city of 50,000+', r.city50k_name ? `${esc(r.city50k_name)} <span class="src">${fmt(r.city50k_mi, 0)} mi</span>` : fmt(null), 'Census places and ACS 2023, from county center')}
+        ${fact('Nearest hospital', r.hosp_name ? `${esc(r.hosp_name)} <span class="src">${fmt(r.hosp_mi, 0)} mi</span>` : fmt(null), 'HIFLD hospitals, general and critical access')}
+        ${fact('Homes with cable, fiber or DSL', fmt(r.broadband_pct, 0, '%'), 'Census ACS 2023 (subscriptions, not FCC coverage)')}
+        ${fact('Amish / Mennonite', `${r.plain_settlements ? esc(r.plain_settlements) + ' · ' : ''}${fmt(r.amish_districts, 0)} church districts here, ${fmt(r.plain_districts_40mi, 0)} within 40 mi`, 'Young Center, Elizabethtown College, 2026')}
+      </ul>
+      <h3>Money and hazards</h3>
+      <ul class="facts">
+        ${fact('Property tax, effective', fmt(r.tax_rate_pct, 2, '%') + (r.tax_med ? ` <span class="src">median ${money(r.tax_med)} on a ${money(r.home_value_med)} home</span>` : ''), 'Census ACS 2023, owner-occupied homes')}
+        ${fact('Overall natural-hazard risk', `${fmt(r.risk_score, 0)} <span class="src">${esc(r.risk_rating || '')}</span>`, 'FEMA National Risk Index, Dec 2025 (0 low – 100 high)')}
+        ${fact('Tornado / wildfire', `${fmt(r.tornado, 0)} / ${fmt(r.wildfire, 0)}`, 'FEMA NRI risk index scores')}
+        ${fact('Flood inland / coastal', `${fmt(r.flood_inland, 0)} / ${r.flood_coastal == null ? 'n/a' : fmt(r.flood_coastal, 0)}`, 'FEMA NRI risk index scores')}
+        ${fact('Drought / hurricane / winter', `${fmt(r.drought, 0)} / ${r.hurricane == null ? 'n/a' : fmt(r.hurricane, 0)} / ${fmt(r.winter, 0)}`, 'FEMA NRI risk index scores')}
+      </ul>
+      <h3>Records link kit</h3>
+      <p class="note">These open in a new tab. The search buttons use DuckDuckGo with the county name already typed in, because no national list of county office websites exists.</p>
+      <div class="buttons">
+        ${r.website ? `<a class="btn" href="${esc(r.website)}" target="_blank" rel="noopener">County website<small>official site</small></a>` : ''}
+        <a class="btn" href="${netr}" target="_blank" rel="noopener">Public records directory<small>assessor, recorder, tax links</small></a>
+        <a class="btn" href="${ddg(`${cname} ${stName} property search appraisal assessor`)}" target="_blank" rel="noopener">Assessor / property search<small>step 1: property card</small></a>
+        <a class="btn" href="${ddg(`${cname} ${stName} GIS parcel map`)}" target="_blank" rel="noopener">GIS parcel map<small>see the lines</small></a>
+        <a class="btn" href="${ddg(`${cname} ${stName} register of deeds records search`)}" target="_blank" rel="noopener">Deeds and plats<small>step 2: register of deeds</small></a>
+        <a class="btn" href="${ddg(`${cname} ${stName} health department septic permit`)}" target="_blank" rel="noopener">Health department<small>step 5: septic permits</small></a>
+        <a class="btn" href="${lf}" target="_blank" rel="noopener">Land &amp; Farm listings<small>then set Acres 10 to 50 in Filter</small></a>
+      </div>`;
+  }
+
+  function refresh() { computeScores(); paint(); renderRank(); if (selected) renderDetail(); }
+
+  // ---------- load
+  Promise.all([fetch('data/counties.json').then(r => r.json()), fetch('data/counties.geojson').then(r => r.json())]).then(([d, g]) => {
+    D = d; F = d.fields; geo = g; states = d.states;
+    rows = d.rows.map(a => { const o = {}; F.forEach((k, i) => o[k] = a[i]); return o; });
+    rows.forEach(r => byFips.set(r.fips, r));
+    $('#built').textContent = `Data built ${d.built}. FEMA National Risk Index ${d.fema_version}. Climate 1991–2020. Population 2024 estimates. Zoning checked ${d.state_sources.zoning_checked || d.built}.`;
+    build();
+    const m = location.hash.match(/county=(\d{5})/); if (m && byFips.has(m[1])) select(m[1], false);
+  }).catch(e => { $('#app').innerHTML = `<p class="empty">The county data did not load (${esc(e.message)}). If you opened this file directly, serve it with a web server instead.</p>`; });
+})();
+</script>
+</body>
+</html>

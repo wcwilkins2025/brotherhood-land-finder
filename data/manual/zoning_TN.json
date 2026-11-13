@@ -1,0 +1,771 @@
+{
+  "state": "TN",
+  "checked": "2026-11-13",
+  "state_list_source": {
+    "name": "UT Center for Local Planning (Institute for Public Service) - Tennessee County Zoning Viewer, County Zoning layer (49 with zoning / 46 without)",
+    "url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+    "date": "2026-08-21"
+  },
+  "counties": [
+    {
+      "fips": "47001",
+      "county": "Anderson",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://andersoncountytn.gov/?p=380",
+      "note": "Planning page cites countywide zoning; notices amend Anderson County Zoning Resolution"
+    },
+    {
+      "fips": "47003",
+      "county": "Bedford",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "http://www.bedfordcountytn.gov/departments/planning___zoning/",
+      "note": "Zoning Resolution PDF linked; applies throughout unincorporated areas"
+    },
+    {
+      "fips": "47005",
+      "county": "Benton",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "bentoncountytn.gov lists no planning/zoning office; no explicit statement"
+    },
+    {
+      "fips": "47007",
+      "county": "Bledsoe",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "bledsoetn.com lists no planning/zoning office; no explicit statement"
+    },
+    {
+      "fips": "47009",
+      "county": "Blount",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://blounttn.gov/DocumentCenter/View/27484/Zoning-Regs-08172023",
+      "note": "Zoning Resolution adopted 2000; Sec 1.5 countywide outside municipal limits"
+    },
+    {
+      "fips": "47011",
+      "county": "Bradley",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://bradleycountytn.gov/departments/planning/",
+      "note": "Planning page links Zoning Resolution (04-2026) and Zoning Map"
+    },
+    {
+      "fips": "47013",
+      "county": "Campbell",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "campbellcountytn.gov lists no planning/zoning office; no explicit statement"
+    },
+    {
+      "fips": "47015",
+      "county": "Cannon",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://cannoncountytn.gov/planning-commission/",
+      "note": "Zoning Resolution adopted Aug 2018, amended Apr 2026; zoning map linked"
+    },
+    {
+      "fips": "47017",
+      "county": "Carroll",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "carrollcountytn.gov lists no planning/zoning office; no explicit statement"
+    },
+    {
+      "fips": "47019",
+      "county": "Carter",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.cartercountytn.gov/services/planning___zoning/index.php",
+      "note": "Office administers county zoning; A-1, R-1, business, industrial districts"
+    },
+    {
+      "fips": "47021",
+      "county": "Cheatham",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.cheathamcountytn.gov/bldg_codes.html",
+      "note": "Building & Codes enforces Zoning Regulations in unincorporated areas"
+    },
+    {
+      "fips": "47023",
+      "county": "Chester",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.chestercountytn.org/bldg_zoning.html",
+      "note": "County Building & Zoning Dept issues zoning permits; resolution text not linked"
+    },
+    {
+      "fips": "47025",
+      "county": "Claiborne",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County site shows subdivision regs and building permits only; zoning not mentioned"
+    },
+    {
+      "fips": "47027",
+      "county": "Clay",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "No county website found"
+    },
+    {
+      "fips": "47029",
+      "county": "Cocke",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.cockecountytn.gov/zoning-department",
+      "note": "Zoning Dept enforces Zoning Regulations (2025); zoning map adopted 9/26/2023"
+    },
+    {
+      "fips": "47031",
+      "county": "Coffee",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://coffeecountytn.gov/300/Permits",
+      "note": "Codes dept applies Zoning Regulations; county hosts Zoning Resolution excerpt"
+    },
+    {
+      "fips": "47033",
+      "county": "Crockett",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.crockettcountytn.com/county-permits",
+      "note": "County site lists Zoning Ordinance, Zoning Map, Rezoning Application"
+    },
+    {
+      "fips": "47035",
+      "county": "Cumberland",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County Codes pages mention permits and planning commission only, no zoning"
+    },
+    {
+      "fips": "47037",
+      "county": "Davidson",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "Metro Nashville-Davidson Title 17 Zoning; nashville.gov/Municode not fetchable"
+    },
+    {
+      "fips": "47039",
+      "county": "Decatur",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "decaturcountytn.gov lists no planning, zoning or codes office"
+    },
+    {
+      "fips": "47041",
+      "county": "DeKalb",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.dekalbtennessee.com/building-department.html",
+      "note": "Page states DeKalb County does not have countywide zoning regulations"
+    },
+    {
+      "fips": "47043",
+      "county": "Dickson",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.dicksoncountytn.gov/pdfs/zoning_resolution.pdf",
+      "note": "Zoning Resolution adopted 1988, amended 2024; dept page read"
+    },
+    {
+      "fips": "47045",
+      "county": "Dyer",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.dyercounty.com/building-and-zoning-office",
+      "note": "Zoning Resolution of Dyer County (2004, TCA 13-7) applies countywide"
+    },
+    {
+      "fips": "47047",
+      "county": "Fayette",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://fayettetn.us/departments/Planning-Development",
+      "note": "Planning page links Zoning Resolution PDF and county zoning map"
+    },
+    {
+      "fips": "47049",
+      "county": "Fentress",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://fentresscountytn.gov/?p=559",
+      "note": "County Zoning page: no zoning regulations; Jamestown city zoning only"
+    },
+    {
+      "fips": "47051",
+      "county": "Franklin",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://franklincotn.us/planning_zoning.html",
+      "note": "Planning & Zoning page links Zoning Resolution (1974) for unincorporated areas"
+    },
+    {
+      "fips": "47053",
+      "county": "Gibson",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County government site not found"
+    },
+    {
+      "fips": "47055",
+      "county": "Giles",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://gilescountytn.gov/regional-planning-commission/",
+      "note": "Page states unincorporated areas not subject to zoning; subdivision standards only"
+    },
+    {
+      "fips": "47057",
+      "county": "Grainger",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County Planning Commission page lists subdivision regs only; no explicit statement"
+    },
+    {
+      "fips": "47059",
+      "county": "Greene",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.greenecountytngov.com/board-of-zoning-building-commissioner/",
+      "note": "Building Commissioner enforces Greene County Zoning Resolution (Dec 2015)"
+    },
+    {
+      "fips": "47061",
+      "county": "Grundy",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "grundycountytn.net has no planning/zoning page"
+    },
+    {
+      "fips": "47063",
+      "county": "Hamblen",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.hamblencountytn.gov/planningandzoning/",
+      "note": "Planning & Zoning office oversees adopted Zoning and Subdivision regulations"
+    },
+    {
+      "fips": "47065",
+      "county": "Hamilton",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.hamiltontn.gov/Services_Construction.aspx",
+      "note": "County page links Hamilton County Zoning Regulations (hosted by RPA)"
+    },
+    {
+      "fips": "47067",
+      "county": "Hancock",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County Planning Commission page lists subdivision regulations only"
+    },
+    {
+      "fips": "47069",
+      "county": "Hardeman",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County government site not located"
+    },
+    {
+      "fips": "47071",
+      "county": "Hardin",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County government site not reachable"
+    },
+    {
+      "fips": "47073",
+      "county": "Hawkins",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.hawkinscountytn.gov/",
+      "note": "Site: Hawkins County does not have any zoning restrictions or code enforcement"
+    },
+    {
+      "fips": "47075",
+      "county": "Haywood",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://haywoodtn.gov/wp-content/uploads/2024/07/Haywood-County-Zoning-Resolution-July-2024.pdf",
+      "note": "Zoning Resolution adopted 1993, updated July 2024, TCA 13-7-101 et seq."
+    },
+    {
+      "fips": "47077",
+      "county": "Henderson",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County homepage lists no planning/zoning office; no explicit statement"
+    },
+    {
+      "fips": "47079",
+      "county": "Henry",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://henrycountygovernment.azurewebsites.net/?p=87",
+      "note": "County page: no local zoning regulations in unincorporated areas"
+    },
+    {
+      "fips": "47081",
+      "county": "Hickman",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://hickmancountytn.gov/images/uploads/portal_files/2025_Hickman_County_Zoning_Resolution.pdf",
+      "note": "Adopted 2005, effective 2006; all county outside Centerville"
+    },
+    {
+      "fips": "47083",
+      "county": "Houston",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County boards page lists no planning commission or BZA; no explicit statement"
+    },
+    {
+      "fips": "47085",
+      "county": "Humphreys",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County planning commission page covers subdivision plats only"
+    },
+    {
+      "fips": "47087",
+      "county": "Jackson",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "jacksoncountytn.gov unreachable"
+    },
+    {
+      "fips": "47089",
+      "county": "Jefferson",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://jeffersoncountytn.gov/zoning",
+      "note": "Zoning Compliance Office; General Zoning Resolution (amended Feb 2026)"
+    },
+    {
+      "fips": "47091",
+      "county": "Johnson",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.johnsoncountytn.gov/newcomer-information",
+      "note": "County page: no Zoning Department; no building permit required"
+    },
+    {
+      "fips": "47093",
+      "county": "Knox",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://knoxplanning.org/zoning/regulations",
+      "note": "Knox County Zoning Ordinance via Municode; Farragut zones itself"
+    },
+    {
+      "fips": "47095",
+      "county": "Lake",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://lakecountytn.gov/images/Lake%20County%20Zoning%20Resolution.pdf",
+      "note": "Zoning Resolution rev. 1992, updated Dec 2024, TCA 13-7-101 et seq."
+    },
+    {
+      "fips": "47097",
+      "county": "Lauderdale",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "No county government site found"
+    },
+    {
+      "fips": "47099",
+      "county": "Lawrence",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "lawrencecountytn.gov lists no planning/zoning department; no explicit statement"
+    },
+    {
+      "fips": "47101",
+      "county": "Lewis",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.lewiscountytn.com/",
+      "note": "County FAQ: only Hohenwald has zoning"
+    },
+    {
+      "fips": "47103",
+      "county": "Lincoln",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.lincolncountytn.gov/county_directory/planning_zoning.php",
+      "note": "Planning & Zoning dept posts Zoning Resolution (revised 7-2026)"
+    },
+    {
+      "fips": "47105",
+      "county": "Loudon",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "http://planningandcodes.loudoncounty-tn.gov/planning.php",
+      "note": "Loudon County Zoning Resolution and zoning maps posted; unincorporated county"
+    },
+    {
+      "fips": "47107",
+      "county": "McMinn",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.mcminncountytn.gov/",
+      "note": "Inferred: site lists subdivision and mobile home regs only; no zoning resolution"
+    },
+    {
+      "fips": "47109",
+      "county": "McNairy",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County homepage lists no planning/zoning office; no explicit statement"
+    },
+    {
+      "fips": "47111",
+      "county": "Macon",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.maconcountytn.gov/government/macon_county_planning_commission_and_board_of_zoning_appeals.php",
+      "note": "Posts Macon County Zoning Code (2014); BZA and zoning officers listed"
+    },
+    {
+      "fips": "47113",
+      "county": "Madison",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.madisoncountytn.gov/261/Zoning-Land-Use-Information",
+      "note": "Inner Region and Outer Region zoning resolutions (updated 6-16-2025)"
+    },
+    {
+      "fips": "47115",
+      "county": "Marion",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.marioncountytn.net/planning-building",
+      "note": "Inferred: page posts subdivision regs and permit rules only; no zoning resolution"
+    },
+    {
+      "fips": "47117",
+      "county": "Marshall",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://marshallcountytn.gov/building-inspector-codes",
+      "note": "Zoning Resolution in iWorQ portal; zoning map for all of Marshall County"
+    },
+    {
+      "fips": "47119",
+      "county": "Maury",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.maurycounty-tn.gov/Directory.aspx",
+      "note": "Building & Zoning dept with Zoning Clerk and Planner; resolution PDF not located"
+    },
+    {
+      "fips": "47121",
+      "county": "Meigs",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.meigscounty.org/directory-pages/planning-zoning",
+      "note": "County Planning & Zoning page: coordinator enforces county Zoning Resolution"
+    },
+    {
+      "fips": "47123",
+      "county": "Monroe",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County planning site lists subdivision regs only; no zoning statement"
+    },
+    {
+      "fips": "47125",
+      "county": "Montgomery",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://montgomerytn.gov/building-codes",
+      "note": "Codes Division enforces county Zoning Resolution (Feb 2024 PDF linked)"
+    },
+    {
+      "fips": "47127",
+      "county": "Moore",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "Metro Lynchburg-Moore County; metromoorecounty.org planning page rendered empty"
+    },
+    {
+      "fips": "47129",
+      "county": "Morgan",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "morgancountytn.gov reached; no planning/zoning page found"
+    },
+    {
+      "fips": "47131",
+      "county": "Obion",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "obioncountytn.gov reached; no planning/zoning content found"
+    },
+    {
+      "fips": "47133",
+      "county": "Overton",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://overtoncountytn.gov/1488-2/",
+      "note": "County page: no building codes or zoning restrictions outside Livingston"
+    },
+    {
+      "fips": "47135",
+      "county": "Perry",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "perrycountytn.com reached; no planning/zoning content found"
+    },
+    {
+      "fips": "47137",
+      "county": "Pickett",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County website not located"
+    },
+    {
+      "fips": "47139",
+      "county": "Polk",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "polkcountytn.gov reached; no planning/zoning content found"
+    },
+    {
+      "fips": "47141",
+      "county": "Putnam",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.putnamcountytn.gov/regional-planning-commission",
+      "note": "County page: no county-wide zoning regulations; subdivision and floodplain regs only"
+    },
+    {
+      "fips": "47143",
+      "county": "Rhea",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "rheacountytn.com unreachable (TLS error)"
+    },
+    {
+      "fips": "47145",
+      "county": "Roane",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://roanecountytn.gov/planning-and-zoning/",
+      "note": "County Zoning Regulations (rev. 2013) for unincorporated areas; zoning map"
+    },
+    {
+      "fips": "47147",
+      "county": "Robertson",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.robertsoncountytn.gov/departments/planning/subdivision_and_zoning_regulations.php",
+      "note": "County publishes Zoning Regulations Articles I-XI; BZA active"
+    },
+    {
+      "fips": "47149",
+      "county": "Rutherford",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://rutherfordcountytn.gov/property-maintenance",
+      "note": "County page cites Rutherford County Zoning Ordinance and BZA; PDF not located"
+    },
+    {
+      "fips": "47151",
+      "county": "Scott",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "scottcounty.com directory lists no planning/zoning office; no explicit statement"
+    },
+    {
+      "fips": "47153",
+      "county": "Sequatchie",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "sequatchiecountytn.gov directory lists no planning/zoning office"
+    },
+    {
+      "fips": "47155",
+      "county": "Sevier",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.seviercountytn.gov/government/departments/services/planning___zoning.php",
+      "note": "Sevier County Zoning Resolution (amended 2026) for Sevier County Planning Region"
+    },
+    {
+      "fips": "47157",
+      "county": "Shelby",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.develop901.com/udc",
+      "note": "Joint Memphis-Shelby County DPD site: UDC is zoning code for unincorporated Shelby"
+    },
+    {
+      "fips": "47159",
+      "county": "Smith",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://smithcotn.com/planning-office/",
+      "note": "Zoning Resolution (amended 2018) enforced by county Planning Office outside cities"
+    },
+    {
+      "fips": "47161",
+      "county": "Stewart",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "stewartcogov.com has no planning/zoning page or statement"
+    },
+    {
+      "fips": "47163",
+      "county": "Sullivan",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://sullivancountytn.gov/planning-and-codes/",
+      "note": "Zoning adopted 1988; Zoning Resolution updated 05-08-2025; GIS zoning map"
+    },
+    {
+      "fips": "47165",
+      "county": "Sumner",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://sumnercountytn.gov/departments/planning-and-engineering/planning-and-zoning/",
+      "note": "County Zoning Resolution effective 12-8-25; zoning map adopted 7-29-24"
+    },
+    {
+      "fips": "47167",
+      "county": "Tipton",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.tiptonco.com/departments/planning_development/index.php",
+      "note": "Tipton County Regional Zoning Resolution and map readopted 2-10-2014"
+    },
+    {
+      "fips": "47169",
+      "county": "Trousdale",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.trousdalecountytn.gov/government/local_government/building_codes_zoning_and_planning/index.php",
+      "note": "Hartsville/Trousdale metro; Zoning Ordinance (passed 2026-03-23) and 2020 Zoning Map"
+    },
+    {
+      "fips": "47171",
+      "county": "Unicoi",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County site lists Planning Commission only; Sycamore 2026 map shows zoning, unresolved"
+    },
+    {
+      "fips": "47173",
+      "county": "Union",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County site has 2023 Subdivision Regulations only; no zoning content"
+    },
+    {
+      "fips": "47175",
+      "county": "Van Buren",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County departments page lists no planning/zoning/codes office"
+    },
+    {
+      "fips": "47177",
+      "county": "Warren",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.warrencountytn.gov/departments/building___environmental_codes/index.php",
+      "note": "Inferred: codes dept lists airport zoning, subdivision, junkyard regs only; no general zoning"
+    },
+    {
+      "fips": "47179",
+      "county": "Washington",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.washingtoncountytn.org/172/Zoning-Planning",
+      "note": "Zoning Office since 1989 for unincorporated areas; Zoning Resolution and GIS map"
+    },
+    {
+      "fips": "47181",
+      "county": "Wayne",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County official documents list no zoning or planning documents"
+    },
+    {
+      "fips": "47183",
+      "county": "Weakley",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "County site: no building codes outside city limits; zoning not addressed"
+    },
+    {
+      "fips": "47185",
+      "county": "White",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://myutk.maps.arcgis.com/apps/instant/basic/index.html?appid=6722054316c3430f838f8b9f7a247425",
+      "note": "whitecountytn.gov returned HTTP 403"
+    },
+    {
+      "fips": "47187",
+      "county": "Williamson",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.williamsoncounty-tn.gov/103/Planning-Zoning",
+      "note": "Zoning Ordinance and Official Zoning Map for unincorporated areas"
+    },
+    {
+      "fips": "47189",
+      "county": "Wilson",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.wilsoncountytn.gov/162/Boards-Commissions-Committees",
+      "note": "Page cites Wilson County Zoning Ordinance and BZA; Zoning Division in directory"
+    }
+  ]
+}

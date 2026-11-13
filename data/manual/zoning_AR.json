@@ -1,0 +1,612 @@
+{
+  "state": "AR",
+  "checked": "2026-11-13",
+  "state_list_source": {
+    "name": "Northwest Arkansas Democrat-Gazette, 'Benton County revising land use rules' (NWA Regional Planning Commission director on counties with zoning)",
+    "url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+    "date": "2018-01-14"
+  },
+  "notes": "No official statewide roster of Arkansas county zoning was found (AAC, AEDC, UA PPC, National Zoning Atlas AR all lack one). Counties not named in the statewide source default to 'none' at level state_list.",
+  "counties": [
+    {
+      "fips": "05001",
+      "county": "Arkansas",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "No county website reachable; not named in statewide source"
+    },
+    {
+      "fips": "05003",
+      "county": "Ashley",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.ashleycountyar.com/",
+      "note": "County site lists no planning, zoning, permit or floodplain office"
+    },
+    {
+      "fips": "05005",
+      "county": "Baxter",
+      "zoning": "partial",
+      "level": "county_site",
+      "source_url": "https://mcclibrary.blob.core.usgovcloudapi.net/codecontent/50027/304366/Chapter%2013%20-%20Urban%20and%20Rural%20Development.pdf",
+      "note": "Planning board, subdivision regs, interim land use plan; no zoning districts"
+    },
+    {
+      "fips": "05007",
+      "county": "Benton",
+      "zoning": "partial",
+      "level": "county_site",
+      "source_url": "https://bentoncountyar.gov/county-planning/faq/",
+      "note": "FAQ: 'currently no zoning'; Planning Board review, subdivision, stormwater, floodplain permits"
+    },
+    {
+      "fips": "05009",
+      "county": "Boone",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.boonecountyar.com/",
+      "note": "County site shows no planning, zoning or permit function"
+    },
+    {
+      "fips": "05011",
+      "county": "Bradley",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "County site unreachable (TLS error); not named in statewide source"
+    },
+    {
+      "fips": "05013",
+      "county": "Calhoun",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "County domain redirects to state portal stub; no planning office listed"
+    },
+    {
+      "fips": "05015",
+      "county": "Carroll",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "No county-owned site found; not named in statewide source"
+    },
+    {
+      "fips": "05017",
+      "county": "Chicot",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://mcclibrary.blob.core.usgovcloudapi.net/codecontent/50035/416633/Chapter%2013%20URBAN%20RURAL%20DEVELOPMENT.pdf",
+      "note": "County code Ch.13 Planning/Zoning and Building articles Reserved"
+    },
+    {
+      "fips": "05019",
+      "county": "Clark",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.clarkcountyar.gov/",
+      "note": "County site lists no planning, zoning or permit office"
+    },
+    {
+      "fips": "05021",
+      "county": "Clay",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://mcclibrary.blob.core.usgovcloudapi.net/codecontent/50036/401078/014_Chapter%2013%20-%20Urban%20and%20Rural%20Development.pdf",
+      "note": "County code Ch.13: all articles Reserved, only state statute text"
+    },
+    {
+      "fips": "05023",
+      "county": "Cleburne",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.cleburnecountyar.com/_files/ugd/d82421_e167549b7a00424abe5f96852d0551ba.pdf",
+      "note": "Ord. 2021-005 rescinded 1986 zoning ordinance; no zoning or building permits"
+    },
+    {
+      "fips": "05025",
+      "county": "Cleveland",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "County domain redirects to state portal stub; not named in statewide source"
+    },
+    {
+      "fips": "05027",
+      "county": "Columbia",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "County site returned no content; code library blocked"
+    },
+    {
+      "fips": "05029",
+      "county": "Conway",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "No county-owned site found; code library blocked"
+    },
+    {
+      "fips": "05031",
+      "county": "Craighead",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://mcclibrary.blob.core.usgovcloudapi.net/codecontent/50039/400144/Chapter%2013%20-%20URBAN%20AND%20RURAL%20DEVELOPMENT.pdf",
+      "note": "Code Ch.13 Planning/Zoning Reserved; floodplain permit packet exists on county site (not read)"
+    },
+    {
+      "fips": "05033",
+      "county": "Crawford",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://crawfordcountyar.gov/officials/county_judge",
+      "note": "No planning or zoning office; only road-related permits"
+    },
+    {
+      "fips": "05035",
+      "county": "Crittenden",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "1970s county zoning ordinance per NWARPC director, enforcement inconsistent; not confirmed from county"
+    },
+    {
+      "fips": "05037",
+      "county": "Cross",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "No county-owned site reachable; not named in statewide source"
+    },
+    {
+      "fips": "05039",
+      "county": "Dallas",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "No county-owned site reachable; not named in statewide source"
+    },
+    {
+      "fips": "05041",
+      "county": "Desha",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "County domain redirects to state portal stub; no planning office listed"
+    },
+    {
+      "fips": "05043",
+      "county": "Drew",
+      "zoning": "partial",
+      "level": "county_site",
+      "source_url": "https://drewcoar.com/departments/oem-911-floodplain-fire/",
+      "note": "OEM/911/Floodplain department; no planning board or zoning on site"
+    },
+    {
+      "fips": "05045",
+      "county": "Faulkner",
+      "zoning": "partial",
+      "level": "county_site",
+      "source_url": "https://www.faulknercountyar.gov/images/documents/Civil/County%20Development.pdf",
+      "note": "Plat approval by County Judge, road standards, floodplain permits; no zoning"
+    },
+    {
+      "fips": "05047",
+      "county": "Franklin",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://franklincountyar.gov/",
+      "note": "County site lists no planning, zoning or floodplain function"
+    },
+    {
+      "fips": "05049",
+      "county": "Fulton",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://fultoncountyar.gov/",
+      "note": "No planning or zoning office; 2005 land-use plan deemed unenforceable by AG"
+    },
+    {
+      "fips": "05051",
+      "county": "Garland",
+      "zoning": "partial",
+      "level": "county_site",
+      "source_url": "https://www.garlandcounty.org/DocumentCenter/View/4266/Information-on-Planning-Zoning-Development-Doing-Business-and-Permitting-in-Garland-County",
+      "note": "Judge memo: no planning board, no zoning; floodplain, road, stormwater permits"
+    },
+    {
+      "fips": "05053",
+      "county": "Grant",
+      "zoning": "partial",
+      "level": "county_site",
+      "source_url": "https://grantcountyar.com/floodplain/",
+      "note": "Floodplain administrator and 2017 Flood Damage Prevention Code; no zoning"
+    },
+    {
+      "fips": "05055",
+      "county": "Greene",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://greenecounty.arkansas.gov/directory",
+      "note": "Directory lists no planning, zoning, building or floodplain department"
+    },
+    {
+      "fips": "05057",
+      "county": "Hempstead",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://hempsteadcountyar.com/",
+      "note": "County site shows no planning, zoning or permit function"
+    },
+    {
+      "fips": "05059",
+      "county": "Hot Spring",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://hotspringcounty.org/",
+      "note": "County site shows no planning, zoning or floodplain function"
+    },
+    {
+      "fips": "05061",
+      "county": "Howard",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://mcclibrary.blob.core.usgovcloudapi.net/codecontent/50084/455264/Chapter%2013%20URBAN%20RURAL%20DEVELOPMENT.pdf",
+      "note": "County code Ch.13: all articles Reserved, only state statute text"
+    },
+    {
+      "fips": "05063",
+      "county": "Independence",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.independencecounty.com/",
+      "note": "County site lists no planning, zoning or permit office"
+    },
+    {
+      "fips": "05065",
+      "county": "Izard",
+      "zoning": "partial",
+      "level": "county_site",
+      "source_url": "https://www.izardcountyar.org/upages.php?id=46",
+      "note": "Floodplain ordinance and development permits; code Ch.13 otherwise Reserved"
+    },
+    {
+      "fips": "05067",
+      "county": "Jackson",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://jacksoncountyar.com/",
+      "note": "County site lists only elected offices; no planning or zoning"
+    },
+    {
+      "fips": "05069",
+      "county": "Jefferson",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "County site blocks automated reads (403); not named in statewide source"
+    },
+    {
+      "fips": "05071",
+      "county": "Johnson",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "No county-owned site found; not named in statewide source"
+    },
+    {
+      "fips": "05073",
+      "county": "Lafayette",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "County domain redirects to state portal stub; not named in statewide source"
+    },
+    {
+      "fips": "05075",
+      "county": "Lawrence",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "County site is a placeholder; not named in statewide source"
+    },
+    {
+      "fips": "05077",
+      "county": "Lee",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "County domain redirects to state portal stub; not named in statewide source"
+    },
+    {
+      "fips": "05079",
+      "county": "Lincoln",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "County domain redirects to state portal stub; not named in statewide source"
+    },
+    {
+      "fips": "05081",
+      "county": "Little River",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://lrcounty.org/",
+      "note": "County site lists 15 departments; none for planning or zoning"
+    },
+    {
+      "fips": "05083",
+      "county": "Logan",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://logancountyark.org/county-directory",
+      "note": "Directory lists no planning, zoning or permit office"
+    },
+    {
+      "fips": "05085",
+      "county": "Lonoke",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "No county-owned site found; not named in statewide source"
+    },
+    {
+      "fips": "05087",
+      "county": "Madison",
+      "zoning": "partial",
+      "level": "county_site",
+      "source_url": "https://mcclibrary.blob.core.usgovcloudapi.net/codecontent/50054/327615/Chapter%2013%20-%20Urban%20and%20Rural%20Development.pdf",
+      "note": "Subdivision regulations (Ord. 2005-002) and mobile-home permit; no zoning"
+    },
+    {
+      "fips": "05089",
+      "county": "Marion",
+      "zoning": "partial",
+      "level": "county_site",
+      "source_url": "https://marioncounty.arkansas.gov/Marion-County-Quorum-Court",
+      "note": "Planning board administers subdivision regulations (Ord. 2012-17); no zoning"
+    },
+    {
+      "fips": "05091",
+      "county": "Miller",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://millercountyar.gov/",
+      "note": "County site has no planning, zoning or permit department"
+    },
+    {
+      "fips": "05093",
+      "county": "Mississippi",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "County page unreadable (expired TLS cert); not named in statewide source"
+    },
+    {
+      "fips": "05095",
+      "county": "Monroe",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://mcclibrary.blob.core.usgovcloudapi.net/codecontent/50057/339130/Chapter%2013%20-%20Urban%20and%20Rural%20Development.pdf",
+      "note": "County code Ch.13 Building and Planning/Zoning articles Reserved"
+    },
+    {
+      "fips": "05097",
+      "county": "Montgomery",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "County domain redirects to state portal; not named in statewide source"
+    },
+    {
+      "fips": "05099",
+      "county": "Nevada",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "No county-owned site reachable; not named in statewide source"
+    },
+    {
+      "fips": "05101",
+      "county": "Newton",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://mcclibrary.blob.core.usgovcloudapi.net/codecontent/50059/416624/Chapter%2013%20URBAN%20RURAL%20DEVELOPMENT.pdf",
+      "note": "Code has no zoning or subdivision regs; 2008 land-use policy plan only"
+    },
+    {
+      "fips": "05103",
+      "county": "Ouachita",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://mcclibrary.blob.core.usgovcloudapi.net/codecontent/50060/327570/Chapter%2013%20-%20Urban%20and%20Rural%20Development.pdf",
+      "note": "Code Ch.13: Building Reserved; Planning/Zoning holds only 911 addressing ordinance"
+    },
+    {
+      "fips": "05105",
+      "county": "Perry",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://perrycoarkansas.org/",
+      "note": "County site lists 11 departments; none for planning or zoning"
+    },
+    {
+      "fips": "05107",
+      "county": "Phillips",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "County domain redirects to state portal stub; not named in statewide source"
+    },
+    {
+      "fips": "05109",
+      "county": "Pike",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://pikecountyar.org/",
+      "note": "County site lists elected offices only; no planning or zoning"
+    },
+    {
+      "fips": "05111",
+      "county": "Poinsett",
+      "zoning": "county",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "Zoning ordinance adopted to block landfill per NWARPC director; county site shows no planning office"
+    },
+    {
+      "fips": "05113",
+      "county": "Polk",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "No county-owned site found; not named in statewide source"
+    },
+    {
+      "fips": "05115",
+      "county": "Pope",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.popecountyar.gov/departments",
+      "note": "Department directory has no planning, zoning or floodplain office"
+    },
+    {
+      "fips": "05117",
+      "county": "Prairie",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "County domain redirects to state portal stub; not named in statewide source"
+    },
+    {
+      "fips": "05119",
+      "county": "Pulaski",
+      "zoning": "partial",
+      "level": "county_site",
+      "source_url": "https://www.pulaskicounty.net/planning-development",
+      "note": "Zoning only in Lake Maumelle Watershed; countywide subdivision, floodplain, stormwater codes; county-wide code proposed"
+    },
+    {
+      "fips": "05121",
+      "county": "Randolph",
+      "zoning": "partial",
+      "level": "county_site",
+      "source_url": "https://mcclibrary.blob.core.usgovcloudapi.net/codecontent/50026/304089/Chapter%202%20-%20Administration.pdf",
+      "note": "Flood Damage Prevention ordinance only; no planning board or zoning"
+    },
+    {
+      "fips": "05123",
+      "county": "Saline",
+      "zoning": "partial",
+      "level": "county_site",
+      "source_url": "https://www.salinecounty.org/",
+      "note": "Planning Board with subdivision regulations and cell-tower ordinance; no zoning"
+    },
+    {
+      "fips": "05125",
+      "county": "Scott",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.scottcountyar.com/",
+      "note": "County site lists only constitutional offices; no planning or zoning"
+    },
+    {
+      "fips": "05127",
+      "county": "Searcy",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://searcyco.org/",
+      "note": "County site shows no planning, zoning or permit function"
+    },
+    {
+      "fips": "05129",
+      "county": "Sebastian",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.fortsmithar.gov/building-business/city-planning",
+      "note": "Fort Smith FAQ: county has no zoning or land use controls; county site not read"
+    },
+    {
+      "fips": "05131",
+      "county": "Sevier",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://seviercountyar.org/",
+      "note": "County site lists no planning board, zoning or subdivision function"
+    },
+    {
+      "fips": "05133",
+      "county": "Sharp",
+      "zoning": "none",
+      "level": "state_list",
+      "source_url": "https://www.nwaonline.com/news/2018/jan/14/benton-county-revising-land-use-rules-2/",
+      "note": "County site and code library blocked (403); not named in statewide source"
+    },
+    {
+      "fips": "05135",
+      "county": "St. Francis",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://stfranciscountyar.gov/departments/",
+      "note": "Departments page lists 16 offices; none for planning or zoning"
+    },
+    {
+      "fips": "05137",
+      "county": "Stone",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.stonecountyar.gov/county-offices",
+      "note": "County offices list has no planning, zoning or permit function"
+    },
+    {
+      "fips": "05139",
+      "county": "Union",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://unioncountyar.gov/",
+      "note": "County site shows only elected offices; no planning or zoning"
+    },
+    {
+      "fips": "05141",
+      "county": "Van Buren",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.vanburencountyar.gov/",
+      "note": "No planning or zoning page; ordinance library not opened"
+    },
+    {
+      "fips": "05143",
+      "county": "Washington",
+      "zoning": "county",
+      "level": "county_site",
+      "source_url": "https://www.washingtoncountyar.gov/government/departments-f-z/planning/ordinances-and-regulations",
+      "note": "Planning and Zoning Ordinance 2025-044; all unincorporated parcels zoned Ag/Single-Family, 1 unit/acre"
+    },
+    {
+      "fips": "05145",
+      "county": "White",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://whitecounty.ar.gov/about",
+      "note": "County site shows no land-use regulation; only a strategic planning project"
+    },
+    {
+      "fips": "05147",
+      "county": "Woodruff",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://woodruffcountyar.gov",
+      "note": "County site lists 12 offices; none for planning, zoning or permits"
+    },
+    {
+      "fips": "05149",
+      "county": "Yell",
+      "zoning": "none",
+      "level": "county_site",
+      "source_url": "https://www.yellcountyar.gov/",
+      "note": "County site lists offices and agencies; no planning or zoning function"
+    }
+  ]
+}
