@@ -262,11 +262,698 @@
     "cors": "*",
     "sample_owner_present": true
    },
-   "note": "99 counties but data from 2017; owners may be out of date. Show as stale. Compute area from geometry."
+   "note": "99 counties but data from 2017; owners may be out of date. Show as stale. Compute area from geometry.",
+   "stale": true
   },
   "KS": {
    "available": false,
    "note": "no statewide parcel service; ORKA (KGS) has only lots/subdivisions for a few counties"
+  },
+  "KY": {
+   "available": false,
+   "note": "No statewide parcel service. kygisserver.ky.gov hosts only Webster County PVA parcels; other parcels are per-county PVA sites or paid aggregators."
+  },
+  "LA": {
+   "available": false,
+   "note": "No statewide parcel service. Parcels are held by parish assessors (e.g. Orleans, East Baton Rouge); statewide sets are paid only."
+  },
+  "ME": {
+   "available": true,
+   "name": "Maine GeoLibrary, Maine Parcels Organized Towns",
+   "layer": "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/ArcGIS/rest/services/Parcels/FeatureServer/38",
+   "format": "geojson",
+   "fields": {
+    "owner": null,
+    "id": "Parcel_ID",
+    "acres": null,
+    "area_sqft": null,
+    "address": null,
+    "county": null
+   },
+   "owner_included": false,
+   "coverage": "partial: organized towns that volunteered data; no Unorganized Territories",
+   "updated": "service last edit 2023-12-18",
+   "info_url": "https://www.maine.gov/geolib/catalog",
+   "test": {
+    "lat": 44.31,
+    "lon": -69.78,
+    "ok": true,
+    "cors": "*",
+    "sample_owner_present": false
+   },
+   "note": "Boundary and Parcel_ID only. Shape__Area is square meters (UTM 19N); compute acres from geometry. Owner data is in a separate table, not on this layer. Many towns stale."
+  },
+  "MD": {
+   "available": true,
+   "name": "Maryland Dept. of Planning / SDAT, MD iMAP Parcel Boundaries",
+   "layer": "https://mdgeodata.md.gov/imap/rest/services/PlanningCadastre/MD_ParcelBoundaries/MapServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": null,
+    "id": "ACCTID",
+    "acres": "ACRES",
+    "area_sqft": null,
+    "address": "ADDRESS",
+    "county": "JURSCODE"
+   },
+   "owner_included": false,
+   "coverage": "statewide",
+   "updated": "SDAT 2026AUG, MDP 2025JUL",
+   "info_url": "https://planning.maryland.gov/Pages/OurProducts/DownloadFiles.aspx",
+   "test": {
+    "lat": 39.6,
+    "lon": -77.0,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": false
+   },
+   "note": "No owner-name field (only owner mailing address). JURSCODE is a 4-letter county code. Use mdgeodata.md.gov host; geodata.md.gov returned a 503 maintenance page. SDATWEBADR links to the SDAT record."
+  },
+  "MA": {
+   "available": true,
+   "name": "MassGIS, Massachusetts Property Tax Parcels (Level 3)",
+   "layer": "https://services1.arcgis.com/hGdibHYSPO59RG1h/ArcGIS/rest/services/Massachusetts_Property_Tax_Parcels/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": "OWNER1",
+    "id": "LOC_ID",
+    "acres": null,
+    "area_sqft": null,
+    "address": "SITE_ADDR",
+    "county": null
+   },
+   "owner_included": true,
+   "coverage": "statewide (351 towns)",
+   "updated": "FY 2027; service edited 2026-10-30",
+   "info_url": "https://www.mass.gov/info-details/massgis-data-property-tax-parcels",
+   "test": {
+    "lat": 42.45,
+    "lon": -72.3,
+    "ok": true,
+    "cors": "*",
+    "sample_owner_present": true
+   },
+   "note": "New URL since 2026-04; old L3_TAXPAR_POLY_ASSESS_gdb returns 400. LOT_SIZE units vary (LOT_UNITS) and the sample value looked wrong; safer to compute acres from geometry. No county field; CITY is the town. MAP_PAR_ID is the local map-parcel id."
+  },
+  "MI": {
+   "available": false,
+   "note": "No statewide parcel service. Michigan parcels are per-county; state DNR layer covers only state-owned land."
+  },
+  "MN": {
+   "available": true,
+   "name": "MnGeo, Minnesota Parcels (Open)",
+   "layer": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_mngeo/plan_parcels_open/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": "owner_name",
+    "id": "state_pin",
+    "acres": "acres_poly",
+    "area_sqft": null,
+    "address": null,
+    "county": "co_name"
+   },
+   "owner_included": true,
+   "coverage": "partial: 60 of 87 counties",
+   "updated": null,
+   "info_url": "https://gisdata.mn.gov/dataset/plan-parcels-open",
+   "test": {
+    "lat": 46.0,
+    "lon": -94.5,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": true
+   },
+   "note": "Only counties that allow open sharing. Address is split: anumber + st_pre_dir + st_name + st_pos_typ, city in ctu_name. acres_deed also available. county_pin is the local id."
+  },
+  "MS": {
+   "available": true,
+   "name": "Mississippi DEQ, Parcels Statewide 2023",
+   "layer": "https://mgis19.mdeq.ms.gov/arcgis/rest/services/GeologyParcelAndFloodGIS/Parcels_Statewide_2023/FeatureServer/3",
+   "format": "geojson",
+   "fields": {
+    "owner": "OWNNAME",
+    "id": "PARNO",
+    "acres": "GISACRES",
+    "area_sqft": null,
+    "address": "SITEADD",
+    "county": "CNTYNAME"
+   },
+   "owner_included": true,
+   "coverage": "statewide (82 counties)",
+   "updated": "TAXYEAR 2023",
+   "info_url": "https://maris.mississippi.edu/html/Maps/MARISMapServices.html",
+   "test": {
+    "lat": 32.6,
+    "lon": -89.6,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": true
+   },
+   "note": "Newer 2024 data at gis.mississippi.edu/server/rest/services/Cadastral/MS_Parcels_August_2024/MapServer layers 1 (West) and 2 (East), same fields, CORS ok, but split in two. TAXACRES also available."
+  },
+  "MO": {
+   "available": false,
+   "note": "No statewide parcel service. MSDIS/gis.mo.gov has only state-owned parcels; county parcels are per-assessor or paid aggregators."
+  },
+  "MT": {
+   "available": true,
+   "name": "Montana State Library, MSDI Cadastral - Montana Parcels",
+   "layer": "https://gisservice.mt.gov/ArcGIS/rest/services/msdi_cadastral_map_v1/MapServer/1",
+   "format": "geojson",
+   "fields": {
+    "owner": "OwnerName",
+    "id": "PARCELID",
+    "acres": "TotalAcres",
+    "area_sqft": null,
+    "address": "AddressLine1",
+    "county": "CountyName"
+   },
+   "owner_included": true,
+   "coverage": "statewide (56 counties)",
+   "updated": "TaxYear 2026",
+   "info_url": "https://msl.mt.gov/geoinfo/msdi/cadastral/",
+   "test": {
+    "lat": 47.0,
+    "lon": -109.5,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": true
+   },
+   "note": "Old gisservicemt.gov MSDI_Framework/Parcels URL now returns an HTML page. GISAcres also available; CityStateZip completes the address."
+  },
+  "NE": {
+   "available": true,
+   "name": "State of Nebraska, Statewide Parcels Current",
+   "layer": "https://giscat.ne.gov/enterprise/rest/services/StatewideParcelsExternal/MapServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": null,
+    "id": "Parcel_ID",
+    "acres": "GIS_Acres",
+    "area_sqft": null,
+    "address": "Situs_Address",
+    "county": "County_ID"
+   },
+   "owner_included": false,
+   "coverage": "statewide (93 counties)",
+   "updated": "current (2024+ tax year)",
+   "info_url": "https://giscat.ne.gov/enterprise/rest/services/StatewideParcelsExternal/MapServer/0",
+   "test": {
+    "lat": 41.5,
+    "lon": -99.5,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": false
+   },
+   "note": "No owner field in the public layer. County_ID is a code, not a name. Acres_Deeded also available; Parcel_URL links to the county record."
+  },
+  "NV": {
+   "available": false,
+   "name": "Nevada DOT (data from NV Division of State Lands), Statewide Parcels 2018",
+   "layer": "https://gis.dot.nv.gov/agsphs/rest/services/Reference/Statewide_Parcels/MapServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": "OwnerName",
+    "id": "APN",
+    "acres": "Acres",
+    "area_sqft": null,
+    "address": "SiteAddress",
+    "county": "County"
+   },
+   "owner_included": true,
+   "coverage": "partial: 16 of 17 counties (no Esmeralda)",
+   "updated": "2018-12-31 snapshot",
+   "info_url": "https://gis.dot.nv.gov/agsphs/rest/services/Reference/Statewide_Parcels/MapServer",
+   "test": {
+    "lat": 39.5,
+    "lon": -119.2,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": true
+   },
+   "note": "Left out: a 2018 snapshot, and Nevada state parcel services say county parcel data may not be redistributed (NRS 250). Use the county assessor. The service tested was https://gis.dot.nv.gov/agsphs/rest/services/Reference/Statewide_Parcels/MapServer/0"
+  },
+  "NH": {
+   "available": true,
+   "name": "NH Dept. of Revenue Administration / GRANIT, Parcel Mosaic",
+   "layer": "https://nhgeodata.unh.edu/nhgeodata/rest/services/CAD/ParcelMosaic/MapServer/1",
+   "format": "geojson",
+   "fields": {
+    "owner": null,
+    "id": "NH_GIS_ID",
+    "acres": null,
+    "area_sqft": "Shape_Area",
+    "address": "StreetAddress",
+    "county": "CountyId"
+   },
+   "owner_included": false,
+   "coverage": "statewide (all towns with digital parcels)",
+   "updated": null,
+   "info_url": "https://granit.unh.edu",
+   "test": {
+    "lat": 43.6,
+    "lon": -71.6,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": false
+   },
+   "note": "No owner field (the 'Name' field is a parcel label, not owner). Shape_Area is sq ft (NH State Plane ft); divide by 43560. Town gives the town; CountyId is a number. PID is the local map-lot."
+  },
+  "NJ": {
+   "available": true,
+   "name": "NJ Office of GIS, Parcels and MOD-IV Composite",
+   "layer": "https://services2.arcgis.com/XVOqAjTOJ5P6ngMu/arcgis/rest/services/Parcels_Composite_NJ_WM/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": null,
+    "id": "PAMS_PIN",
+    "acres": "CALC_ACRE",
+    "area_sqft": null,
+    "address": "PROP_LOC",
+    "county": "COUNTY"
+   },
+   "owner_included": false,
+   "coverage": "statewide",
+   "updated": "service edited 2026-11-05",
+   "info_url": "https://njogis-newjersey.opendata.arcgis.com/",
+   "test": {
+    "lat": 40.85,
+    "lon": -74.9,
+    "ok": true,
+    "cors": "*",
+    "sample_owner_present": false
+   },
+   "note": "OWNER_NAME field exists but is blank (redacted under Daniel's Law). PROP_LOC is street only; MUN_NAME gives the town."
+  },
+  "NM": {
+   "available": false,
+   "note": "No statewide parcel service. Each of 33 county assessors holds parcels; state (TRD/RGIS) publishes only tax districts and BLM surface-ownership layers."
+  },
+  "NY": {
+   "available": true,
+   "name": "NYS GIS Program Office, NYS Tax Parcels Public",
+   "layer": "https://nysgeohub.ny.gov/arcgis/rest/services/Parcels/NYS_Tax_Parcels_Public/MapServer/1",
+   "format": "geojson",
+   "fields": {
+    "owner": "PRIMARY_OWNER",
+    "id": "SWIS_SBL_ID",
+    "acres": "CALC_ACRES",
+    "area_sqft": null,
+    "address": "PARCEL_ADDR",
+    "county": "COUNTY_NAME"
+   },
+   "owner_included": true,
+   "coverage": "partial: 38 of 62 counties",
+   "updated": "ROLL_YR 2025",
+   "info_url": "https://gis.ny.gov/parcels",
+   "test": {
+    "lat": 42.8,
+    "lon": -75.0,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": true
+   },
+   "note": "Only counties that permit public sharing; layer 0 is the footprint of covered counties. Old gisservices.its.ny.gov URL now returns HTML. ACRES (assessor) also available."
+  },
+  "NC": {
+   "available": true,
+   "name": "NC OneMap / NC CGIA, Statewide Parcels",
+   "layer": "https://services.nconemap.gov/secure/rest/services/NC1Map_Parcels/FeatureServer/1",
+   "format": "geojson",
+   "fields": {
+    "owner": "ownname",
+    "id": "parno",
+    "acres": "gisacres",
+    "area_sqft": null,
+    "address": "siteadd",
+    "county": "cntyname"
+   },
+   "owner_included": true,
+   "coverage": "statewide (100 counties)",
+   "updated": null,
+   "info_url": "https://www.nconemap.gov/pages/parcels",
+   "test": {
+    "lat": 35.7,
+    "lon": -79.3,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": true
+   },
+   "note": "No login needed despite '/secure/' in the path. ownname2 holds second owner; scity is site city."
+  },
+  "ND": {
+   "available": true,
+   "name": "NDGISHub (ND Information Technology), NDGISHUB Parcels",
+   "layer": "https://services1.arcgis.com/GOcSXpzwBHyk2nog/arcgis/rest/services/NDGISHUB_Parcels/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": "Ownership",
+    "id": "UniqueGISID",
+    "acres": "CalculatedAcres",
+    "area_sqft": null,
+    "address": null,
+    "county": "CountyName"
+   },
+   "owner_included": false,
+   "coverage": "statewide",
+   "updated": "2026-11-09 (service edit date)",
+   "info_url": "https://www.gis.nd.gov/",
+   "test": {
+    "lat": 47.3,
+    "lon": -100.5,
+    "ok": true,
+    "cors": "*",
+    "sample_owner_present": false
+   },
+   "note": "Boundaries for all 53 counties. Ownership field filled in only 19 counties; no situs address."
+  },
+  "OH": {
+   "available": true,
+   "name": "OGRIP (Ohio DAS), Ohio Statewide Parcels Public View",
+   "layer": "https://services2.arcgis.com/MlJ0G8iWUyC7jAmu/arcgis/rest/services/OhioStatewidePacels_full_view/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": null,
+    "id": "StateParcelID",
+    "acres": "LandArea",
+    "area_sqft": null,
+    "address": "SitusAddressAll",
+    "county": "County"
+   },
+   "owner_included": false,
+   "coverage": "statewide",
+   "updated": "2026-11-04 (service edit date)",
+   "info_url": "https://gis1.oit.ohio.gov/geodatadownload/",
+   "test": {
+    "lat": 39.3,
+    "lon": -83.5,
+    "ok": true,
+    "cors": "*",
+    "sample_owner_present": false
+   },
+   "note": "No owner name field in public view. LandArea is CAMA land area (appears to be acres; unit not documented). LocalParcelID also available."
+  },
+  "OK": {
+   "available": false,
+   "note": "No statewide service; county-only parcel layers (OKMaps has no parcels)."
+  },
+  "OR": {
+   "available": false,
+   "note": "No public statewide service; ORMAP and ODF statewide taxlot services require a token/login. County-only otherwise."
+  },
+  "PA": {
+   "available": true,
+   "name": "PASDA (Penn State), PA Parcels",
+   "layer": "https://maps.pasda.psu.edu/server/rest/services/PA_Parcels/MapServer/1",
+   "format": "geojson",
+   "fields": {
+    "owner": null,
+    "id": "PIN",
+    "acres": null,
+    "area_sqft": null,
+    "address": null,
+    "county": "Source"
+   },
+   "owner_included": false,
+   "coverage": "partial: 39 of 67 counties",
+   "updated": "varies by county (Date field, e.g. 202509)",
+   "info_url": "https://www.pasda.psu.edu/",
+   "test": {
+    "lat": 40.6,
+    "lon": -77.6,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": false
+   },
+   "note": "Boundaries and PIN only. Shape_Area unit unclear; compute area from geometry."
+  },
+  "RI": {
+   "available": true,
+   "name": "RIGIS / RIDEM, Tax Parcels",
+   "layer": "https://risegis.ri.gov/hosting/rest/services/RIDEM/Tax_Parcels/MapServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": null,
+    "id": "PlatLot",
+    "acres": "Acres",
+    "area_sqft": null,
+    "address": null,
+    "county": null
+   },
+   "owner_included": false,
+   "coverage": "statewide",
+   "updated": null,
+   "info_url": "https://www.rigis.org/",
+   "test": {
+    "lat": 41.65,
+    "lon": -71.65,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": false
+   },
+   "note": "No owner. TownCode gives town. RIGIS requires a 'not a survey / not legally authoritative' disclaimer on any public parcel viewer."
+  },
+  "SC": {
+   "available": false,
+   "note": "No statewide service; SC DNR layer only links to county viewers. County-only."
+  },
+  "SD": {
+   "available": false,
+   "note": "No statewide service; county/city parcel layers only (e.g. Minnehaha, Pennington)."
+  },
+  "TN": {
+   "available": true,
+   "name": "TN Comptroller / STS (tnmap), Tennessee Property Boundaries Public Use",
+   "layer": "https://services1.arcgis.com/YuVBSS7Y1of2Qud1/arcgis/rest/services/Tennessee_Property_Boundaries_Public_Use/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": "OWNER",
+    "id": "PARCELID",
+    "acres": "DEEDAC",
+    "area_sqft": null,
+    "address": "ADDRESS",
+    "county": "COUNTY_NAME"
+   },
+   "owner_included": true,
+   "coverage": "partial: 86 of 95 counties",
+   "updated": "2026-11-12 (service edit date)",
+   "info_url": "https://tnmap.tn.gov/",
+   "test": {
+    "lat": 35.6,
+    "lon": -85.6,
+    "ok": true,
+    "cors": "*",
+    "sample_owner_present": true
+   },
+   "note": "Missing self-reporting counties (e.g. Davidson, Williamson, Shelby, Knox, Hamilton); point there returns 0 features."
+  },
+  "TX": {
+   "available": true,
+   "name": "TxGIO, StratMap Land Parcels (most recent)",
+   "layer": "https://feature.geographic.texas.gov/arcgis/rest/services/Parcels/stratmap_land_parcels_48_most_recent/MapServer/0",
+   "format": "identify",
+   "fields": {
+    "owner": "OWNER_NAME",
+    "id": "PROP_ID",
+    "acres": "GIS_AREA",
+    "area_sqft": null,
+    "address": "SITUS_ADDR",
+    "county": "COUNTY"
+   },
+   "owner_included": true,
+   "coverage": "statewide",
+   "updated": "tax year 2026",
+   "info_url": "https://geographic.texas.gov/",
+   "test": {
+    "lat": 31.2,
+    "lon": -99.3,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": true
+   },
+   "note": "Layer /query returns 'not supported'. Use service-level identify instead: .../MapServer/identify?geometry=lon,lat&geometryType=esriGeometryPoint&sr=4326&layers=all:0&tolerance=0&mapExtent=lon-1,lat-1,lon+1,lat+1&imageDisplay=400,400,96&returnGeometry=true&f=json. Returns Esri JSON rings (not GeoJSON), attribute keys uppercase, values as strings ('Null' for empty). GIS_AREA unit per GIS_AREA_UNIT; usually acres. GEO_ID is the county geo id."
+  },
+  "UT": {
+   "available": true,
+   "name": "UGRC, Utah Statewide Parcels",
+   "layer": "https://services1.arcgis.com/99lidPhWCzftIe9K/arcgis/rest/services/UtahStatewideParcels/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": null,
+    "id": "PARCEL_ID",
+    "acres": null,
+    "area_sqft": null,
+    "address": "PARCEL_ADD",
+    "county": "County"
+   },
+   "owner_included": false,
+   "coverage": "statewide",
+   "updated": "2026-08-04 (ParcelsCur)",
+   "info_url": "https://gis.utah.gov/products/sgid/cadastre/parcels/",
+   "test": {
+    "lat": 39.4,
+    "lon": -111.9,
+    "ok": true,
+    "cors": "*",
+    "sample_owner_present": false
+   },
+   "note": "Owner names not published (OWN_TYPE is only a category like private/federal). Shape__Area is Web Mercator m2, not true area; compute acres from geometry. County LIR layers add acres/value."
+  },
+  "VT": {
+   "available": true,
+   "name": "VCGI, Statewide Standardized Parcel Data (VTPARCELS)",
+   "layer": "https://services1.arcgis.com/BkFxaEFNwHqX3tAw/arcgis/rest/services/FS_VCGI_OPENDATA_Cadastral_VTPARCELS_poly_standardized_parcels_SP_v1/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": "OWNER1",
+    "id": "SPAN",
+    "acres": "ACRESGL",
+    "area_sqft": null,
+    "address": "E911ADDR",
+    "county": null
+   },
+   "owner_included": true,
+   "coverage": "statewide",
+   "updated": "2026-11-11 (service edit date); grand list YEAR 2026",
+   "info_url": "https://vcgi.vermont.gov/data-and-programs/parcel-program",
+   "test": {
+    "lat": 44.1,
+    "lon": -72.6,
+    "ok": true,
+    "cors": "*",
+    "sample_owner_present": true
+   },
+   "note": "No county field; TNAME is town name. ACRESGL is grand-list acres."
+  },
+  "VA": {
+   "available": true,
+   "name": "VGIN (VDEM), Virginia Parcels",
+   "layer": "https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VA_Base_Layers/VA_Parcels/MapServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": null,
+    "id": "PARCELID",
+    "acres": null,
+    "area_sqft": null,
+    "address": null,
+    "county": "LOCALITY"
+   },
+   "owner_included": false,
+   "coverage": "statewide",
+   "updated": "2026-09-03 (LASTUPDATE on sample)",
+   "info_url": "https://vgin.vdem.virginia.gov/pages/cl-data-download",
+   "test": {
+    "lat": 37.4,
+    "lon": -78.6,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": false
+   },
+   "note": "Boundaries and parcel ID only; no owner, acres or address. Compute area from geometry. 136 localities."
+  },
+  "WA": {
+   "available": true,
+   "name": "WA Geospatial Program (WaTech), Current Parcels",
+   "layer": "https://services.arcgis.com/jsIt88o09Q0r1j8h/arcgis/rest/services/Current_Parcels/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": null,
+    "id": "PARCEL_ID_NR",
+    "acres": null,
+    "area_sqft": "Shape__Area",
+    "address": "SITUS_ADDRESS",
+    "county": "COUNTY_NM"
+   },
+   "owner_included": false,
+   "coverage": "statewide",
+   "updated": "2026-04-08 (service edit date)",
+   "info_url": "https://geo.wa.gov/",
+   "test": {
+    "lat": 47.0,
+    "lon": -118.9,
+    "ok": true,
+    "cors": "*",
+    "sample_owner_present": false
+   },
+   "note": "No owner names. COUNTY_NM is a county code number, not a name. Shape__Area is sq ft (WA State Plane South ft)."
+  },
+  "WV": {
+   "available": true,
+   "name": "WV GIS Technical Center, WV Parcels",
+   "layer": "https://services.wvgis.wvu.edu/arcgis/rest/services/Planning_Cadastre/WV_Parcels/MapServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": "FullOwnerName",
+    "id": "CleanParcelID",
+    "acres": "CALC_ACRE",
+    "area_sqft": null,
+    "address": "FullPhysicalAddress",
+    "county": "COUNTY"
+   },
+   "owner_included": true,
+   "coverage": "statewide",
+   "updated": null,
+   "info_url": "https://www.mapwv.gov/parcel/",
+   "test": {
+    "lat": 38.6,
+    "lon": -80.6,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": true
+   },
+   "note": "COUNTY is a 2-digit county code, not a name. CALC_ACRE is GIS-calculated."
+  },
+  "WI": {
+   "available": true,
+   "name": "Wisconsin DOA / State Cartographer's Office, Wisconsin Statewide Parcels",
+   "layer": "https://services3.arcgis.com/n6uYoouQZW75n5WI/arcgis/rest/services/Wisconsin_Statewide_Parcels_DB/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": "OWNERNME1",
+    "id": "PARCELID",
+    "acres": "GISACRES",
+    "area_sqft": null,
+    "address": "SITEADRESS",
+    "county": "CONAME"
+   },
+   "owner_included": true,
+   "coverage": "statewide",
+   "updated": "tax roll 2025, loaded 2026-03-06 (V12)",
+   "info_url": "https://www.sco.wisc.edu/parcels/data/",
+   "test": {
+    "lat": 44.6,
+    "lon": -89.9,
+    "ok": true,
+    "cors": "*",
+    "sample_owner_present": true
+   },
+   "note": "Also ASSDACRES and DEEDACRES. Older URL without _DB returns 400."
+  },
+  "WY": {
+   "available": true,
+   "name": "Wyoming Dept of Revenue Property Tax Division, Wyoming Parcels for 2026",
+   "layer": "https://services3.arcgis.com/r0iJ85SKZ4zAzz3P/arcgis/rest/services/Wyoming_Parcels_for_2026/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": "ownername1",
+    "id": "parcelnb",
+    "acres": "landgrossa",
+    "area_sqft": "landgrosss",
+    "address": "locationad",
+    "county": "jurisdicti"
+   },
+   "owner_included": true,
+   "coverage": "statewide",
+   "updated": "tax year 2026; service edit 2026-06-10",
+   "info_url": "https://gis.wyo.gov/parcels/",
+   "test": {
+    "lat": 43.0,
+    "lon": -107.6,
+    "ok": true,
+    "cors": "*",
+    "sample_owner_present": true
+   },
+   "note": "All 23 counties. Field names are lowercase and truncated (landgrossa = acres, landgrosss = sq ft). Layer name changes yearly (..._for_2026)."
   }
  }
 }

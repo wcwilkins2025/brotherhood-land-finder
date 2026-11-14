@@ -97,6 +97,58 @@ spot or border they give it. Nothing is proxied or stored.
 | State well records | `data/manual/well_records.json`, one page per state, checked by hand on the date in the file (44 of 51 fetched and confirmed; the rest are marked unverified and the page says so) | Where the state's search tool is a map app that returns no text to a fetcher, the entry points at the agency's verified hub page and names the tool in the note. |
 | Links out | SoilWeb (UC Davis) at the coordinates; NRCS Web Soil Survey; USGS National Map viewer; FEMA Flood Map Service Center | all public, no login. |
 
+## Tax parcels: owner and lines (`parcels.js`, `data/parcels.json`)
+
+Both pages ask the state's own free parcel service for the tax parcel at a clicked point, and the main
+map asks for the parcel lines in view at zoom 15 and closer. Each service below was queried from a
+browser origin on 2026-11-14 and returned a parcel polygon with cross-origin access allowed. Only field
+names are stored in this repository; owner names come live from the state and are never stored or
+searchable. The hand-checked lists are `data/manual/parcels_AtoK.json`, `parcels_KtoN.json` and
+`parcels_NtoW.json`; `data/parcels.json` merges them. Texas answers only the MapServer identify
+operation, which `parcels.js` handles. Acres are the service's own figure where it has a reliable
+one, otherwise computed from the returned lines.
+
+| State | Service | Owner name | Coverage | Data date |
+|---|---|---|---|---|
+| AR | Arkansas GIS Office, Parcel Polygons (Planning_Cadastre) | yes | statewide | 2026-10-01 (pubdate) |
+| CO | Colorado OIT, Colorado Public Parcels | yes | partial: 44 of 64 counties | dateReceived varies by county (sample 2026-03-27) |
+| CT | CT Office of Policy and Management GIS, Connecticut CAMA and Parcel Layer | yes | statewide | 2025-2026 collection (layer edited 2026-11-12) |
+| DC | DC OCTO, Owner Polygons (Common Ownership Layer) | yes | statewide | 2026-09-29 (EXTRACTDAT) |
+| DE | Delaware FirstMap, DE State Parcels | no | statewide | 2026-11-01 (UPDATED) |
+| FL | FL Dept of Revenue parcels via FDACS GIS, GIO_Parcels_for_OAWP_Optimized | yes | statewide | 2025 DOR collection (exported Aug 2025) |
+| HI | Hawaii Statewide GIS Program, TMK Parcels (ParcelsZoning) | no | statewide |  |
+| IA | Iowa HSEMD statewide parcels 2017 (archived copy) | yes | statewide | 2017-11-02 (deprecated, not maintained) (old) |
+| IN | IndianaMap / IGIO, Parcel Boundaries of Indiana Current | no | statewide | 2025-08-11 load (layer edited 2026-10-06) |
+| MA | MassGIS, Massachusetts Property Tax Parcels (Level 3) | yes | statewide (351 towns) | FY 2027; service edited 2026-10-30 |
+| MD | Maryland Dept. of Planning / SDAT, MD iMAP Parcel Boundaries | no | statewide | SDAT 2026AUG, MDP 2025JUL |
+| ME | Maine GeoLibrary, Maine Parcels Organized Towns | no | partial: organized towns that volunteered data; no Unorganized Territories | service last edit 2023-12-18 |
+| MN | MnGeo, Minnesota Parcels (Open) | yes | partial: 60 of 87 counties |  |
+| MS | Mississippi DEQ, Parcels Statewide 2023 | yes | statewide (82 counties) | TAXYEAR 2023 |
+| MT | Montana State Library, MSDI Cadastral - Montana Parcels | yes | statewide (56 counties) | TaxYear 2026 |
+| NC | NC OneMap / NC CGIA, Statewide Parcels | yes | statewide (100 counties) |  |
+| ND | NDGISHub (ND Information Technology), NDGISHUB Parcels | no | statewide | 2026-11-09 (service edit date) |
+| NE | State of Nebraska, Statewide Parcels Current | no | statewide (93 counties) | current (2024+ tax year) |
+| NH | NH Dept. of Revenue Administration / GRANIT, Parcel Mosaic | no | statewide (all towns with digital parcels) |  |
+| NJ | NJ Office of GIS, Parcels and MOD-IV Composite | no | statewide | service edited 2026-11-05 |
+| NY | NYS GIS Program Office, NYS Tax Parcels Public | yes | partial: 38 of 62 counties | ROLL_YR 2025 |
+| OH | OGRIP (Ohio DAS), Ohio Statewide Parcels Public View | no | statewide | 2026-11-04 (service edit date) |
+| PA | PASDA (Penn State), PA Parcels | no | partial: 39 of 67 counties | varies by county (Date field, e.g. 202509) |
+| RI | RIGIS / RIDEM, Tax Parcels | no | statewide |  |
+| TN | TN Comptroller / STS (tnmap), Tennessee Property Boundaries Public Use | yes | partial: 86 of 95 counties | 2026-11-12 (service edit date) |
+| TX | TxGIO, StratMap Land Parcels (most recent) | yes | statewide | tax year 2026 |
+| UT | UGRC, Utah Statewide Parcels | no | statewide | 2026-08-04 (ParcelsCur) |
+| VA | VGIN (VDEM), Virginia Parcels | no | statewide | 2026-09-03 (LASTUPDATE on sample) |
+| VT | VCGI, Statewide Standardized Parcel Data (VTPARCELS) | yes | statewide | 2026-11-11 (service edit date); grand list YEAR 2026 |
+| WA | WA Geospatial Program (WaTech), Current Parcels | no | statewide | 2026-04-08 (service edit date) |
+| WI | Wisconsin DOA / State Cartographer's Office, Wisconsin Statewide Parcels | yes | statewide | tax roll 2025, loaded 2026-03-06 (V12) |
+| WV | WV GIS Technical Center, WV Parcels | yes | statewide |  |
+| WY | Wyoming Dept of Revenue Property Tax Division, Wyoming Parcels for 2026 | yes | statewide | tax year 2026; service edit 2026-06-10 |
+
+No free statewide parcel service (owner and lines are at the county assessor or GIS office; the
+county panel links them): Alaska (no statewide private-parcel service; borough/municipal only); Alabama (no statewide service; parcels are county-by-county (some counties publish their own)); Arizona (no statewide service; county assessor services only); California (no statewide service; CA UCD_Parcels MapServer refuses query; 2013 multi-county copy is st); Georgia (no statewide service; county services only); Idaho (no cleared public service); Illinois (no statewide service; county services only); Kansas (no statewide parcel service; ORKA (KGS) has only lots/subdivisions for a few counties); Kentucky (No statewide parcel service); Louisiana (No statewide parcel service); Michigan (No statewide parcel service); Missouri (No statewide parcel service); New Mexico (No statewide parcel service); Nevada (Left out: a 2018 snapshot, and Nevada state parcel services say county parcel data may not); Oklahoma (No statewide service; county-only parcel layers (OKMaps has no parcels)); Oregon (No public statewide service; ORMAP and ODF statewide taxlot services require a token/login); South Carolina (No statewide service; SC DNR layer only links to county viewers); South Dakota (No statewide service; county/city parcel layers only (e).
+
+Tax maps are not surveys. Lines can be off by many feet, and owners change; confirm at the county.
+
 ## Not included (and why)
 
 - **FCC National Broadband Map availability by county.** Every download endpoint requires a browser session (HTTP 401/403 to any client without one). The Census broadband-subscription share stands in and is labeled as such. To add it by hand: download the "Fixed Broadband Availability Summary by Geography Type" CSV from https://broadbandmap.fcc.gov/data-download/nationwide-data, keep county rows for Any Technology (fixed terrestrial), and fill `data/manual/broadband.csv`.

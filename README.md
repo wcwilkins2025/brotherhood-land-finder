@@ -15,8 +15,9 @@ Live page: https://wcwilkins2025.github.io/brotherhood-land-finder/
 
 | Piece | Where |
 |---|---|
-| The page | `index.html` (sliders, "near me" search, US county map, ranked list, county detail, link kit, "Read this before you sign") |
+| The page | `index.html` (sliders, "near me" search, a map that zooms from the whole country to aerial photos, soil lines and tax parcels, ranked list, county detail, link kit, "Read this before you sign") |
 | Parcel check | `parcel.html` (type an address or draw a border; live soil survey facts and NRCS ratings for a house, septic, garden, pasture, pond; seasonal water table; nearby USGS well depths and levels; the aquifer underneath; state well-record link) |
+| Tax parcels | `parcels.js` and `data/parcels.json`: owner, parcel number, acres and lines from each state's free parcel service (33 states), on the main map at close zoom and under the pin on the parcel check |
 | County data | `data/counties.json` (one row per county, ~50 fields, plus a state-law block) |
 | Map shapes | `data/counties.geojson` (Census cartographic boundaries, 1:20m, 3-decimal coordinates) |
 | Town and ZIP lookups for "near me" | `data/places.json`, `data/zips.json` |

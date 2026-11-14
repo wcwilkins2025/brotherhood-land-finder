@@ -33,11 +33,11 @@
   }
   function norm(s, props, polys) {
     const f = s.fields || {};
-    let acres = pick(props, f.acres); acres = acres == null || acres === '' ? null : +acres;
+    let acres = pick(props, f.acres); acres = acres == null || acres === '' || String(acres).toLowerCase() === 'null' ? null : +acres;
     if ((acres == null || !(acres > 0)) && f.area_sqft) { const a = +pick(props, f.area_sqft); if (a > 0) acres = a / 43560; }
     if ((acres == null || !(acres > 0)) && polys.length) acres = areaAcres(polys);
-    const clean = (v) => (v == null ? null : String(v).trim() || null);
-    return { polys, owner: s.owner_included === false ? null : clean(pick(props, f.owner)), id: clean(pick(props, f.id)), acres, address: clean(pick(props, f.address)), county: clean(pick(props, f.county)) };
+    const clean = (v) => { if (v == null) return null; const t = String(v).trim(); return t && t.toLowerCase() !== 'null' ? t : null; };
+    return { polys, owner: s.owner_included === false ? null : clean(pick(props, f.owner)), id: clean(pick(props, f.id)), acres, address: (clean(pick(props, f.address)) || '').replace(/(\s*,\s*)+/g, ', ').replace(/^[ ,]+|[ ,]+$/g, '') || null, county: clean(pick(props, f.county)) };
   }
   function areaAcres(polys) {
     let m2 = 0;
@@ -47,6 +47,15 @@
       m2 += (i === 0 ? 1 : -1) * Math.abs(a) / 2;
     }));
     return m2 / 4046.86;
+  }
+  // some services (Texas) only answer the MapServer identify operation
+  function identify(s, geometry, geometryType, ext) {
+    const svc = s.layer.replace(/\/\d+$/, ''); const lyr = (s.layer.match(/\/(\d+)$/) || [, '0'])[1];
+    const q = new URLSearchParams({ geometry, geometryType, sr: '4326', layers: `all:${lyr}`, tolerance: '0', mapExtent: ext, imageDisplay: '800,800,96', returnGeometry: 'true', f: 'json' });
+    return fetch(`${svc}/identify?${q}`).then((r) => { if (!r.ok) throw new Error(`${s.name}: ${r.status}`); return r.json(); }).then((j) => {
+      if (j.error) throw new Error(`${s.name}: ${j.error.message || 'error'}`);
+      return (j.results || []).map((ft) => norm(s, ft.attributes || {}, fromEsri(ft.geometry)));
+    });
   }
   function query(s, params) {
     const fmt = s.format === 'json' ? 'json' : 'geojson';
@@ -59,10 +68,12 @@
   }
   P.at = function (st, lat, lon) {
     const s = P.state(st); if (!s) return Promise.resolve(null);
+    if (s.format === 'identify') return identify(s, `${lon},${lat}`, 'esriGeometryPoint', `${lon - 0.01},${lat - 0.01},${lon + 0.01},${lat + 0.01}`).then((fs) => fs.find((f) => f.polys.length) || null);
     return query(s, { geometry: `${lon},${lat}`, geometryType: 'esriGeometryPoint' }).then((fs) => fs.find((f) => f.polys.length) || null);
   };
   P.inBox = function (st, south, west, north, east, max) {
     const s = P.state(st); if (!s) return Promise.resolve([]);
+    if (s.format === 'identify') return identify(s, `${west},${south},${east},${north}`, 'esriGeometryEnvelope', `${west},${south},${east},${north}`).then((fs) => fs.filter((f) => f.polys.length).slice(0, max || 400));
     return query(s, { geometry: `${west},${south},${east},${north}`, geometryType: 'esriGeometryEnvelope', resultRecordCount: String(max || 400) }).then((fs) => fs.filter((f) => f.polys.length));
   };
   // the outer ring of the largest polygon, for handing a parcel to the soil and water check
@@ -77,8 +88,8 @@
     const e = P.esc;
     return `<div class="pcard"><div class="pk">Tax parcel</div>
       <div class="pv">${f.owner ? e(f.owner) : '<span class="muted">Owner not published by this state</span>'}</div>
-      <div class="pm">${f.acres ? `${f.acres >= 10 ? Math.round(f.acres) : f.acres.toFixed(2)} acres` : ''}${f.id ? ` · Parcel ${e(f.id)}` : ''}${f.address ? `<br>${e(f.address)}` : ''}${f.county ? `<br>${e(f.county)} County` : ''}</div>
-      <div class="ps">${e(s.name || 'State parcel service')}${s.updated ? `, ${e(s.updated)}` : ''}. Tax maps are not surveys; lines can be off by many feet.</div></div>`;
+      <div class="pm">${f.acres ? `${f.acres >= 10 ? Math.round(f.acres) : f.acres.toFixed(2)} acres` : ''}${f.id ? ` · Parcel ${e(f.id)}` : ''}${f.address ? `<br>${e(f.address)}` : ''}${f.county && !/^\d+$/.test(f.county) ? `<br>${e(/county|parish|borough|town/i.test(f.county) ? f.county : f.county + ' County')}` : ''}</div>
+      <div class="ps">${e(s.name || 'State parcel service')}${s.updated ? `, ${e(s.updated)}` : ''}.${s.stale ? ' <b>Old data: the owner may have changed.</b>' : ''} Tax maps are not surveys; lines can be off by many feet. Confirm the owner at the county.</div></div>`;
   };
   // which state a point is in, from the Census county shapes (loaded once, shared with the main map)
   const FIPS2ST = { '01': 'AL', '02': 'AK', '04': 'AZ', '05': 'AR', '06': 'CA', '08': 'CO', '09': 'CT', '10': 'DE', '11': 'DC', '12': 'FL', '13': 'GA', '15': 'HI', '16': 'ID', '17': 'IL', '18': 'IN', '19': 'IA', '20': 'KS', '21': 'KY', '22': 'LA', '23': 'ME', '24': 'MD', '25': 'MA', '26': 'MI', '27': 'MN', '28': 'MS', '29': 'MO', '30': 'MT', '31': 'NE', '32': 'NV', '33': 'NH', '34': 'NJ', '35': 'NM', '36': 'NY', '37': 'NC', '38': 'ND', '39': 'OH', '40': 'OK', '41': 'OR', '42': 'PA', '44': 'RI', '45': 'SC', '46': 'SD', '47': 'TN', '48': 'TX', '49': 'UT', '50': 'VT', '51': 'VA', '53': 'WA', '54': 'WV', '55': 'WI', '56': 'WY' };
