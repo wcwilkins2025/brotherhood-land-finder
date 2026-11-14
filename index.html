@@ -139,6 +139,9 @@
   details summary { cursor: pointer; font-weight: 600; margin-top: 10px; }
   footer { color: var(--muted); font-size: 14.5px; border-top: 1px solid var(--rule); margin-top: 28px; }
   footer .wrap { padding-block: 20px; }
+  footer .feedback { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--rule); }
+  footer .feedback strong { display: block; color: var(--fg); font-family: 'Barlow Condensed', sans-serif; font-size: 20px; letter-spacing: .3px; margin-bottom: 8px; }
+  footer .feedback .buttons { margin-bottom: 8px; }
   footer a, .detail a:not(.btn), .note a, .sub a { color: var(--accent); }
   .sr { position: absolute; left: -9999px; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
@@ -200,8 +203,17 @@
 
 <footer>
   <div class="wrap">
-    <p>Free forever. No login, no tracking, nothing stored about you. Built by a Brotherhood member for the Brotherhood. Every number comes from a public dataset and every county panel names its source. Full list, dates and download links: <a href="https://github.com/wcwilkins2025/brotherhood-land-finder/blob/main/data/sources.md" target="_blank" rel="noopener">data/sources.md</a>. Found a county with wrong information? <a href="https://github.com/wcwilkins2025/brotherhood-land-finder/issues" target="_blank" rel="noopener">Tell us here</a>.</p>
+    <p>Free forever. No login, no tracking, nothing stored about you. Built by a Brotherhood member for the Brotherhood. Every number comes from a public dataset and every county panel names its source. Full list, dates and download links: <a href="https://github.com/wcwilkins2025/brotherhood-land-finder/blob/main/data/sources.md" target="_blank" rel="noopener">data/sources.md</a>. </p>
     <p id="built"></p>
+    <div class="feedback" id="feedback">
+      <strong>Found a problem or have an idea?</strong>
+      <div class="buttons">
+        <a class="btn ghost" id="fbBug" href="https://github.com/wcwilkins2025/brotherhood-land-finder/issues/new?template=bug.yml" target="_blank" rel="noopener">Report a bug<small>map, sliders, search or a button</small></a>
+        <a class="btn ghost" id="fbData" href="https://github.com/wcwilkins2025/brotherhood-land-finder/issues/new?template=wrong-county-data.yml" target="_blank" rel="noopener">Wrong county information<small>or open a county and use its button</small></a>
+        <a class="btn ghost" id="fbIdea" href="https://github.com/wcwilkins2025/brotherhood-land-finder/issues/new?template=feedback.yml" target="_blank" rel="noopener">Send feedback<small>a factor to add, anything else</small></a>
+      </div>
+      <p>Reports go to the project's public issue page on GitHub, so you need a free GitHub account to post one. Nothing on this page asks who you are. No account? Post it in the Brotherhood group instead.</p>
+    </div>
   </div>
 </footer>
 
@@ -261,7 +273,7 @@
 
   // ---------- state
   let D, F, rows, states, geo, byFips = new Map(), weights = {}, near = null, nearMiles = 150, nearOnly = true, nearW = NEAR.dflt;
-  let selected = null, showN = 25, scores = new Map(), places = null, zips = null;
+  let selected = null, DATA_BUILT = null, showN = 25, scores = new Map(), places = null, zips = null;
   FACTORS.forEach(f => weights[f.key] = f.dflt);
   const $ = (s, el = document) => el.querySelector(s);
   const fmt = (v, d = 0, suf = '') => v == null ? '<span class="na">no data</span>' : (typeof v === 'number' ? v.toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d }) : v) + suf;
@@ -542,9 +554,22 @@
         <a class="btn" href="${ddg(`${cname} ${stName} register of deeds records search`)}" target="_blank" rel="noopener">Deeds and plats<small>step 2: register of deeds</small></a>
         <a class="btn" href="${ddg(`${cname} ${stName} health department septic permit`)}" target="_blank" rel="noopener">Health department<small>step 5: septic permits</small></a>
         <a class="btn" href="${lf}" target="_blank" rel="noopener">Land &amp; Farm listings<small>then set Acres 10 to 50 in Filter</small></a>
-      </div>`;
+      </div>
+      <p class="note">Something here wrong or out of date? <a href="${reportUrl(r, stName)}" target="_blank" rel="noopener">Report wrong information for ${esc(cname)}</a>. It opens a form with the county already filled in.</p>`;
   }
 
+  // Prefilled GitHub issue form. Only the county's public facts go in the link, nothing about the person.
+  const ISSUES = 'https://github.com/wcwilkins2025/brotherhood-land-finder/issues/new';
+  function reportUrl(r, stName) {
+    const q = new URLSearchParams({
+      template: 'wrong-county-data.yml',
+      title: `[County] ${r.name}, ${r.st}: `,
+      county: `${r.name}, ${stName}`,
+      fips: r.fips,
+      built: DATA_BUILT || '',
+    });
+    return `${ISSUES}?${q}`;
+  }
   function refresh() { computeScores(); paint(); renderRank(); if (selected) renderDetail(); }
 
   // ---------- load
@@ -552,6 +577,9 @@
     D = d; F = d.fields; geo = g; states = d.states;
     rows = d.rows.map(a => { const o = {}; F.forEach((k, i) => o[k] = a[i]); return o; });
     rows.forEach(r => byFips.set(r.fips, r));
+    DATA_BUILT = d.built;
+    $('#fbBug').href += `&built=${encodeURIComponent(d.built)}`;
+    $('#fbData').href += `&built=${encodeURIComponent(d.built)}`;
     $('#built').textContent = `Data built ${d.built}. FEMA National Risk Index ${d.fema_version}. Climate 1991–2020. Population 2024 estimates. Zoning checked ${d.state_sources.zoning_checked || d.built}.`;
     build();
     const m = location.hash.match(/county=(\d{5})/); if (m && byFips.has(m[1])) select(m[1], false);

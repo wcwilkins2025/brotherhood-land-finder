@@ -1,0 +1,56 @@
+name: Wrong information for a county
+description: A county's zoning, price, water or other fact is wrong or out of date.
+title: "[County] "
+labels: ["county data"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks. The fastest fix is a link to the county's own page that shows the right answer.
+        Do not post anything about yourself or your own land purchase here. This is a public page.
+  - type: input
+    id: county
+    attributes:
+      label: County and state
+      placeholder: Fannin County, Texas
+    validations:
+      required: true
+  - type: input
+    id: fips
+    attributes:
+      label: FIPS code (filled in for you if you came from the county panel)
+      placeholder: "48147"
+  - type: dropdown
+    id: field
+    attributes:
+      label: Which fact is wrong?
+      options:
+        - County zoning
+        - Land price per acre
+        - Rain, growing season or climate
+        - Well depth or water
+        - Hospital distance or nearest town
+        - Population or density
+        - Natural hazard scores
+        - Amish or Plain community
+        - Public land share
+        - State law (homeschool, carry, right to farm, rainwater, tax)
+        - A link in the records kit goes to the wrong place
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: whats_wrong
+    attributes:
+      label: What the page says, and what is correct
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Link to the county or state page that shows the right answer
+      placeholder: https://
+  - type: input
+    id: built
+    attributes:
+      label: Data build date shown at the bottom of the page

@@ -1,0 +1,25 @@
+name: Something on the page is broken
+description: The map, sliders, search, list or a button does not work right.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what you got instead.
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Phone or computer, and which browser
+      placeholder: iPhone, Safari
+  - type: input
+    id: near
+    attributes:
+      label: If you typed a town or ZIP, which one
+  - type: input
+    id: built
+    attributes:
+      label: Data build date shown at the bottom of the page

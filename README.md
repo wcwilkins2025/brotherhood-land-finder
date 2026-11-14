@@ -48,11 +48,23 @@ an official state list (checkmark), counties settled by state law (Texas
 counties cannot zone; Oregon and Washington require zoning everywhere), and
 everything else marked "verify" and scored from the state's general pattern.
 
-## Contributing a correction
+## Bugs, wrong data and feedback
 
-Open an issue with the county, what is wrong, and a link to the county's own
-page that shows the right answer. Zoning corrections go in
-`data/manual/zoning_XX.json` with the URL you confirmed from.
+Use the issue forms: https://github.com/wcwilkins2025/brotherhood-land-finder/issues/new/choose
+
+- **Wrong information for a county.** Open the county on the live page and click
+  "Report wrong information" under its link kit. The form arrives with the county,
+  its FIPS code and the data build date already filled in. Add what is wrong and a
+  link to the county's own page that shows the right answer.
+- **Something broken** (map, sliders, search, a button). Use "Report a bug" at the
+  bottom of the page.
+- **An idea or a new data source.** Use "Send feedback" at the bottom of the page.
+
+Posting needs a free GitHub account. The page itself never asks who you are and
+the report links carry only the county's public facts, nothing about the person.
+
+Zoning corrections land in `data/manual/zoning_XX.json` with the URL they were
+confirmed from.
 
 ## License
 

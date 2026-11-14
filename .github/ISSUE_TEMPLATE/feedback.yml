@@ -1,0 +1,12 @@
+name: Feedback or an idea
+description: A factor to add, a slider that is off, a county link worth adding, or anything else.
+title: "[Idea] "
+labels: ["feedback"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your feedback
+      description: Plain words are fine. If it is a new data source, paste the link.
+    validations:
+      required: true
