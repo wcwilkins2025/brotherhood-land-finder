@@ -7,6 +7,7 @@
 <meta name="description" content="Type an address or draw a border on the map and get the soil survey facts, the NRCS ratings for a house, septic, garden, pasture and pond, the seasonal water table, nearby well depths and the aquifer underneath. Free, no login, no tracking.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<script src="parcels.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
   :root {
@@ -65,6 +66,13 @@
   #map { height: 440px; border: 1px solid var(--rule); margin-top: 12px; background: var(--bg); cursor: crosshair; }
   #map.drawing, #map.drawing .leaflet-interactive, #map.drawing .leaflet-grab { cursor: crosshair; }
   #map.drawing { outline: 3px solid #00b8d4; outline-offset: -3px; }
+  .parcelbox { margin: 10px 0 0; padding: 12px 14px; border: 1px solid var(--rule); border-left: 4px solid #ffb84d; background: var(--surface); }
+  .parcelbox .pcard { font-size: 15px; }
+  .parcelbox .pk { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  .parcelbox .pv { font-weight: 600; font-size: 17px; margin: 2px 0; }
+  .parcelbox .ps, .parcelbox .muted { font-size: 13px; color: var(--muted); }
+  .parcelbox .btn { margin-top: 10px; }
+  .drawtip.bad { background: #5a1d10; color: #ffe6dd; }
   .drawtip { margin: 8px 0 0; padding: 8px 12px; background: #0b2530; color: #e6fbff; border-radius: 6px; font-weight: 600; font-size: 15px; }
   .leaflet-container { font-family: var(--font-body); }
   .maphelp { font-size: 14.5px; color: var(--muted); margin: 8px 0 0; }
@@ -138,6 +146,7 @@
       <button class="btn" id="findBtn" type="button">Find</button>
     </div>
     <div id="map" role="application" aria-label="Map. Click to set the spot. In draw mode, click the corners of the parcel."></div>
+    <div id="parcelBox" class="parcelbox" hidden></div>
     <p id="drawTip" class="drawtip" role="status" aria-live="polite" hidden></p>
     <div class="row" style="margin-top:10px">
       <button class="btn ghost" id="drawBtn" type="button">Draw a border</button>
@@ -258,6 +267,27 @@
     if (zoomTo) map.setView([lat, lon], Math.max(map.getZoom(), 15));
     $('#where').textContent = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
     writeHash();
+    lookupParcel(lat, lon);
+  }
+  // the tax parcel under the pin, from the state's own parcel service where there is a free one
+  let parcelOutline = null, parcelReq = 0, lastParcel = null;
+  async function lookupParcel(lat, lon) {
+    const box = $('#parcelBox'); const id = ++parcelReq;
+    if (parcelOutline) { map.removeLayer(parcelOutline); parcelOutline = null; }
+    lastParcel = null; box.hidden = false; box.innerHTML = '<span class="muted">Looking up the tax parcel…</span>';
+    try {
+      await Parcels.load(); const c = await Parcels.countyAt(lat, lon); if (id !== parcelReq) return;
+      const st = c && c.st; const info = st ? Parcels.info(st) : null;
+      if (!st) { box.hidden = true; return; }
+      if (!info) { box.hidden = true; return; }
+      if (!info.available) { box.innerHTML = `<div class="pk">Tax parcel</div><div class="pv">${esc(STATE_NAMES[st] || st)} has no free statewide parcel map</div><div class="ps">Owner and lines are at the county assessor or GIS office. Open the county on <a href="./#county=${c.fips}">the Land Finder map</a> for its records links, or draw the border yourself.</div>`; return; }
+      const f = await Parcels.at(st, lat, lon); if (id !== parcelReq) return;
+      if (!f) { box.innerHTML = '<div class="pk">Tax parcel</div><div class="pv">No parcel at this spot</div><div class="ps">Roads, water and some public land have none. Move the pin onto the land.</div>'; return; }
+      lastParcel = f;
+      parcelOutline = L.layerGroup(f.polys.map((rings) => L.polygon(rings, { color: '#ffb84d', weight: 3, fillOpacity: 0.05, interactive: false }))).addTo(map);
+      box.innerHTML = Parcels.card(f, st) + '<button class="btn" type="button" id="useParcel">Use this parcel as the border</button>';
+      $('#useParcel').addEventListener('click', () => { const ring = Parcels.outer(lastParcel); if (ring.length < 4) return; verts = ring.slice(0, -1).slice(0, 400); stopDrawing(true); map.fitBounds(verts, { padding: [20, 20] }); });
+    } catch (e) { if (id === parcelReq) box.innerHTML = `<div class="pk">Tax parcel</div><div class="ps">The state parcel service did not answer (${esc(e.message)}). Try again in a minute, or draw the border.</div>`; }
   }
   // drawing: bright cyan so it stands out from the photo and the orange soil lines; a dot on every corner;
   // the shape closes as you go; nothing drawn takes clicks away from the map
@@ -273,7 +303,17 @@
     $('#finishBtn').hidden = !(drawing && verts.length >= 3); $('#undoBtn').hidden = !(drawing && verts.length);
     const tip = $('#drawTip');
     tip.hidden = !drawing;
-    tip.textContent = !drawing ? '' : verts.length === 0 ? 'Click the first corner of the parcel.' : verts.length < 3 ? `Corner ${verts.length} set. Click the next corner.` : `${verts.length} corners, ${ac.toFixed(1)} acres. Click the next corner, or double-click or press Finish when you are done.`;
+    const x = verts.length >= 4 && crosses(verts);
+    tip.textContent = !drawing ? '' : verts.length === 0 ? 'Click the first corner of the parcel.' : verts.length < 3 ? `Corner ${verts.length} set. Click the next corner, going around the edge in order.` : x ? 'The lines cross. Press Undo last corner, then click the corners in order going around the edge.' : `${verts.length} corners, ${ac.toFixed(1)} acres. Click the next corner, or double-click or press Finish when you are done.`;
+    tip.classList.toggle('bad', x);
+  }
+  // true when any two non-neighboring sides of the closed shape cross
+  function crosses(vs) {
+    const n = vs.length; if (n < 4) return false;
+    const ccw = (a, b, c) => (c[0] - a[0]) * (b[1] - a[1]) - (b[0] - a[0]) * (c[1] - a[1]);
+    const hit = (a, b, c, d) => (ccw(a, b, c) > 0) !== (ccw(a, b, d) > 0) && (ccw(c, d, a) > 0) !== (ccw(c, d, b) > 0);
+    for (let i = 0; i < n; i++) for (let j = i + 2; j < n; j++) { if (i === 0 && j === n - 1) continue; if (hit(vs[i], vs[(i + 1) % n], vs[j], vs[(j + 1) % n])) return true; }
+    return false;
   }
   function startDrawing() {
     drawing = true; verts = []; clearResultLayers();
@@ -367,7 +407,7 @@
     const usePoly = verts.length >= 3 && !drawing;
     if (!usePoly && !pin) { say('Find the ground first: type an address, or click the spot on the map.', true); return; }
     const center = usePoly ? verts.reduce((a, v) => [a[0] + v[0] / verts.length, a[1] + v[1] / verts.length], [0, 0]) : [pin.getLatLng().lat, pin.getLatLng().lng];
-    const ac = usePoly ? acres(verts) : 0;
+    let ac = usePoly ? acres(verts) : 0;
     if (ac > 3000) { say('That border is over 3,000 acres. Draw the piece you mean to buy.', true); return; }
     const chosen = USES.filter((u) => $(`#uses input[value="${u.id}"]`).checked);
     $('#goBtn').disabled = true; clearResultLayers(); $('#results').innerHTML = '';
@@ -377,15 +417,15 @@
       let units;
       if (usePoly) {
         const w = wktPoly(verts);
-        const rows = await sda(`SELECT mukey, mupolygongeo.STIntersection(geometry::STGeomFromText('${w}',4326)).STAsText() AS wkt FROM mupolygon WHERE mupolygongeo.STIntersects(geometry::STGeomFromText('${w}',4326))=1`);
+        const rows = await sda(`SELECT mukey, mupolygongeo.STIntersection(geometry::STGeomFromText('${w}',4326).MakeValid()).STAsText() AS wkt FROM mupolygon WHERE mupolygongeo.STIntersects(geometry::STGeomFromText('${w}',4326).MakeValid())=1`);
         const by = new Map();
         rows.forEach((r) => { const polys = parseWkt(r.wkt); let a = 0; polys.forEach((rings) => { a += m2(rings[0]); for (let i = 1; i < rings.length; i++) a -= m2(rings[i]); }); const u = by.get(r.mukey) || { mukey: r.mukey, m2: 0, polys: [] }; u.m2 += a; u.polys.push(...polys); by.set(r.mukey, u); });
-        units = [...by.values()]; const tot = units.reduce((s, u) => s + u.m2, 0) || 1; units.forEach((u) => { u.share = u.m2 / tot; }); units.sort((a, b) => b.share - a.share);
+        units = [...by.values()]; const tot = units.reduce((s, u) => s + u.m2, 0) || 1; units.forEach((u) => { u.share = u.m2 / tot; }); if (tot > 1) ac = tot / 4046.86; units.sort((a, b) => b.share - a.share);
       } else {
         const rows = await sda(`SELECT * FROM SDA_Get_Mukey_from_intersection_with_WktWgs84('point(${center[1].toFixed(6)} ${center[0].toFixed(6)})')`);
         units = rows.map((r) => ({ mukey: r.mukey, share: 1, polys: [] }));
       }
-      if (!units.length) { say('The soil survey has no map unit here. Water, a city, or an unmapped area.', true); $('#goBtn').disabled = false; return; }
+      if (!units.length) { say(usePoly ? 'The soil survey returned nothing inside that border. If its lines cross, press Redraw the border and click the corners in order going around. If the shape is fine, this ground has no detailed soil survey yet (some national forest and tribal land); Web Soil Survey will say the same.' : 'The soil survey has no map unit at this spot. It may be open water, or ground with no detailed soil survey yet (some national forest and tribal land). Try a spot nearby.', true); $('#goBtn').disabled = false; return; }
       const keys = units.map((u) => `'${u.mukey}'`).join(',');
       // 2. map unit facts, 3. major components and their ratings, 4. soil layers of the biggest unit's main soil
       const interps = [...new Set(chosen.flatMap((u) => u.interps))];

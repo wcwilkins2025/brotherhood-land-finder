@@ -1,0 +1,272 @@
+{
+ "checked": "2026-11-14",
+ "note": "One free public parcel service per state, each queried from a browser origin and confirmed on the date given. Only field names are stored here.",
+ "states": {
+  "AL": {
+   "available": false,
+   "note": "no statewide service; parcels are county-by-county (some counties publish their own)"
+  },
+  "AK": {
+   "available": false,
+   "note": "no statewide private-parcel service; borough/municipal only"
+  },
+  "AZ": {
+   "available": false,
+   "note": "no statewide service; county assessor services only"
+  },
+  "AR": {
+   "available": true,
+   "name": "Arkansas GIS Office, Parcel Polygons (Planning_Cadastre)",
+   "layer": "https://gis.arkansas.gov/arcgis/rest/services/FEATURESERVICES/Planning_Cadastre/FeatureServer/6",
+   "format": "geojson",
+   "fields": {
+    "owner": "ownername",
+    "id": "parcelid",
+    "acres": null,
+    "area_sqft": null,
+    "address": "adrlabel",
+    "county": "county"
+   },
+   "owner_included": true,
+   "coverage": "statewide",
+   "updated": "2026-10-01 (pubdate)",
+   "info_url": "https://gis.arkansas.gov/",
+   "test": {
+    "lat": 34.85,
+    "lon": -92.95,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": true
+   },
+   "note": "75 of 75 counties. No acres field; compute area from geometry."
+  },
+  "CA": {
+   "available": false,
+   "note": "no statewide service; CA UCD_Parcels MapServer refuses query; 2013 multi-county copy is stale with no owner"
+  },
+  "CO": {
+   "available": true,
+   "name": "Colorado OIT, Colorado Public Parcels",
+   "layer": "https://gis.colorado.gov/public/rest/services/Address_and_Parcel/Colorado_Public_Parcels/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": "owner",
+    "id": "parcel_id",
+    "acres": "landAcres",
+    "area_sqft": "landSqft",
+    "address": "situsAdd",
+    "county": "countyName"
+   },
+   "owner_included": true,
+   "coverage": "partial: 44 of 64 counties",
+   "updated": "dateReceived varies by county (sample 2026-03-27)",
+   "info_url": "https://geodata.colorado.gov/",
+   "test": {
+    "lat": 39.3,
+    "lon": -104.3,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": true
+   },
+   "note": "Only counties that share data are included."
+  },
+  "CT": {
+   "available": true,
+   "name": "CT Office of Policy and Management GIS, Connecticut CAMA and Parcel Layer",
+   "layer": "https://services3.arcgis.com/3FL1kr7L4LvwA2Kb/ArcGIS/rest/services/Connecticut_CAMA_and_Parcel_Layer/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": "Owner",
+    "id": "Parcel_ID",
+    "acres": "Land_Acres",
+    "area_sqft": null,
+    "address": "Location",
+    "county": null
+   },
+   "owner_included": true,
+   "coverage": "statewide",
+   "updated": "2025-2026 collection (layer edited 2026-11-12)",
+   "info_url": "https://catalog.data.gov/dataset/connecticut-cama-and-parcel-layer-2025",
+   "test": {
+    "lat": 41.85,
+    "lon": -72.25,
+    "ok": true,
+    "cors": "*",
+    "sample_owner_present": true
+   },
+   "note": "169 towns. Town_Name instead of county; a few towns suppress owner."
+  },
+  "DE": {
+   "available": true,
+   "name": "Delaware FirstMap, DE State Parcels",
+   "layer": "https://enterprise.firstmap.delaware.gov/arcgis/rest/services/PlanningCadastre/DE_StateParcels/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": null,
+    "id": "PIN",
+    "acres": "ACRES",
+    "area_sqft": null,
+    "address": null,
+    "county": "COUNTY"
+   },
+   "owner_included": false,
+   "coverage": "statewide",
+   "updated": "2026-11-01 (UPDATED)",
+   "info_url": "https://firstmap.delaware.gov/",
+   "test": {
+    "lat": 38.85,
+    "lon": -75.55,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": false
+   },
+   "note": "Boundaries, PIN and acres only; no owner or address."
+  },
+  "DC": {
+   "available": true,
+   "name": "DC OCTO, Owner Polygons (Common Ownership Layer)",
+   "layer": "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Property_and_Land_WebMercator/MapServer/40",
+   "format": "geojson",
+   "fields": {
+    "owner": "OWNERNAME",
+    "id": "SSL",
+    "acres": null,
+    "area_sqft": "LANDAREA",
+    "address": "PREMISEADD",
+    "county": null
+   },
+   "owner_included": true,
+   "coverage": "statewide",
+   "updated": "2026-09-29 (EXTRACTDAT)",
+   "info_url": "https://opendata.dc.gov/",
+   "test": {
+    "lat": 38.93,
+    "lon": -77.02,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": true
+   },
+   "note": "Whole District. Very wide record; request selected outFields."
+  },
+  "FL": {
+   "available": true,
+   "name": "FL Dept of Revenue parcels via FDACS GIS, GIO_Parcels_for_OAWP_Optimized",
+   "layer": "https://gis.fdacs.gov/mapping/rest/services/GIO_Parcels_for_OAWP_Optimized/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": "OWN_NAME",
+    "id": "PARCEL_ID",
+    "acres": null,
+    "area_sqft": null,
+    "address": null,
+    "county": "CO_NO"
+   },
+   "owner_included": true,
+   "coverage": "statewide",
+   "updated": "2025 DOR collection (exported Aug 2025)",
+   "info_url": "https://floridarevenue.com/property/Pages/DataPortal.aspx",
+   "test": {
+    "lat": 30.1,
+    "lon": -81.9,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": true
+   },
+   "note": "67 counties; confidential records excluded. CO_NO is DOR county number. No acres or situs; compute area from geometry. Hosted by FDACS, not an official DOR endpoint."
+  },
+  "GA": {
+   "available": false,
+   "note": "no statewide service; county services only"
+  },
+  "HI": {
+   "available": true,
+   "name": "Hawaii Statewide GIS Program, TMK Parcels (ParcelsZoning)",
+   "layer": "https://geodata.hawaii.gov/arcgis/rest/services/ParcelsZoning/MapServer/25",
+   "format": "geojson",
+   "fields": {
+    "owner": null,
+    "id": "tmk_txt",
+    "acres": "gisacres",
+    "area_sqft": null,
+    "address": null,
+    "county": "county"
+   },
+   "owner_included": false,
+   "coverage": "statewide",
+   "updated": null,
+   "info_url": "https://geoportal.hawaii.gov/",
+   "test": {
+    "lat": 19.6,
+    "lon": -155.5,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": false
+   },
+   "note": "All 4 counties. No owner; qpub_link field links to county assessor page."
+  },
+  "ID": {
+   "available": false,
+   "note": "no cleared public service. IDWR Reference/Parcels FeatureServer answers with CORS (44 counties) but OWNER is empty and its metadata says data cannot be shared outside IDWR; state ITS layer is agency-only"
+  },
+  "IL": {
+   "available": false,
+   "note": "no statewide service; county services only"
+  },
+  "IN": {
+   "available": true,
+   "name": "IndianaMap / IGIO, Parcel Boundaries of Indiana Current",
+   "layer": "https://gisdata.in.gov/server/rest/services/Hosted/Parcel_Boundaries_of_Indiana_Current/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": null,
+    "id": "parcel_id",
+    "acres": null,
+    "area_sqft": null,
+    "address": "prop_add",
+    "county": "county_fips"
+   },
+   "owner_included": false,
+   "coverage": "statewide",
+   "updated": "2025-08-11 load (layer edited 2026-10-06)",
+   "info_url": "https://www.indianamap.org/",
+   "test": {
+    "lat": 40.3,
+    "lon": -86.5,
+    "ok": true,
+    "cors": "https://wcwilkins2025.github.io",
+    "sample_owner_present": false
+   },
+   "note": "92 of 92 counties. No owner names; state_parcel_id also available. Compute area from geometry."
+  },
+  "IA": {
+   "available": true,
+   "name": "Iowa HSEMD statewide parcels 2017 (archived copy)",
+   "layer": "https://services3.arcgis.com/kd9gaiUExYqUbnoq/ArcGIS/rest/services/Iowa_Parcels_2017/FeatureServer/0",
+   "format": "geojson",
+   "fields": {
+    "owner": "DEEDHOLDER",
+    "id": "PARCELNUMB",
+    "acres": null,
+    "area_sqft": null,
+    "address": null,
+    "county": "COUNTYNAME"
+   },
+   "owner_included": true,
+   "coverage": "statewide",
+   "updated": "2017-11-02 (deprecated, not maintained)",
+   "info_url": "https://github.com/ui-libraries/Iowa-Parcels",
+   "test": {
+    "lat": 42.0,
+    "lon": -93.6,
+    "ok": true,
+    "cors": "*",
+    "sample_owner_present": true
+   },
+   "note": "99 counties but data from 2017; owners may be out of date. Show as stale. Compute area from geometry."
+  },
+  "KS": {
+   "available": false,
+   "note": "no statewide parcel service; ORKA (KGS) has only lots/subdivisions for a few counties"
+  }
+ }
+}
