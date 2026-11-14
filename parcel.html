@@ -63,7 +63,9 @@
   .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   input[type=text] { font: inherit; padding: 11px 12px; border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); color: var(--fg); min-height: 46px; flex: 1 1 260px; }
   #map { height: 440px; border: 1px solid var(--rule); margin-top: 12px; background: var(--bg); cursor: crosshair; }
-  #map.drawing { cursor: cell; }
+  #map.drawing, #map.drawing .leaflet-interactive, #map.drawing .leaflet-grab { cursor: crosshair; }
+  #map.drawing { outline: 3px solid #00b8d4; outline-offset: -3px; }
+  .drawtip { margin: 8px 0 0; padding: 8px 12px; background: #0b2530; color: #e6fbff; border-radius: 6px; font-weight: 600; font-size: 15px; }
   .leaflet-container { font-family: var(--font-body); }
   .maphelp { font-size: 14.5px; color: var(--muted); margin: 8px 0 0; }
   .uses { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px 16px; margin: 8px 0 14px; }
@@ -136,6 +138,7 @@
       <button class="btn" id="findBtn" type="button">Find</button>
     </div>
     <div id="map" role="application" aria-label="Map. Click to set the spot. In draw mode, click the corners of the parcel."></div>
+    <p id="drawTip" class="drawtip" role="status" aria-live="polite" hidden></p>
     <div class="row" style="margin-top:10px">
       <button class="btn ghost" id="drawBtn" type="button">Draw a border</button>
       <button class="btn ghost" id="finishBtn" type="button" hidden>Finish</button>
@@ -256,27 +259,45 @@
     $('#where').textContent = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
     writeHash();
   }
+  // drawing: bright cyan so it stands out from the photo and the orange soil lines; a dot on every corner;
+  // the shape closes as you go; nothing drawn takes clicks away from the map
+  const DRAW = '#00e5ff';
+  let dots = null;
   function redraw() {
-    if (line) map.removeLayer(line); if (poly) map.removeLayer(poly); line = poly = null;
-    if (verts.length >= 3 && !drawing) poly = L.polygon(verts, { color: '#d98a4f', weight: 3, fillOpacity: .08 }).addTo(map);
-    else if (verts.length) line = L.polyline(verts, { color: '#d98a4f', weight: 3, dashArray: '6 6' }).addTo(map);
+    if (line) map.removeLayer(line); if (poly) map.removeLayer(poly); if (dots) map.removeLayer(dots); line = poly = dots = null;
+    if (verts.length >= 3) poly = L.polygon(verts, { color: DRAW, weight: 4, opacity: 1, fillColor: DRAW, fillOpacity: drawing ? 0.12 : 0.15, dashArray: drawing ? '10 6' : null, interactive: false }).addTo(map);
+    else if (verts.length === 2) line = L.polyline(verts, { color: DRAW, weight: 4, opacity: 1, interactive: false }).addTo(map);
+    if (drawing && verts.length) { dots = L.layerGroup(verts.map((v, i) => L.circleMarker(v, { radius: i === 0 ? 8 : 6, color: '#0b2530', weight: 2, fillColor: i === 0 ? '#ffffff' : DRAW, fillOpacity: 1, interactive: false }))).addTo(map); }
     const ac = verts.length >= 3 ? acres(verts) : 0;
-    $('#where').textContent = verts.length >= 3 ? `${ac.toFixed(1)} acres drawn` : (pin ? `${pin.getLatLng().lat.toFixed(5)}, ${pin.getLatLng().lng.toFixed(5)}` : '');
+    $('#where').textContent = verts.length >= 3 ? `${ac.toFixed(1)} acres ${drawing ? 'so far' : 'drawn'}` : (pin ? `${pin.getLatLng().lat.toFixed(5)}, ${pin.getLatLng().lng.toFixed(5)}` : '');
     $('#finishBtn').hidden = !(drawing && verts.length >= 3); $('#undoBtn').hidden = !(drawing && verts.length);
+    const tip = $('#drawTip');
+    tip.hidden = !drawing;
+    tip.textContent = !drawing ? '' : verts.length === 0 ? 'Click the first corner of the parcel.' : verts.length < 3 ? `Corner ${verts.length} set. Click the next corner.` : `${verts.length} corners, ${ac.toFixed(1)} acres. Click the next corner, or double-click or press Finish when you are done.`;
+  }
+  function startDrawing() {
+    drawing = true; verts = []; clearResultLayers();
+    map.doubleClickZoom.disable();
+    $('#map').classList.add('drawing'); $('#drawBtn').classList.add('on'); $('#drawBtn').textContent = 'Cancel drawing';
+    if (map.getZoom() < 14 && pin) map.setView(pin.getLatLng(), 16);
+    redraw();
+  }
+  function stopDrawing(keep) {
+    drawing = false; if (!keep) verts = [];
+    map.doubleClickZoom.enable();
+    $('#map').classList.remove('drawing'); $('#drawBtn').classList.remove('on'); $('#drawBtn').textContent = verts.length >= 3 ? 'Redraw the border' : 'Draw a border';
+    redraw(); if (keep && verts.length >= 3) { writeHash(); say(`Border set: ${acres(verts).toFixed(1)} acres. Tick what you want to do with it and press Check this ground.`); }
   }
   map.on('click', (e) => {
     if (drawing) { verts.push([e.latlng.lat, e.latlng.lng]); redraw(); }
     else setPin(e.latlng.lat, e.latlng.lng, false);
   });
-  $('#drawBtn').addEventListener('click', () => {
-    drawing = !drawing; if (drawing) verts = [];
-    $('#map').classList.toggle('drawing', drawing); $('#drawBtn').classList.toggle('on', drawing);
-    $('#drawBtn').textContent = drawing ? 'Drawing: click each corner' : 'Draw a border';
-    if (!drawing) verts = []; redraw();
-  });
-  $('#finishBtn').addEventListener('click', () => { drawing = false; $('#map').classList.remove('drawing'); $('#drawBtn').classList.remove('on'); $('#drawBtn').textContent = 'Draw a border'; redraw(); writeHash(); });
+  // a double-click lands as two clicks then a dblclick; drop the extra corner and finish
+  map.on('dblclick', () => { if (!drawing) return; verts.pop(); if (verts.length >= 3) stopDrawing(true); else redraw(); });
+  $('#drawBtn').addEventListener('click', () => { if (drawing) stopDrawing(false); else startDrawing(); });
+  $('#finishBtn').addEventListener('click', () => stopDrawing(true));
   $('#undoBtn').addEventListener('click', () => { verts.pop(); redraw(); });
-  $('#clearBtn').addEventListener('click', () => { verts = []; drawing = false; $('#map').classList.remove('drawing'); $('#drawBtn').classList.remove('on'); $('#drawBtn').textContent = 'Draw a border'; if (pin) { map.removeLayer(pin); pin = null; } clearResultLayers(); redraw(); $('#results').innerHTML = ''; location.hash = ''; });
+  $('#clearBtn').addEventListener('click', () => { stopDrawing(false); verts = []; if (pin) { map.removeLayer(pin); pin = null; } clearResultLayers(); redraw(); $('#results').innerHTML = ''; history.replaceState(null, '', location.pathname); say(''); });
   function clearResultLayers() { if (unitLayer) map.removeLayer(unitLayer); if (wellLayer) map.removeLayer(wellLayer); unitLayer = wellLayer = null; }
 
   // local flat-earth area, good to well under 1% on parcel sizes
