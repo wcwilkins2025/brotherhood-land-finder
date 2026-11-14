@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Parcel Soil and Water Check</title>
+<meta name="description" content="Type an address or draw a border on the map and get the soil survey facts, the NRCS ratings for a house, septic, garden, pasture and pond, the seasonal water table, nearby well depths and the aquifer underneath. Free, no login, no tracking.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+  :root {
+    --bg: #f3f1ec; --surface: #ffffff; --fg: #1f2328; --muted: #5c6369; --rule: #d6d2c8;
+    --accent: #8a4b1f; --accent-ink: #ffffff; --accent-hover: #6e3a16;
+    --band: #22302e; --band-fg: #f3f1ec; --step: #2f5d4a; --warn: #9a3b1f;
+    --good: #2f5d4a; --mid: #9a6b1f; --bad: #9a3b1f; --good-bg: #dfeae4; --mid-bg: #f3e7cf; --bad-bg: #f2dcd3;
+    --font-display: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
+    --font-body: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15191b; --surface: #1d2224; --fg: #e8e5de; --muted: #a09c93; --rule: #343b3e;
+      --accent: #d98a4f; --accent-ink: #15191b; --accent-hover: #e9a068;
+      --band: #0f1514; --band-fg: #e8e5de; --step: #7fc3a4; --warn: #e58a6a;
+      --good: #7fc3a4; --mid: #d9b26a; --bad: #e58a6a; --good-bg: #223b31; --mid-bg: #3b3220; --bad-bg: #3e2822;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15191b; --surface: #1d2224; --fg: #e8e5de; --muted: #a09c93; --rule: #343b3e;
+    --accent: #d98a4f; --accent-ink: #15191b; --accent-hover: #e9a068;
+    --band: #0f1514; --band-fg: #e8e5de; --step: #7fc3a4; --warn: #e58a6a;
+    --good: #7fc3a4; --mid: #d9b26a; --bad: #e58a6a; --good-bg: #223b31; --mid-bg: #3b3220; --bad-bg: #3e2822;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 17px; line-height: 1.5; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 24px; }
+  header { background: var(--band); color: var(--band-fg); }
+  header .wrap { padding-block: 28px 24px; display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: flex-end; justify-content: space-between; }
+  header a { color: inherit; }
+  .crumb { font-size: 15px; opacity: .85; margin: 0 0 6px; }
+  h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(36px, 7vw, 52px); line-height: .95; text-transform: uppercase; margin: 0 0 10px; text-wrap: balance; }
+  .lede { font-size: 18px; margin: 0; max-width: 640px; }
+  h2 { font-family: var(--font-display); font-weight: 700; font-size: 28px; line-height: 1; text-transform: uppercase; margin: 0 0 6px; }
+  h3 { font-family: var(--font-display); font-weight: 600; font-size: 21px; line-height: 1.05; text-transform: uppercase; margin: 18px 0 6px; color: var(--step); }
+  .sub { color: var(--muted); margin: 0 0 14px; font-size: 15px; }
+  .card { background: var(--surface); border: 1px solid var(--rule); padding: 18px 20px; margin-bottom: 18px; }
+  .steps ol { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 10px; }
+  .steps li { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; }
+  .steps .n { font-family: var(--font-display); font-size: 28px; font-weight: 700; line-height: 1; color: var(--step); padding-top: 2px; }
+  .btn { display: inline-block; background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: 17px; text-decoration: none;
+    padding: 12px 16px; border-radius: 6px; min-height: 46px; line-height: 1.15; border: 2px solid transparent; cursor: pointer; font-family: inherit; }
+  .btn:hover { background: var(--accent-hover); }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .btn:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--step); outline-offset: 2px; }
+  .btn small { display: block; font-weight: 400; font-size: 12.5px; opacity: .85; margin-top: 2px; }
+  .btn.ghost { background: transparent; color: var(--fg); border-color: var(--rule); }
+  .btn.ghost:hover { border-color: var(--fg); background: transparent; }
+  .btn.ghost.on { border-color: var(--accent); color: var(--accent); }
+  .theme { background: transparent; color: var(--band-fg); border: 1px solid rgba(255,255,255,.35); border-radius: 6px; padding: 8px 12px; font: inherit; font-size: 14px; cursor: pointer; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  input[type=text] { font: inherit; padding: 11px 12px; border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); color: var(--fg); min-height: 46px; flex: 1 1 260px; }
+  #map { height: 440px; border: 1px solid var(--rule); margin-top: 12px; background: var(--bg); cursor: crosshair; }
+  #map.drawing { cursor: cell; }
+  .leaflet-container { font-family: var(--font-body); }
+  .maphelp { font-size: 14.5px; color: var(--muted); margin: 8px 0 0; }
+  .uses { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px 16px; margin: 8px 0 14px; }
+  .uses label { display: flex; gap: 8px; align-items: flex-start; cursor: pointer; }
+  .uses input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--accent); }
+  .note { font-size: 14.5px; color: var(--muted); margin: 8px 0; }
+  .warn { color: var(--warn); font-weight: 600; }
+  .status { margin: 10px 0 0; font-size: 15px; min-height: 1.5em; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-size: 13px; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); font-weight: 600; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .tablewrap { overflow-x: auto; }
+  .rating { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 14px; white-space: nowrap; }
+  .r-good { background: var(--good-bg); color: var(--good); }
+  .r-mid { background: var(--mid-bg); color: var(--mid); }
+  .r-bad { background: var(--bad-bg); color: var(--bad); }
+  .r-na { background: var(--bg); color: var(--muted); }
+  .use { border-top: 1px solid var(--rule); padding: 14px 0; }
+  .use:first-child { border-top: 0; }
+  .use h4 { margin: 0 0 4px; font-size: 18px; }
+  .use .bar { display: flex; height: 12px; border-radius: 3px; overflow: hidden; margin: 6px 0; background: var(--bg); max-width: 520px; }
+  .use .bar span { display: block; height: 100%; }
+  .use ul { margin: 6px 0 0; padding-left: 20px; }
+  .use li { margin: 2px 0; }
+  .src { font-size: 13.5px; color: var(--muted); }
+  .facts { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px 20px; }
+  .facts li { border-top: 1px solid var(--rule); padding-top: 6px; }
+  .facts .k { font-size: 13px; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); }
+  .facts .v { font-weight: 600; }
+  .buttons { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+  .buttons .btn { flex: 1 1 220px; }
+  .swatch { display: inline-block; width: 14px; height: 14px; border: 1px solid var(--rule); vertical-align: -2px; margin-right: 6px; }
+  footer { color: var(--muted); font-size: 14.5px; border-top: 1px solid var(--rule); margin-top: 28px; }
+  footer .wrap { padding-block: 20px; }
+  footer a, .card a:not(.btn), .note a { color: var(--accent); }
+  details { margin: 10px 0; }
+  summary { cursor: pointer; font-weight: 600; }
+  @media (max-width: 640px) { #map { height: 360px; } .buttons .btn { flex-basis: 100%; } }
+  @media print { header .theme, .steps, #map, .buttons, footer, .controls { display: none !important; } .card { border: 1px solid #999; break-inside: avoid; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div>
+      <p class="crumb"><a href="./">Brotherhood Land Finder</a> › Check a parcel</p>
+      <h1>Soil and water<br>on one piece of ground</h1>
+      <p class="lede">Type an address or draw the parcel's border. You get the government soil survey for that ground, how the NRCS rates it for a house, septic, garden, pasture and pond, the seasonal water table, nearby well depths and the aquifer underneath.</p>
+    </div>
+    <button class="theme" id="themeBtn" type="button" aria-label="Switch light or dark">Light / dark</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="card steps">
+    <h2>How to use it</h2>
+    <ol>
+      <li><span class="n">1</span><div><strong>Find the ground.</strong> Type a street address, or a town and state, or a ZIP, and press Find. Or just click the spot on the map.</div></li>
+      <li><span class="n">2</span><div><strong>Draw the border if you have one.</strong> Press Draw a border, click each corner of the parcel, then press Finish. Skip this and you get the soil at the one spot you clicked.</div></li>
+      <li><span class="n">3</span><div><strong>Tick what you want to do with it</strong> and press Check this ground.</div></li>
+    </ol>
+  </div>
+
+  <div class="card controls">
+    <h2>Where</h2>
+    <div class="row">
+      <input type="text" id="addr" placeholder="Address, or Town, ST, or ZIP" aria-label="Address, town and state, or ZIP" autocomplete="off">
+      <button class="btn" id="findBtn" type="button">Find</button>
+    </div>
+    <div id="map" role="application" aria-label="Map. Click to set the spot. In draw mode, click the corners of the parcel."></div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn ghost" id="drawBtn" type="button">Draw a border</button>
+      <button class="btn ghost" id="finishBtn" type="button" hidden>Finish</button>
+      <button class="btn ghost" id="undoBtn" type="button" hidden>Undo last corner</button>
+      <button class="btn ghost" id="clearBtn" type="button">Clear</button>
+      <button class="btn ghost" id="baseBtn" type="button">Topo map</button>
+      <span id="where" class="note" style="margin:0"></span>
+    </div>
+    <p class="maphelp">Soil map unit lines (from the NRCS soil survey) appear when you zoom in close. The photo and topo tiles are from the USGS. Street addresses are placed by the Census Bureau's geocoder, which can be a few hundred feet off; move the pin if it is wrong.</p>
+
+    <h2 style="margin-top:18px">What do you want to do with it?</h2>
+    <div class="uses" id="uses"></div>
+    <div class="row">
+      <button class="btn" id="goBtn" type="button">Check this ground</button>
+      <span id="status" class="status" role="status" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <div id="results"></div>
+
+  <details class="card">
+    <summary>What this can and cannot tell you</summary>
+    <p>The soil survey was mapped at 1:24,000 from pits, borings and air photos, mostly decades ago. A map unit line is good to within a few acres, not a few feet, and every unit has minor soils inside it that are not shown. The ratings are the NRCS's own, computed from the soil's properties, and they describe the typical soil of the unit, not your exact spot. A septic permit still needs a site evaluation or perc test on the ground itself.</p>
+    <p>The seasonal water table here is the shallow saturated layer the soil scientists found, within the top six and a half feet. It is not the depth you would drill a well to. For that, the nearby USGS wells and the state well-log database give you real well depths and water levels from the neighborhood. Well logs from the neighbors are the best evidence there is.</p>
+    <p>Nothing here is a legal description, a survey, a flood determination or advice from a licensed anyone. It is a head start on the questions to ask.</p>
+  </details>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Free forever. No login, no tracking, nothing stored about you. Your address goes to the Census Bureau's geocoder to turn it into coordinates. The coordinates go to the USDA soil survey (Soil Data Access) and the USGS water data service to pull the public records for that spot. Nothing goes anywhere else, and nothing is kept. Sources and dates: <a href="https://github.com/wcwilkins2025/brotherhood-land-finder/blob/main/data/sources.md" target="_blank" rel="noopener">data/sources.md</a>. Found a problem? <a href="https://github.com/wcwilkins2025/brotherhood-land-finder/issues/new?template=bug.yml" target="_blank" rel="noopener">Report a bug</a> or <a href="https://github.com/wcwilkins2025/brotherhood-land-finder/issues/new?template=feedback.yml" target="_blank" rel="noopener">send feedback</a>.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  // ---------- theme (same as the main page)
+  const root = document.documentElement;
+  function applyTheme(t) { if (t) root.setAttribute('data-theme', t); else root.removeAttribute('data-theme'); try { if (t) localStorage.setItem('theme', t); else localStorage.removeItem('theme'); } catch (e) {} }
+  try { const t = localStorage.getItem('theme'); if (t) root.setAttribute('data-theme', t); } catch (e) {}
+  $('#themeBtn').addEventListener('click', () => {
+    const dark = root.getAttribute('data-theme') === 'dark' || (!root.getAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches);
+    applyTheme(dark ? 'light' : 'dark');
+  });
+
+  // ---------- what a man might do with the ground, and which NRCS rating answers it
+  // interps: NRCS interpretation names in the cointerp table. kind 'limit' = Not/Somewhat/Very limited; 'index' = a 0 to 1 productivity score.
+  const USES = [
+    { id: 'house', label: 'A house on a slab or crawlspace', interps: ['ENG - Dwellings W/O Basements'], kind: 'limit', checked: true },
+    { id: 'septic', label: 'A septic system', interps: ['ENG - Septic Tank Absorption Fields'], kind: 'limit', checked: true },
+    { id: 'garden', label: 'A garden and crops', interps: ['NCCPI - National Commodity Crop Productivity Index (Ver 3.0)'], kind: 'index', checked: true },
+    { id: 'pasture', label: 'Pasture and hay', interps: ['AGR - Pasture Productivity Index', 'AGR - Hay Productivity Index'], kind: 'index', checked: true },
+    { id: 'orchard', label: 'An orchard or trees', interps: [], kind: 'rule' },
+    { id: 'pond', label: 'A pond', interps: ['WMS - Pond Reservoir Area', 'WMS - Embankments, Dikes, and Levees'], kind: 'limit' },
+    { id: 'basement', label: 'A basement or cellar', interps: ['ENG - Dwellings With Basements'], kind: 'limit' },
+    { id: 'road', label: 'A driveway or gravel road', interps: ['ENG - Unpaved Local Roads and Streets'], kind: 'limit' },
+    { id: 'excav', label: 'Digging: footings, trenches, water lines', interps: ['ENG - Shallow Excavations'], kind: 'limit' },
+    { id: 'fence', label: 'Fence posts', interps: ['GRL - Fencing, Post Depth =<36 inches'], kind: 'limit' },
+    { id: 'camp', label: 'Camping or an RV while you build', interps: ['URB/REC - Camp Areas'], kind: 'limit' },
+  ];
+  $('#uses').innerHTML = USES.map((u) => `<label><input type="checkbox" value="${u.id}" ${u.checked ? 'checked' : ''}> <span>${esc(u.label)}</span></label>`).join('');
+
+  // plain words for the NRCS limitation names
+  const WHY = {
+    'Depth to saturated zone': 'water sits near the surface part of the year',
+    'Slow water movement': 'water soaks in slowly, so a drain field needs more room or a different design',
+    'Shrink-swell': 'the clay swells wet and shrinks dry; slabs, posts and pipes heave unless built for it',
+    'Depth to bedrock': 'rock is close to the surface',
+    'Depth to cemented pan': 'a hard pan is close to the surface',
+    'Slope': 'steep ground',
+    'Flooding': 'it floods',
+    'Ponding': 'water stands on the surface after rain',
+    'Too clayey': 'heavy clay',
+    'Too sandy': 'loose sand',
+    'Large stones content': 'big rocks in the digging',
+    'Large stones': 'big rocks in the digging',
+    'Low strength': 'soft ground under a load',
+    'Seepage': 'water leaks through; a pond will not hold without a liner or clay',
+    'Seepage bottom layer': 'water leaks out the bottom; a pond will not hold without a liner or clay',
+    'Piping': 'water can tunnel through an earthen dam',
+    'Unstable excavation walls': 'trench walls cave in',
+    'Cutbanks cave': 'trench walls cave in',
+    'Frost action': 'frost heave',
+    'Droughty': 'dries out fast',
+    'Dusty': 'dusty when dry',
+    'Too acid': 'acid soil',
+    'Too alkaline': 'alkaline soil',
+    'Depth to water table': 'a shallow water table',
+    '<36 inches to water table': 'water within three feet in the wet season',
+    'Low available water': 'holds little water for plants',
+    'Hard to pack': 'hard to compact for a dam',
+    'Filtering capacity': 'the soil does not filter waste well; effluent can reach groundwater',
+    'Subsidence': 'the ground settles',
+    'Erodes easily': 'erodes easily',
+    'Rooting depth': 'shallow rooting depth',
+  };
+  const why = (t) => WHY[t] || Object.keys(WHY).find((k) => t.toLowerCase().includes(k.toLowerCase())) && WHY[Object.keys(WHY).find((k) => t.toLowerCase().includes(k.toLowerCase()))] || t;
+
+  // ---------- map
+  const map = L.map('map', { zoomControl: true, attributionControl: true }).setView([38.5, -96], 4);
+  const usgs = (svc) => L.tileLayer(`https://basemap.nationalmap.gov/arcgis/rest/services/${svc}/MapServer/tile/{z}/{y}/{x}`, { maxZoom: 16, attribution: 'USGS The National Map' });
+  const imagery = usgs('USGSImageryTopo'), topo = usgs('USGSTopo');
+  imagery.addTo(map);
+  const soilLines = L.tileLayer.wms('https://SDMDataAccess.sc.egov.usda.gov/Spatial/SDM.wms', { layers: 'MapunitPoly', format: 'image/png', transparent: true, minZoom: 13, opacity: .9, attribution: 'USDA NRCS Soil Survey' }).addTo(map);
+  let baseIsTopo = false;
+  $('#baseBtn').addEventListener('click', () => { baseIsTopo = !baseIsTopo; map.removeLayer(baseIsTopo ? imagery : topo); (baseIsTopo ? topo : imagery).addTo(map); soilLines.bringToFront(); $('#baseBtn').textContent = baseIsTopo ? 'Photo map' : 'Topo map'; });
+
+  let pin = null, verts = [], drawing = false, line = null, poly = null, unitLayer = null, wellLayer = null;
+  const pinIcon = L.divIcon({ className: '', html: '<div style="width:16px;height:16px;border-radius:50%;background:#d98a4f;border:3px solid #fff;box-shadow:0 0 0 2px #1f2328"></div>', iconSize: [16, 16], iconAnchor: [8, 8] });
+  function setPin(lat, lon, zoomTo) {
+    if (pin) pin.setLatLng([lat, lon]); else pin = L.marker([lat, lon], { icon: pinIcon, draggable: true }).addTo(map).on('dragend', () => { const p = pin.getLatLng(); setPin(p.lat, p.lng, false); });
+    if (zoomTo) map.setView([lat, lon], Math.max(map.getZoom(), 15));
+    $('#where').textContent = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+    writeHash();
+  }
+  function redraw() {
+    if (line) map.removeLayer(line); if (poly) map.removeLayer(poly); line = poly = null;
+    if (verts.length >= 3 && !drawing) poly = L.polygon(verts, { color: '#d98a4f', weight: 3, fillOpacity: .08 }).addTo(map);
+    else if (verts.length) line = L.polyline(verts, { color: '#d98a4f', weight: 3, dashArray: '6 6' }).addTo(map);
+    const ac = verts.length >= 3 ? acres(verts) : 0;
+    $('#where').textContent = verts.length >= 3 ? `${ac.toFixed(1)} acres drawn` : (pin ? `${pin.getLatLng().lat.toFixed(5)}, ${pin.getLatLng().lng.toFixed(5)}` : '');
+    $('#finishBtn').hidden = !(drawing && verts.length >= 3); $('#undoBtn').hidden = !(drawing && verts.length);
+  }
+  map.on('click', (e) => {
+    if (drawing) { verts.push([e.latlng.lat, e.latlng.lng]); redraw(); }
+    else setPin(e.latlng.lat, e.latlng.lng, false);
+  });
+  $('#drawBtn').addEventListener('click', () => {
+    drawing = !drawing; if (drawing) verts = [];
+    $('#map').classList.toggle('drawing', drawing); $('#drawBtn').classList.toggle('on', drawing);
+    $('#drawBtn').textContent = drawing ? 'Drawing: click each corner' : 'Draw a border';
+    if (!drawing) verts = []; redraw();
+  });
+  $('#finishBtn').addEventListener('click', () => { drawing = false; $('#map').classList.remove('drawing'); $('#drawBtn').classList.remove('on'); $('#drawBtn').textContent = 'Draw a border'; redraw(); writeHash(); });
+  $('#undoBtn').addEventListener('click', () => { verts.pop(); redraw(); });
+  $('#clearBtn').addEventListener('click', () => { verts = []; drawing = false; $('#map').classList.remove('drawing'); $('#drawBtn').classList.remove('on'); $('#drawBtn').textContent = 'Draw a border'; if (pin) { map.removeLayer(pin); pin = null; } clearResultLayers(); redraw(); $('#results').innerHTML = ''; location.hash = ''; });
+  function clearResultLayers() { if (unitLayer) map.removeLayer(unitLayer); if (wellLayer) map.removeLayer(wellLayer); unitLayer = wellLayer = null; }
+
+  // local flat-earth area, good to well under 1% on parcel sizes
+  function m2(vs) { const lat0 = vs.reduce((a, v) => a + v[0], 0) / vs.length * Math.PI / 180; const kx = 111320 * Math.cos(lat0), ky = 110540; let a = 0; for (let i = 0; i < vs.length; i++) { const [y1, x1] = vs[i], [y2, x2] = vs[(i + 1) % vs.length]; a += (x1 * kx) * (y2 * ky) - (x2 * kx) * (y1 * ky); } return Math.abs(a) / 2; }
+  const acres = (vs) => m2(vs) / 4046.86;
+  const hav = (a, b, c, d) => { const r = Math.PI / 180, x = Math.sin((c - a) * r / 2), y = Math.sin((d - b) * r / 2); return 2 * 3958.8 * Math.asin(Math.sqrt(x * x + Math.cos(a * r) * Math.cos(c * r) * y * y)); };
+
+  // the spot and border live in the URL hash so a link can be shared; nothing is stored anywhere
+  function writeHash() {
+    if (verts.length >= 3 && !drawing) location.replace('#poly=' + verts.map((v) => v[0].toFixed(5) + ',' + v[1].toFixed(5)).join(';'));
+    else if (pin) { const p = pin.getLatLng(); location.replace(`#${p.lat.toFixed(5)},${p.lng.toFixed(5)},${map.getZoom()}`); }
+  }
+  function readHash() {
+    const h = location.hash.slice(1); if (!h) return;
+    if (h.startsWith('poly=')) { verts = h.slice(5).split(';').map((s) => s.split(',').map(Number)).filter((v) => v.length === 2 && v.every(isFinite)); if (verts.length >= 3) { redraw(); map.fitBounds(verts, { padding: [20, 20] }); } return; }
+    const [lat, lon, z] = h.split(',').map(Number);
+    if (isFinite(lat) && isFinite(lon)) { map.setView([lat, lon], isFinite(z) ? z : 15); setPin(lat, lon, false); }
+  }
+
+  // ---------- finding the ground: ZIP and "Town, ST" from this site's own lists, street addresses from the Census geocoder (JSONP, no key)
+  let places = null, zips = null;
+  const loadJSON = (u) => fetch(u).then((r) => { if (!r.ok) throw new Error(`${u}: ${r.status}`); return r.json(); });
+  async function geocode(q) {
+    q = q.trim(); if (!q) return null;
+    if (/^\d{5}$/.test(q)) { zips = zips || await loadJSON('data/zips.json'); const z = zips[q]; return z ? { lat: z[0], lon: z[1], label: `ZIP ${q}`, zoom: 12 } : null; }
+    const m = q.match(/^([^,\d]+),\s*([A-Za-z]{2})$/);
+    if (m) { places = places || await loadJSON('data/places.json'); const name = m[1].trim().toLowerCase(), st = m[2].toUpperCase(); const p = places.find((x) => x.st === st && x.name.toLowerCase() === name) || places.find((x) => x.st === st && x.name.toLowerCase().startsWith(name)); if (p) return { lat: p.lat, lon: p.lon, label: `${p.name}, ${p.st}`, zoom: 12 }; }
+    return new Promise((resolve, reject) => {
+      const cb = 'cb_' + Date.now(); const s = document.createElement('script');
+      window[cb] = (d) => { delete window[cb]; s.remove(); const a = d?.result?.addressMatches?.[0]; resolve(a ? { lat: a.coordinates.y, lon: a.coordinates.x, label: a.matchedAddress, zoom: 16 } : null); };
+      s.onerror = () => { delete window[cb]; s.remove(); reject(new Error('The Census geocoder did not answer.')); };
+      s.src = `https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=${encodeURIComponent(q)}&benchmark=Public_AR_Current&format=jsonp&callback=${cb}`;
+      document.head.appendChild(s);
+    });
+  }
+  async function find() {
+    const q = $('#addr').value; if (!q.trim()) return;
+    say('Finding it…');
+    try { const r = await geocode(q); if (!r) { say(`Could not place "${q}". Try a full street address with the town and state, or click the map.`, true); return; } verts = []; redraw(); map.setView([r.lat, r.lon], r.zoom); setPin(r.lat, r.lon, false); say(`Placed at ${r.label}. If the pin is off, drag it or click the right spot.`); }
+    catch (e) { say(e.message, true); }
+  }
+  $('#findBtn').addEventListener('click', find);
+  $('#addr').addEventListener('keydown', (e) => { if (e.key === 'Enter') find(); });
+  function say(t, bad) { const s = $('#status'); s.textContent = t; s.className = 'status' + (bad ? ' warn' : ''); }
+
+  // ---------- Soil Data Access (USDA NRCS): free, no key, answers SQL over the soil survey
+  const SDA = 'https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest';
+  async function sda(query) {
+    const r = await fetch(SDA, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query, format: 'JSON+COLUMNNAME' }) });
+    const t = await r.text();
+    if (!r.ok || t.startsWith('<?xml')) throw new Error('The soil survey service refused the request: ' + t.replace(/<[^>]+>/g, ' ').trim().slice(0, 160));
+    const d = JSON.parse(t); const rows = d.Table || []; if (!rows.length) return [];
+    const cols = rows[0]; return rows.slice(1).map((row) => Object.fromEntries(cols.map((c, i) => [c, row[i]])));
+  }
+  const wktPoly = (vs) => 'POLYGON((' + vs.concat([vs[0]]).map((v) => `${v[1].toFixed(6)} ${v[0].toFixed(6)}`).join(', ') + '))';
+  // tiny WKT reader for POLYGON / MULTIPOLYGON / GEOMETRYCOLLECTION from SQL Server
+  function parseWkt(w) {
+    const polys = []; const re = /\(\(([^()]+(?:\)\s*,\s*\([^()]+)*)\)\)/g; let m;
+    while ((m = re.exec(w))) { const rings = m[1].split(/\)\s*,\s*\(/).map((r) => r.trim().split(',').map((p) => { const [x, y] = p.trim().split(/\s+/).map(Number); return [y, x]; })); polys.push(rings); }
+    return polys;
+  }
+
+  // ---------- the check
+  $('#goBtn').addEventListener('click', run);
+  let aquifers = null, wellRecords = null;
+  async function run() {
+    const usePoly = verts.length >= 3 && !drawing;
+    if (!usePoly && !pin) { say('Find the ground first: type an address, or click the spot on the map.', true); return; }
+    const center = usePoly ? verts.reduce((a, v) => [a[0] + v[0] / verts.length, a[1] + v[1] / verts.length], [0, 0]) : [pin.getLatLng().lat, pin.getLatLng().lng];
+    const ac = usePoly ? acres(verts) : 0;
+    if (ac > 3000) { say('That border is over 3,000 acres. Draw the piece you mean to buy.', true); return; }
+    const chosen = USES.filter((u) => $(`#uses input[value="${u.id}"]`).checked);
+    $('#goBtn').disabled = true; clearResultLayers(); $('#results').innerHTML = '';
+    try {
+      say('Asking the soil survey…');
+      // 1. which map units, and how much of the parcel each one covers
+      let units;
+      if (usePoly) {
+        const w = wktPoly(verts);
+        const rows = await sda(`SELECT mukey, mupolygongeo.STIntersection(geometry::STGeomFromText('${w}',4326)).STAsText() AS wkt FROM mupolygon WHERE mupolygongeo.STIntersects(geometry::STGeomFromText('${w}',4326))=1`);
+        const by = new Map();
+        rows.forEach((r) => { const polys = parseWkt(r.wkt); let a = 0; polys.forEach((rings) => { a += m2(rings[0]); for (let i = 1; i < rings.length; i++) a -= m2(rings[i]); }); const u = by.get(r.mukey) || { mukey: r.mukey, m2: 0, polys: [] }; u.m2 += a; u.polys.push(...polys); by.set(r.mukey, u); });
+        units = [...by.values()]; const tot = units.reduce((s, u) => s + u.m2, 0) || 1; units.forEach((u) => { u.share = u.m2 / tot; }); units.sort((a, b) => b.share - a.share);
+      } else {
+        const rows = await sda(`SELECT * FROM SDA_Get_Mukey_from_intersection_with_WktWgs84('point(${center[1].toFixed(6)} ${center[0].toFixed(6)})')`);
+        units = rows.map((r) => ({ mukey: r.mukey, share: 1, polys: [] }));
+      }
+      if (!units.length) { say('The soil survey has no map unit here. Water, a city, or an unmapped area.', true); $('#goBtn').disabled = false; return; }
+      const keys = units.map((u) => `'${u.mukey}'`).join(',');
+      // 2. map unit facts, 3. major components and their ratings, 4. soil layers of the biggest unit's main soil
+      const interps = [...new Set(chosen.flatMap((u) => u.interps))];
+      const [mu, comps, ratings] = await Promise.all([
+        sda(`SELECT m.mukey, m.musym, m.muname, m.farmlndcl, a.slopegraddcp, a.drclassdcd, a.hydgrpdcd, a.flodfreqdcd, a.pondfreqprs, a.wtdepannmin, a.brockdepmin, a.aws0100wta, a.niccdcd, a.hydclprs FROM mapunit m LEFT JOIN muaggatt a ON a.mukey=m.mukey WHERE m.mukey IN (${keys})`),
+        sda(`SELECT c.mukey, c.cokey, c.compname, c.comppct_r, c.drainagecl, c.hydgrp, c.slope_r, c.taxorder, c.taxsubgrp, c.corsteel, c.corcon FROM component c WHERE c.mukey IN (${keys}) AND c.majcompflag='Yes' ORDER BY c.comppct_r DESC`),
+        interps.length ? sda(`SELECT c.mukey, c.cokey, i.mrulename, i.ruledepth, i.interphr, i.interphrc FROM component c JOIN cointerp i ON i.cokey=c.cokey WHERE c.mukey IN (${keys}) AND c.majcompflag='Yes' AND i.ruledepth<=1 AND i.mrulename IN (${interps.map((n) => `'${n.replace(/'/g, "''")}'`).join(',')}) ORDER BY i.ruledepth, i.seqnum`) : Promise.resolve([]),
+      ]);
+      const muBy = new Map(mu.map((r) => [r.mukey, r]));
+      const compBy = new Map(); comps.forEach((c) => { if (!compBy.has(c.mukey)) compBy.set(c.mukey, []); compBy.get(c.mukey).push(c); });
+      const big = units[0]; const dom = (compBy.get(big.mukey) || [])[0];
+      const layers = dom ? await sda(`SELECT h.hzname, h.hzdept_r, h.hzdepb_r, h.sandtotal_r, h.claytotal_r, h.ph1to1h2o_r, h.awc_r, h.ksat_r, h.om_r, (SELECT TOP 1 texture FROM chtexturegrp t WHERE t.chkey=h.chkey AND t.rvindicator='Yes') AS texture FROM chorizon h WHERE h.cokey='${dom.cokey}' ORDER BY h.hzdept_r`) : [];
+
+      // draw the units
+      if (usePoly) {
+        const palette = ['#d98a4f', '#7fc3a4', '#d9b26a', '#8fb0d9', '#c98fd9', '#a0a0a0', '#e58a6a', '#6ab0b8'];
+        unitLayer = L.layerGroup().addTo(map);
+        units.forEach((u, i) => { u.color = palette[i % palette.length]; u.polys.forEach((rings) => L.polygon(rings, { color: u.color, weight: 1.5, fillColor: u.color, fillOpacity: .3 }).bindTooltip(muBy.get(u.mukey)?.muname || u.mukey).addTo(unitLayer)); });
+      }
+
+      say('Asking the USGS about wells…');
+      // 5. water: USGS wells within about 10 miles (depth), latest water levels, the principal aquifer
+      const d = 0.15, bbox = `${(center[1] - d).toFixed(4)},${(center[0] - d).toFixed(4)},${(center[1] + d).toFixed(4)},${(center[0] + d).toFixed(4)}`;
+      const api = 'https://api.waterdata.usgs.gov/ogcapi/v0/collections';
+      const [wellsRes, levelsRes, aq, wr] = await Promise.allSettled([
+        loadJSON(`${api}/monitoring-locations/items?bbox=${bbox}&site_type_code=GW&limit=300&f=json`),
+        loadJSON(`${api}/latest-field-measurements/items?bbox=${bbox}&parameter_code=72019&limit=300&f=json`),
+        aquifers ? Promise.resolve(aquifers) : loadJSON('data/aquifers.json').then((j) => (aquifers = j)),
+        wellRecords ? Promise.resolve(wellRecords) : loadJSON('data/manual/well_records.json').then((j) => (wellRecords = j)).catch(() => null),
+      ]);
+      const wells = wellsRes.status === 'fulfilled' ? wellsRes.value.features.map((f) => ({ id: f.properties.monitoring_location_number, name: f.properties.monitoring_location_name, lat: f.geometry.coordinates[1], lon: f.geometry.coordinates[0], depth: f.properties.well_constructed_depth, hole: f.properties.hole_constructed_depth, aq: f.properties.aquifer_code, naq: f.properties.national_aquifer_code, county: f.properties.county_name, st: f.properties.state_code })) : null;
+      const levels = new Map(); if (levelsRes.status === 'fulfilled') levelsRes.value.features.forEach((f) => { const p = f.properties; const id = (p.monitoring_location_id || '').replace(/^[A-Z0-9]+-/, ''); const prev = levels.get(id); if (!prev || p.time > prev.time) levels.set(id, { v: +p.value, time: p.time, unit: p.unit_of_measure }); });
+      if (wells) { wells.forEach((w) => { w.mi = hav(center[0], center[1], w.lat, w.lon); w.lev = levels.get(w.id) || null; }); wells.sort((a, b) => a.mi - b.mi); }
+      // the local aquifer codes on the nearest wells, decoded through the USGS code table (one small call per code)
+      const aqNames = new Map();
+      if (wells) { const codes = [...new Set(wells.slice(0, 15).map((w) => w.aq).filter(Boolean))].slice(0, 8); await Promise.allSettled(codes.map((c) => loadJSON(`${api}/aquifer-codes/items?f=json&id=${encodeURIComponent(c)}`).then((j) => { const n = j.features?.[0]?.properties?.aquifer_name; if (n) aqNames.set(c, n); }))); }
+      const aquifer = aq.status === 'fulfilled' ? aquiferAt(aq.value, center[0], center[1]) : null;
+      const stateCode = wells?.[0]?.st || null;
+      render({ usePoly, ac, center, units, muBy, compBy, dom, layers, ratings, chosen, wells, aqNames, wellsOk: wellsRes.status === 'fulfilled', aquifer, aquiferOk: aq.status === 'fulfilled', wr: wr.status === 'fulfilled' ? wr.value : null, stateCode });
+      say('');
+      $('#results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (e) { say(e.message || String(e), true); }
+    $('#goBtn').disabled = false;
+  }
+
+  function aquiferAt(fc, lat, lon) {
+    const hit = (ring) => { let inside = false; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const [xi, yi] = ring[i], [xj, yj] = ring[j]; if ((yi > lat) !== (yj > lat) && lon < (xj - xi) * (lat - yi) / (yj - yi) + xi) inside = !inside; } return inside; };
+    for (const f of fc.features) { let n = 0; for (const ring of f.geometry.coordinates) if (hit(ring)) n++; if (n % 2 === 1) return f.properties; }
+    return null;
+  }
+
+  // ---------- the report
+  const cmToFt = (cm) => cm == null ? null : cm / 30.48;
+  const ft = (x) => x == null ? '' : x < 1 ? `${Math.round(x * 12)} in` : `${x.toFixed(1)} ft`;
+  const pct = (x) => `${Math.round(x * 100)}%`;
+  const CLASS = { 'Not limited': 'good', 'Somewhat limited': 'mid', 'Very limited': 'bad', 'Not rated': 'na' };
+  const INDEX_CLASS = (v) => v >= 0.6 ? 'good' : v >= 0.35 ? 'mid' : 'bad';
+  const badge = (cls, text) => `<span class="rating r-${cls}">${esc(text)}</span>`;
+  const fact = (k, v) => `<li><div class="k">${k}</div><div class="v">${v}</div></li>`;
+
+  function render(R) {
+    const { usePoly, ac, center, units, muBy, compBy, dom, layers, ratings, chosen, wells, aqNames, aquifer, wr, stateCode } = R;
+    const where = usePoly ? `${ac.toFixed(1)} acres drawn, ${units.length} soil map unit${units.length === 1 ? '' : 's'}` : `the spot at ${center[0].toFixed(5)}, ${center[1].toFixed(5)}`;
+
+    // soil map units
+    const unitRows = units.map((u) => { const m = muBy.get(u.mukey) || {}; const wt = cmToFt(m.wtdepannmin); const br = cmToFt(m.brockdepmin);
+      return `<tr><td>${usePoly ? `<span class="swatch" style="background:${u.color}"></span>` : ''}<strong>${esc(m.muname || u.mukey)}</strong><div class="src">${esc(m.musym || '')} · ${esc(m.farmlndcl || 'farmland class not rated')}</div></td>
+        <td class="num">${usePoly ? pct(u.share) : 'at the pin'}</td>
+        <td>${esc(m.drclassdcd || '–')}</td>
+        <td class="num">${m.slopegraddcp != null ? m.slopegraddcp + '%' : '–'}</td>
+        <td class="num">${m.wtdepannmin == null ? 'none found within 6.5 ft' : (m.wtdepannmin == 0 ? 'at the surface' : ft(wt))}</td>
+        <td class="num">${m.brockdepmin == null ? 'none within 6.5 ft' : ft(br)}</td>
+        <td>${esc(m.flodfreqdcd || '–')}${m.pondfreqprs && m.pondfreqprs !== '0' ? ', ponds' : ''}${m.hydclprs && m.hydclprs !== '0' ? ', hydric (wetland soil)' : ''}</td>
+        <td class="num">${m.niccdcd || '–'}</td></tr>`; }).join('');
+
+    // ratings per use. Dominant major component per unit; area-weighted shares by class across the parcel.
+    const byUse = chosen.map((u) => {
+      if (u.kind === 'rule') return orchardRule(u, units, muBy, compBy, layers);
+      const shares = {}, reasons = new Map(); let idxSum = 0, idxW = 0, rated = 0;
+      units.forEach((unit) => {
+        const comp = (compBy.get(unit.mukey) || [])[0]; if (!comp) return;
+        const rows = ratings.filter((r) => r.cokey === comp.cokey && u.interps.includes(r.mrulename));
+        const tops = rows.filter((r) => r.ruledepth == 0); if (!tops.length) return; rated += unit.share;
+        if (u.kind === 'index') { const v = tops.reduce((s, r) => s + (+r.interphr || 0), 0) / tops.length; idxSum += v * unit.share; idxW += unit.share; }
+        else { const worst = tops.reduce((a, r) => (+r.interphr > +a.interphr ? r : a)); const cls = worst.interphrc || 'Not rated'; shares[cls] = (shares[cls] || 0) + unit.share; }
+        rows.filter((r) => r.ruledepth == 1 && +r.interphr >= (u.kind === 'index' ? 2 : 0.2) && r.interphrc).forEach((r) => { const k = r.interphrc; reasons.set(k, (reasons.get(k) || 0) + unit.share * +r.interphr); });
+      });
+      return { u, shares, reasons: [...reasons.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map((e) => e[0]), idx: idxW ? idxSum / idxW : null, rated };
+    });
+    const useBlocks = byUse.map((b) => {
+      if (b.html) return b.html;
+      if (!b.rated) return `<div class="use"><h4>${esc(b.u.label)}</h4>${badge('na', 'No NRCS rating here')} <span class="src">The survey has no rating of this kind for this soil.</span></div>`;
+      let head, bar = '';
+      if (b.u.kind === 'index') { head = badge(INDEX_CLASS(b.idx), `${Math.round(b.idx * 100)} out of 100`) + ` <span class="src">NRCS productivity index, area-weighted; 60+ is good ground, under 35 is poor</span>`; }
+      else {
+        const order = ['Not limited', 'Somewhat limited', 'Very limited', 'Not rated']; const tot = Object.values(b.shares).reduce((a, x) => a + x, 0) || 1;
+        head = order.filter((k) => b.shares[k]).map((k) => badge(CLASS[k], usePoly ? `${pct(b.shares[k] / tot)} ${k}` : k)).join(' ');
+        if (usePoly) bar = `<div class="bar">${order.filter((k) => b.shares[k]).map((k) => `<span style="width:${b.shares[k] / tot * 100}%;background:var(--${CLASS[k] === 'na' ? 'rule' : CLASS[k]})"></span>`).join('')}</div>`;
+      }
+      const why_ = b.reasons.length ? `<ul>${b.reasons.map((r) => `<li><strong>${esc(r)}</strong>: ${esc(why(r))}</li>`).join('')}</ul>` : '';
+      return `<div class="use"><h4>${esc(b.u.label)}</h4>${head}${bar}${why_}</div>`;
+    }).join('');
+
+    // layers of the main soil
+    const layerRows = layers.map((h) => `<tr><td>${esc(h.hzname || '')}</td><td class="num">${Math.round((h.hzdept_r || 0) / 2.54)}–${Math.round((h.hzdepb_r || 0) / 2.54)} in</td><td>${esc(TEX[h.texture] || h.texture || '–')}</td><td class="num">${h.claytotal_r != null ? Math.round(h.claytotal_r) + '%' : '–'}</td><td class="num">${h.ph1to1h2o_r ?? '–'}</td><td class="num">${h.ksat_r != null ? ksatWord(+h.ksat_r) : '–'}</td><td class="num">${h.om_r != null ? (+h.om_r).toFixed(1) + '%' : '–'}</td></tr>`).join('');
+
+    // water
+    const wtUnits = units.map((u) => ({ u, m: muBy.get(u.mukey) || {} }));
+    const shallow = wtUnits.filter((x) => x.m.wtdepannmin != null && +x.m.wtdepannmin < 100).reduce((s, x) => s + x.u.share, 0);
+    const wtLine = wtUnits.every((x) => x.m.wtdepannmin == null) ? 'The soil survey found no seasonal water table within 6.5 feet of the surface here.'
+      : usePoly ? `${pct(shallow)} of the parcel has a seasonal water table within about 3 feet of the surface. ` + wtUnits.filter((x) => x.m.wtdepannmin != null).map((x) => `${esc(x.m.muname)}: ${x.m.wtdepannmin == 0 ? 'at the surface' : ft(cmToFt(x.m.wtdepannmin))}`).join('; ') + '.'
+      : `Seasonal high water table ${wtUnits[0].m.wtdepannmin == 0 ? 'at the surface' : ft(cmToFt(wtUnits[0].m.wtdepannmin)) + ' down'} in the wet season.`;
+    const wellRows = wells ? wells.slice(0, 15).map((w) => `<tr><td>${esc(w.name)}<div class="src">${esc(w.county || '')}</div></td><td class="num">${w.mi.toFixed(1)} mi</td><td class="num">${w.depth != null ? Math.round(w.depth) + ' ft' : (w.hole != null ? Math.round(w.hole) + ' ft (hole)' : '–')}</td><td class="num">${w.lev ? `${w.lev.v.toFixed(0)} ft down<div class="src">${esc(w.lev.time.slice(0, 10))}</div>` : '–'}</td><td>${esc(aqNames.get(w.aq) || w.aq || '–')}${w.aq && aqNames.get(w.aq) ? `<div class="src">${esc(w.aq)}</div>` : ''}</td></tr>`).join('') : '';
+    const aqCount = new Map(); (wells || []).forEach((w) => { if (w.aq) aqCount.set(w.aq, (aqCount.get(w.aq) || 0) + 1); });
+    const topAq = [...aqCount.entries()].sort((a, b) => b[1] - a[1])[0];
+    const depths = wells ? wells.filter((w) => w.depth != null).map((w) => w.depth).sort((a, b) => a - b) : [];
+    const med = depths.length ? depths[Math.floor(depths.length / 2)] : null;
+    const levs = wells ? wells.filter((w) => w.lev).map((w) => w.lev.v).sort((a, b) => a - b) : [];
+    const medLev = levs.length ? levs[Math.floor(levs.length / 2)] : null;
+    const wellsLine = !wells ? '<span class="warn">The USGS well service did not answer. Try again in a minute.</span>'
+      : !wells.length ? 'The USGS has no wells on record within about 10 miles. That is common; most private wells are only in the state\'s own records (link below).'
+      : `${wells.length} USGS wells within about 10 miles. ${depths.length ? `Median well depth ${Math.round(med)} ft (${depths.length} with a depth).` : 'None has a depth on record.'} ${medLev != null ? `Median water level ${Math.round(medLev)} ft below ground (${levs.length} with a measurement; dates vary, see the table).` : 'No water-level measurements on record for them.'}${topAq ? ` ${topAq[1] === wells.length ? 'All of them' : topAq[1] + ' of them'} tap the ${esc(aqNames.get(topAq[0]) || topAq[0])}.` : ''}`;
+    const aqLine = !R.aquiferOk ? '<span class="warn">The aquifer map did not load.</span>' : aquifer ? `<strong>${esc(aquifer.name)}</strong> (${esc(aquifer.rock.toLowerCase() || 'rock type not given')}). ${AQ_WORDS[aquifer.rock] || ''}` : 'No principal aquifer is mapped at the surface here. The USGS map shows the rock that crops out, so a deeper aquifer can still lie under it; the wells above say which one they reach. Where they reach none, wells draw from minor or shallow aquifers that vary farm to farm, and the state well records are the only way to know what the neighbors found.';
+    const st = stateCode ? FIPS2ST[stateCode] : null; const rec = st && wr?.states?.[st];
+    const stateBtn = rec && rec.url ? `<a class="btn" href="${esc(rec.url)}" target="_blank" rel="noopener">${esc(st)} well records<small>${esc(rec.name)}${rec.verified ? '' : ' (link not verified)'}</small></a>` : `<a class="btn" href="${ddg(`${st ? STATE_NAMES[st] + ' ' : ''}water well logs driller reports database`)}" target="_blank" rel="noopener">State well records<small>search; no verified link yet</small></a>`;
+    const ll = `${center[0].toFixed(5)},${center[1].toFixed(5)}`;
+
+    $('#results').innerHTML = `
+      <div class="card">
+        <h2>The soil on ${esc(where)}</h2>
+        <p class="sub">USDA NRCS soil survey (SSURGO) through Soil Data Access, read just now. Water table and bedrock depths are the survey's minimums for the unit.</p>
+        <div class="tablewrap"><table><thead><tr><th>Map unit</th><th class="num">${usePoly ? 'Share' : ''}</th><th>Drainage</th><th class="num">Slope</th><th class="num">Water table (wet season)</th><th class="num">Bedrock</th><th>Flooding</th><th class="num">Capability class</th></tr></thead><tbody>${unitRows}</tbody></table></div>
+        <p class="note">Capability class: 1 is the best cropland, 4 is marginal, 6 to 7 is pasture or woods only, 8 is unusable. The drainage word says how fast water leaves the soil; "poorly drained" ground is wet for weeks at a time.</p>
+      </div>
+      <div class="card">
+        <h2>Fit for what you want to do</h2>
+        <p class="sub">The NRCS's own ratings for the main soil of each unit${usePoly ? ', weighted by how much of your border each unit covers' : ''}. "Limited" means it can be done but costs more or needs a special design; "very limited" means expect real trouble or a no from the permit office.</p>
+        ${useBlocks || '<p class="note">Tick something above to rate it.</p>'}
+      </div>
+      <div class="card">
+        <h2>Under the surface: ${esc(dom ? dom.compname : 'main soil')}</h2>
+        <p class="sub">${dom ? `${esc(dom.compname)} makes up ${dom.comppct_r}% of ${esc(muBy.get(units[0].mukey)?.muname || 'the biggest unit')}. ${esc(dom.taxsubgrp || '')}. Steel corrodes: ${esc((dom.corsteel || 'not rated').toLowerCase())}; concrete: ${esc((dom.corcon || 'not rated').toLowerCase())}.` : 'No component data.'}</p>
+        <div class="tablewrap"><table><thead><tr><th>Layer</th><th class="num">Depth</th><th>Texture</th><th class="num">Clay</th><th class="num">pH</th><th class="num">Water moves</th><th class="num">Organic matter</th></tr></thead><tbody>${layerRows || '<tr><td colspan="7">No layer data.</td></tr>'}</tbody></table></div>
+        <p class="note">Gardens want a loam with pH 6 to 7 and a few percent organic matter. Clay above 35% drains slowly and heaves. Water that moves "very slow" is the usual reason a septic field is refused.</p>
+      </div>
+      <div class="card">
+        <h2>Water</h2>
+        <h3>Seasonal water table (from the soil survey)</h3>
+        <p>${wtLine}</p>
+        <p class="note">This is the shallow saturated layer within the top 6.5 feet, the thing that matters for septic, basements and fence posts. It is not the aquifer a well draws from.</p>
+        <h3>Wells nearby (USGS)</h3>
+        <p>${wellsLine}</p>
+        ${wells && wells.length ? `<div class="tablewrap"><table><thead><tr><th>Well</th><th class="num">Distance</th><th class="num">Well depth</th><th class="num">Water level</th><th>Aquifer the well taps</th></tr></thead><tbody>${wellRows}</tbody></table></div><p class="note">USGS Water Data API, monitoring locations and latest field measurements, read just now. Water level is depth below the land surface on the date shown; old dates are old. Well depth is the drilled depth, not the water level.</p>` : ''}
+        <h3>The aquifer underneath</h3>
+        <p>${aqLine}</p>
+        <p class="note">USGS Principal Aquifers of the United States, mapped at 1:2,500,000. It tells you the regional water-bearing rock, not whether a well on this parcel will make water.</p>
+        <h3>Get the real well logs</h3>
+        <div class="buttons">
+          ${stateBtn}
+          <a class="btn" href="https://casoilresource.lawr.ucdavis.edu/gmap/?loc=${ll}" target="_blank" rel="noopener">SoilWeb at this spot<small>UC Davis; the full soil survey, zoomable</small></a>
+          <a class="btn" href="https://websoilsurvey.nrcs.usda.gov/app/" target="_blank" rel="noopener">Web Soil Survey<small>NRCS; draw the parcel there for the official report</small></a>
+          <a class="btn" href="https://apps.nationalmap.gov/viewer/?center=${center[1].toFixed(5)},${center[0].toFixed(5)}&zoom=15" target="_blank" rel="noopener">USGS topo and elevation<small>The National Map viewer</small></a>
+          <a class="btn" href="https://msc.fema.gov/portal/search?AddressQuery=${encodeURIComponent(ll)}" target="_blank" rel="noopener">FEMA flood map<small>official flood zone for this spot</small></a>
+        </div>
+      </div>`;
+
+    if (wells && wells.length) { wellLayer = L.layerGroup().addTo(map); wells.slice(0, 40).forEach((w) => L.circleMarker([w.lat, w.lon], { radius: 5, color: '#1f2328', weight: 1, fillColor: '#8fb0d9', fillOpacity: .9 }).bindTooltip(`${w.name}: ${w.depth != null ? Math.round(w.depth) + ' ft deep' : 'depth unknown'}${w.lev ? `, water ${Math.round(w.lev.v)} ft down (${w.lev.time.slice(0, 4)})` : ''}`).addTo(wellLayer)); }
+  }
+
+  // orchard: no national NRCS rating, so a plain rule from the facts, said as such
+  function orchardRule(u, units, muBy, compBy, layers) {
+    const probs = new Map(); let bad = 0, mid = 0;
+    units.forEach((unit) => { const m = muBy.get(unit.mukey) || {}; let worst = 0;
+      if (m.wtdepannmin != null && m.wtdepannmin < 91) { probs.set('Water table within 3 feet', 1); worst = 2; }
+      else if (m.wtdepannmin != null && m.wtdepannmin < 150) { probs.set('Water table within 5 feet', 1); worst = Math.max(worst, 1); }
+      if (/poorly/i.test(m.drclassdcd || '')) { probs.set(`${m.drclassdcd}`, 1); worst = Math.max(worst, /^(very )?poorly/i.test(m.drclassdcd) ? 2 : 1); }
+      if (m.brockdepmin != null && m.brockdepmin < 100) { probs.set('Bedrock within 40 inches', 1); worst = Math.max(worst, m.brockdepmin < 50 ? 2 : 1); }
+      if (m.flodfreqdcd && !/none|very rare/i.test(m.flodfreqdcd)) { probs.set(`Flooding: ${m.flodfreqdcd.toLowerCase()}`, 1); worst = Math.max(worst, /frequent/i.test(m.flodfreqdcd) ? 2 : 1); }
+      if (worst === 2) bad += unit.share; else if (worst === 1) mid += unit.share; });
+    const top = layers.find((h) => h.hzdept_r == 0 || h.hzdept_r == null) || layers[0];
+    if (top && top.ph1to1h2o_r != null && (top.ph1to1h2o_r < 5.5 || top.ph1to1h2o_r > 7.8)) probs.set(`Topsoil pH ${top.ph1to1h2o_r}`, 1);
+    const good = Math.max(0, 1 - bad - mid);
+    const parts = [[good, 'good', 'Not limited'], [mid, 'mid', 'Somewhat limited'], [bad, 'bad', 'Very limited']].filter((p) => p[0] > 0.001);
+    const head = parts.map((p) => badge(p[1], units.length > 1 || units[0].polys.length ? `${pct(p[0])} ${p[2]}` : p[2])).join(' ');
+    const why_ = probs.size ? `<ul>${[...probs.keys()].map((k) => `<li>${esc(k)}</li>`).join('')}</ul>` : '<p class="note">Drains, no shallow water table, no shallow rock, no flooding on record.</p>';
+    return { html: `<div class="use"><h4>${esc(u.label)}</h4>${head}<p class="src">Our rule, not an NRCS rating: fruit and nut trees die in standing water, so this looks at water table, drainage, bedrock, flooding and topsoil pH.</p>${why_}</div>` };
+  }
+
+  const TEX = { S: 'sand', LS: 'loamy sand', SL: 'sandy loam', L: 'loam', SIL: 'silt loam', SI: 'silt', SCL: 'sandy clay loam', CL: 'clay loam', SICL: 'silty clay loam', SC: 'sandy clay', SIC: 'silty clay', C: 'clay', FSL: 'fine sandy loam', VFSL: 'very fine sandy loam', LFS: 'loamy fine sand', FS: 'fine sand', COS: 'coarse sand', GR: 'gravel', 'GR-L': 'gravelly loam', 'GR-SL': 'gravelly sandy loam', 'GR-CL': 'gravelly clay loam', 'CB-L': 'cobbly loam', 'ST-L': 'stony loam', 'CN-L': 'channery loam', 'CN-SIL': 'channery silt loam', 'FL-SIL': 'flaggy silt loam', 'SH-SIL': 'shaly silt loam', 'GR-SIL': 'gravelly silt loam', WB: 'weathered bedrock', UWB: 'unweathered bedrock', BR: 'bedrock', MUCK: 'muck', PEAT: 'peat', MPT: 'mucky peat', 'V-GR-L': 'very gravelly loam' };
+  const ksatWord = (k) => k < 0.01 ? 'very slow' : k < 0.1 ? 'very slow' : k < 1 ? 'slow' : k < 4 ? 'moderate' : k < 14 ? 'moderately fast' : k < 42 ? 'fast' : 'very fast';
+  const AQ_WORDS = {
+    'Unconsolidated sand and gravel aquifers': 'Sand and gravel: usually the easiest water to find and the shallowest wells, but open to whatever soaks in from the surface.',
+    'Semiconsolidated sand aquifers': 'Loosely cemented sand: good yields in most places; depth varies.',
+    'Sandstone aquifers': 'Sandstone: steady water, often deeper wells; yields depend on the fractures.',
+    'Carbonate-rock aquifers': 'Limestone or dolomite: water moves through cracks and caves, so one well makes plenty and the next makes little, and surface pollution travels fast. Ask about sinkholes.',
+    'Sandstone and carbonate-rock aquifers': 'Layered sandstone and limestone: water in both; yields vary by which layer the well reaches.',
+    'Igneous and metamorphic-rock aquifers': 'Hard crystalline rock: water only in the fractures. Wells are a gamble on yield, and drillers go deep. Ask neighbors how deep and how many gallons a minute.',
+  };
+  const FIPS2ST = { '01': 'AL', '02': 'AK', '04': 'AZ', '05': 'AR', '06': 'CA', '08': 'CO', '09': 'CT', '10': 'DE', '11': 'DC', '12': 'FL', '13': 'GA', '15': 'HI', '16': 'ID', '17': 'IL', '18': 'IN', '19': 'IA', '20': 'KS', '21': 'KY', '22': 'LA', '23': 'ME', '24': 'MD', '25': 'MA', '26': 'MI', '27': 'MN', '28': 'MS', '29': 'MO', '30': 'MT', '31': 'NE', '32': 'NV', '33': 'NH', '34': 'NJ', '35': 'NM', '36': 'NY', '37': 'NC', '38': 'ND', '39': 'OH', '40': 'OK', '41': 'OR', '42': 'PA', '44': 'RI', '45': 'SC', '46': 'SD', '47': 'TN', '48': 'TX', '49': 'UT', '50': 'VT', '51': 'VA', '53': 'WA', '54': 'WV', '55': 'WI', '56': 'WY' };
+  const STATE_NAMES = { AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', DC: 'District of Columbia', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming' };
+  const ddg = (q) => `https://duckduckgo.com/?q=${encodeURIComponent(q)}`;
+
+  readHash();
+  map.on('moveend', () => { if (pin && !(verts.length >= 3)) writeHash(); });
+})();
+</script>
+</body>
+</html>

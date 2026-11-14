@@ -182,7 +182,7 @@
         <li><span class="n">2</span><div><strong>Read the deed and the plat.</strong> At the register of deeds or county clerk, find the current deed and any recorded plat or survey. Look for easements, mineral reservations, right-of-way, and whether the seller actually holds title alone.</div></li>
         <li><span class="n">3</span><div><strong>Check for taxes owed.</strong> The tax collector will tell you if back taxes or liens ride with the land. They become yours at closing if nobody clears them.</div></li>
         <li><span class="n">4</span><div><strong>Ask about ag-use rules and rollback.</strong> If the land is taxed at an agricultural rate, find out what you must do to keep it (acres, livestock, hay, a lease) and what the rollback tax is if you lose it. In some states the rollback is five years of back taxes plus interest.</div></li>
-        <li><span class="n">5</span><div><strong>Wells and septic.</strong> Ask the county health department what a septic permit requires on that soil, and ask neighbors or the state well database how deep the wells run. A perc test before closing is cheap compared to a lot you cannot build on.</div></li>
+        <li><span class="n">5</span><div><strong>Wells and septic.</strong> Run the parcel through <a href="parcel.html">the soil and water check</a> first: it shows the seasonal water table, the septic rating and nearby well depths from the government surveys. Then Ask the county health department what a septic permit requires on that soil, and ask neighbors or the state well database how deep the wells run. A perc test before closing is cheap compared to a lot you cannot build on.</div></li>
         <li><span class="n">6</span><div><strong>Attorney last, not never.</strong> A local real-estate attorney reads the title commitment and the contract for a few hundred dollars. Do it after you have done the first five, so you are paying for judgment and not for homework.</div></li>
       </ol>
     </div>
@@ -554,6 +554,7 @@
         <a class="btn" href="${ddg(`${cname} ${stName} register of deeds records search`)}" target="_blank" rel="noopener">Deeds and plats<small>step 2: register of deeds</small></a>
         <a class="btn" href="${ddg(`${cname} ${stName} health department septic permit`)}" target="_blank" rel="noopener">Health department<small>step 5: septic permits</small></a>
         <a class="btn" href="${lf}" target="_blank" rel="noopener">Land &amp; Farm listings<small>then set Acres 10 to 50 in Filter</small></a>
+        <a class="btn" href="parcel.html#${r.lat.toFixed(4)},${r.lon.toFixed(4)},10" target="_blank" rel="noopener">Check a parcel's soil and water<small>type an address or draw its border</small></a>
       </div>
       <p class="note">Something here wrong or out of date? <a href="${reportUrl(r, stName)}" target="_blank" rel="noopener">Report wrong information for ${esc(cname)}</a>. It opens a form with the county already filled in.</p>`;
   }

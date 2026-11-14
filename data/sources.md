@@ -78,6 +78,25 @@ assessor, recorder, GIS or health-department URLs exists:
 - Assessor, GIS, deeds, health department: DuckDuckGo searches with the county and state typed in.
 - Land & Farm: `https://www.landandfarm.com/search/<state>/<county>-county-land-for-sale/` (format confirmed 2026-11-13). The site's acreage filter is a form, not a URL parameter, so the user sets 10 to 50 acres after the page opens. Land.com, LandSearch and LandWatch refuse automated reads, so no listings are read or shown.
 
+## Parcel check (`parcel.html`)
+
+The parcel page asks the government services live, from the visitor's browser, for the one
+spot or border they give it. Nothing is proxied or stored.
+
+| What | Source | How |
+|---|---|---|
+| Where an address is | US Census Bureau Geocoder, `geocoding.geo.census.gov/geocoder/locations/onelineaddress`, benchmark Public_AR_Current, JSONP | Street addresses only. Towns and ZIPs come from this site's own `places.json` and `zips.json`. Accuracy is the TIGER street range, often a few hundred feet off; the pin can be dragged. |
+| Soil map units under a point or border | USDA NRCS Soil Data Access, `sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest` | Point: `SDA_Get_Mukey_from_intersection_with_WktWgs84`. Border: `mupolygon` intersected with the drawn polygon; the area share of each unit is computed in the browser from the returned WKT. |
+| Map unit facts | SDA tables `mapunit`, `muaggatt` | farmland class, dominant drainage class, slope, flooding, ponding, hydric, minimum depth to seasonal water table (`wtdepannmin`) and to bedrock (`brockdepmin`), capability class (`niccdcd`). |
+| Ratings for a house, septic, garden, pasture, pond, roads, digging, fence posts, camping | SDA `cointerp` for the major components, rule depth 0 (the class) and 1 (the reasons) | Interpretations used: ENG - Dwellings W/O Basements; ENG - Dwellings With Basements; ENG - Septic Tank Absorption Fields; NCCPI - National Commodity Crop Productivity Index (Ver 3.0); AGR - Pasture Productivity Index; AGR - Hay Productivity Index; WMS - Pond Reservoir Area; WMS - Embankments, Dikes, and Levees; ENG - Unpaved Local Roads and Streets; ENG - Shallow Excavations; GRL - Fencing, Post Depth =<36 inches; URB/REC - Camp Areas. The rating shown per unit is the dominant major component's; a border is area-weighted. The orchard line is our own rule from the facts and is labeled as such. |
+| Soil layers | SDA `chorizon`, `chtexturegrp` (RV texture) for the dominant component of the largest unit | depth, texture, clay %, pH (1:1 water), saturated hydraulic conductivity in words, organic matter. |
+| Soil map lines on the map | NRCS `SDMDataAccess.sc.egov.usda.gov/Spatial/SDM.wms`, layer MapunitPoly | shown at zoom 13 and closer. |
+| Base map | USGS The National Map, `basemap.nationalmap.gov` USGSImageryTopo and USGSTopo tiles | public domain, no key. |
+| Wells nearby | USGS Water Data API, `api.waterdata.usgs.gov/ogcapi/v0/collections/monitoring-locations` (site type GW, bbox about 10 miles) and `latest-field-measurements` (parameter 72019, depth to water below land surface) | well depth is `well_constructed_depth`; the water level is the latest field measurement with its date. Aquifer codes are decoded through the `aquifer-codes` collection. The legacy `waterservices.usgs.gov/nwis/gwlevels` service was retired in 2025 and is not used. |
+| The aquifer underneath | USGS Principal Aquifers of the United States, `water.usgs.gov/GIS/dsdl/aquifers_us.zip` (2003 edition, file dated 2015-03-16), 1:2,500,000 | `data/build_aquifers.py` drops "Other rocks" and simplifies to 0.01 degree into `data/aquifers.json`; the page does a point-in-polygon on the spot or the border's center. |
+| State well records | `data/manual/well_records.json`, one page per state, checked by hand on the date in the file (44 of 51 fetched and confirmed; the rest are marked unverified and the page says so) | Where the state's search tool is a map app that returns no text to a fetcher, the entry points at the agency's verified hub page and names the tool in the note. |
+| Links out | SoilWeb (UC Davis) at the coordinates; NRCS Web Soil Survey; USGS National Map viewer; FEMA Flood Map Service Center | all public, no login. |
+
 ## Not included (and why)
 
 - **FCC National Broadband Map availability by county.** Every download endpoint requires a browser session (HTTP 401/403 to any client without one). The Census broadband-subscription share stands in and is labeled as such. To add it by hand: download the "Fixed Broadband Availability Summary by Geography Type" CSV from https://broadbandmap.fcc.gov/data-download/nationwide-data, keep county rows for Any Technology (fixed terrestrial), and fill `data/manual/broadband.csv`.

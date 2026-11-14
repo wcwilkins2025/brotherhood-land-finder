@@ -16,10 +16,12 @@ Live page: https://wcwilkins2025.github.io/brotherhood-land-finder/
 | Piece | Where |
 |---|---|
 | The page | `index.html` (sliders, "near me" search, US county map, ranked list, county detail, link kit, "Read this before you sign") |
+| Parcel check | `parcel.html` (type an address or draw a border; live soil survey facts and NRCS ratings for a house, septic, garden, pasture, pond; seasonal water table; nearby USGS well depths and levels; the aquifer underneath; state well-record link) |
 | County data | `data/counties.json` (one row per county, ~50 fields, plus a state-law block) |
 | Map shapes | `data/counties.geojson` (Census cartographic boundaries, 1:20m, 3-decimal coordinates) |
 | Town and ZIP lookups for "near me" | `data/places.json`, `data/zips.json` |
 | Build pipeline | `data/fetch_all.sh` (downloads), `data/build.py` (joins everything on FIPS) |
+| Aquifer polygons | `data/aquifers.json` from `data/build_aquifers.py` (USGS principal aquifers, simplified) |
 | Hand-gathered inputs | `data/manual/` (state laws, zoning by state and county, Amish settlements, public land) |
 | Every dataset, date and URL | `data/sources.md` |
 
@@ -28,6 +30,7 @@ Live page: https://wcwilkins2025.github.io/brotherhood-land-finder/
 ```bash
 sh data/fetch_all.sh       # downloads ~600 MB of public files into ./downloads (gitignored)
 python -I data/build.py    # writes data/counties.json, counties.geojson, places.json, zips.json
+python -I data/build_aquifers.py  # writes data/aquifers.json from downloads/aquifers/
 python -m http.server 8000 # then open http://localhost:8000/
 ```
 
