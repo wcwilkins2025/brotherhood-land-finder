@@ -4,7 +4,7 @@ A free, public, static web page that scores every US county (3,144 counties and
 equivalents in the 50 states and DC) for a self-sustaining rural life, and gives a
 per-county link kit for the records check you must do before you sign.
 
-Live page: https://wcwilkins2025.github.io/brotherhood-land-finder/
+Live page: https://thelandfinder.org/
 
 - No login, no tracking, nothing stored about anyone. No member data of any kind.
 - One HTML file plus the data files it loads. Hosted on GitHub Pages. Free forever.
