@@ -1,4 +1,4 @@
-# Brotherhood Land Finder
+# Land Finder
 
 A free, public, static web page that scores every US county (3,144 counties and
 equivalents in the 50 states and DC) for a self-sustaining rural life, and gives a

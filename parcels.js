@@ -1,4 +1,4 @@
-/* Brotherhood Land Finder: parcel lookup shared by the main map and the parcel check.
+/* Land Finder: parcel lookup shared by the main map and the parcel check.
    Asks a state's own public parcel service (listed in data/parcels.json, each one tested)
    for the tax parcel at a point or the parcels in a box. Runs in the browser; nothing is stored,
    and there is no search by owner name on purpose. */

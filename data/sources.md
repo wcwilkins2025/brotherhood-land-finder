@@ -1,6 +1,6 @@
 # Sources
 
-Every dataset the Brotherhood Land Finder uses, with its date and URL. All are public
+Every dataset the Land Finder uses, with its date and URL. All are public
 files or keyless public APIs. Nothing needed an account or a paid key. Downloaded and
 built 2026-11-13 by `data/fetch_all.sh` and `data/build.py`.
 
