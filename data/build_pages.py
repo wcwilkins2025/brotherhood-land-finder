@@ -17,7 +17,7 @@ BUILT = D['built']
 e = lambda s: html.escape('' if s is None else str(s), quote=True)
 
 FAMILY = ('<p class="hr-family">Part of <a href="https://homesteadready.org/">Homestead Ready</a>, free tools for land, '
-          'homesteading, readiness and radio. <a href="https://www.facebook.com/groups/homesteadready" rel="noopener">Join the Facebook group</a>.</p>')
+          'homesteading, health, readiness and radio. <a href="https://www.facebook.com/groups/homesteadready" rel="noopener">Join the Facebook group</a>.</p>')
 
 
 def slug(s):
