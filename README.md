@@ -16,6 +16,7 @@ Live page: https://thelandfinder.org/
 | Piece | Where |
 |---|---|
 | The page | `index.html` (sliders, "near me" search, a map that zooms from the whole country to aerial photos, soil lines and tax parcels, ranked list, county detail, link kit, "Read this before you sign") |
+| State and county pages | `/tx/`, `/tx/fannin-county/` and so on, one plain page per state and county for search engines, built by `data/build_pages.py` from `data/counties.json`; listed in `sitemap.xml` |
 | Parcel check | `parcel.html` (type an address or draw a border; live soil survey facts and NRCS ratings for a house, septic, garden, pasture, pond; seasonal water table; nearby USGS well depths and levels; the aquifer underneath; state well-record link) |
 | Tax parcels | `parcels.js` and `data/parcels.json`: owner, parcel number, acres and lines from each state's free parcel service (33 states), on the main map at close zoom and under the pin on the parcel check |
 | County data | `data/counties.json` (one row per county, ~50 fields, plus a state-law block) |
@@ -32,6 +33,7 @@ Live page: https://thelandfinder.org/
 sh data/fetch_all.sh       # downloads ~600 MB of public files into ./downloads (gitignored)
 python -I data/build.py    # writes data/counties.json, counties.geojson, places.json, zips.json
 python -I data/build_aquifers.py  # writes data/aquifers.json from downloads/aquifers/
+python -I data/build_pages.py     # writes a page per state and county, sitemap.xml and robots.txt
 python -m http.server 8000 # then open http://localhost:8000/
 ```
 

@@ -11,27 +11,27 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
   :root {
-    --bg: #f3f1ec; --surface: #ffffff; --fg: #1f2328; --muted: #5c6369; --rule: #d6d2c8;
-    --accent: #8a4b1f; --accent-ink: #ffffff; --accent-hover: #6e3a16;
-    --band: #22302e; --band-fg: #f3f1ec; --step: #2f5d4a; --warn: #9a3b1f;
-    --good: #2f5d4a; --mid: #9a6b1f; --bad: #9a3b1f; --good-bg: #dfeae4; --mid-bg: #f3e7cf; --bad-bg: #f2dcd3;
+    --bg: #f5efe2; --surface: #fffaf0; --fg: #2b2a24; --muted: #5d5848; --rule: #e0d5bd;
+    --accent: #9a4f1f; --accent-ink: #ffffff; --accent-hover: #7d3f17;
+    --band: #2f4a32; --band-fg: #f5efe2; --step: #2f4a32; --warn: #9a3b1f;
+    --good: #3b6e44; --mid: #8a6208; --bad: #9a3b1f; --good-bg: #e2ebdc; --mid-bg: #f2e7cd; --bad-bg: #f0dbd4;
     --font-display: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
     --font-body: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #15191b; --surface: #1d2224; --fg: #e8e5de; --muted: #a09c93; --rule: #343b3e;
-      --accent: #d98a4f; --accent-ink: #15191b; --accent-hover: #e9a068;
-      --band: #0f1514; --band-fg: #e8e5de; --step: #7fc3a4; --warn: #e58a6a;
-      --good: #7fc3a4; --mid: #d9b26a; --bad: #e58a6a; --good-bg: #223b31; --mid-bg: #3b3220; --bad-bg: #3e2822;
+      --bg: #1a1d16; --surface: #252a1f; --fg: #ece5d4; --muted: #b5ad99; --rule: #3a3f31;
+      --accent: #d9884c; --accent-ink: #1a1d16; --accent-hover: #e9a068;
+      --band: #12150f; --band-fg: #ece5d4; --step: #9fbf5e; --warn: #e58a6a;
+      --good: #8cc79a; --mid: #e0b450; --bad: #e58a6a; --good-bg: #2a3424; --mid-bg: #3b3220; --bad-bg: #3a2620;
       color-scheme: dark;
     }
   }
   :root[data-theme="dark"] {
-    --bg: #15191b; --surface: #1d2224; --fg: #e8e5de; --muted: #a09c93; --rule: #343b3e;
-    --accent: #d98a4f; --accent-ink: #15191b; --accent-hover: #e9a068;
-    --band: #0f1514; --band-fg: #e8e5de; --step: #7fc3a4; --warn: #e58a6a;
-    --good: #7fc3a4; --mid: #d9b26a; --bad: #e58a6a; --good-bg: #223b31; --mid-bg: #3b3220; --bad-bg: #3e2822;
+    --bg: #1a1d16; --surface: #252a1f; --fg: #ece5d4; --muted: #b5ad99; --rule: #3a3f31;
+    --accent: #d9884c; --accent-ink: #1a1d16; --accent-hover: #e9a068;
+    --band: #12150f; --band-fg: #ece5d4; --step: #9fbf5e; --warn: #e58a6a;
+    --good: #8cc79a; --mid: #e0b450; --bad: #e58a6a; --good-bg: #2a3424; --mid-bg: #3b3220; --bad-bg: #3a2620;
     color-scheme: dark;
   }
   * { box-sizing: border-box; }
@@ -109,6 +109,8 @@
   .swatch { display: inline-block; width: 14px; height: 14px; border: 1px solid var(--rule); vertical-align: -2px; margin-right: 6px; }
   footer { color: var(--muted); font-size: 14.5px; border-top: 1px solid var(--rule); margin-top: 28px; }
   footer .wrap { padding-block: 20px; }
+  .hr-family { color: var(--muted); }
+  .hr-family a { color: var(--accent); }
   footer a, .card a:not(.btn), .note a { color: var(--accent); }
   details { margin: 10px 0; }
   summary { cursor: pointer; font-weight: 600; }
@@ -179,6 +181,7 @@
 
 <footer>
   <div class="wrap">
+    <p class="hr-family">Part of <a href="https://homesteadready.org/">Homestead Ready</a>, free tools for land, homesteading, readiness and radio. <a href="https://www.facebook.com/groups/homesteadready" rel="noopener">Join the Facebook group</a>.</p>
     <p>Free forever. No login, no tracking, nothing stored about you. Your address goes to the Census Bureau's geocoder to turn it into coordinates. The coordinates go to the USDA soil survey (Soil Data Access) and the USGS water data service to pull the public records for that spot. Nothing goes anywhere else, and nothing is kept. Sources and dates: <a href="https://github.com/wcwilkins2025/brotherhood-land-finder/blob/main/data/sources.md" target="_blank" rel="noopener">data/sources.md</a>. Found a problem? <a href="https://github.com/wcwilkins2025/brotherhood-land-finder/issues/new?template=bug.yml" target="_blank" rel="noopener">Report a bug</a> or <a href="https://github.com/wcwilkins2025/brotherhood-land-finder/issues/new?template=feedback.yml" target="_blank" rel="noopener">send feedback</a>.</p>
   </div>
 </footer>
