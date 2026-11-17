@@ -443,7 +443,7 @@
   function setupMap() {
     map = L.map('map', { preferCanvas: true, zoomSnap: 0.5, minZoom: 3, maxZoom: 19, worldCopyJump: false }).fitBounds([[24.4, -124.8], [49.4, -66.9]]);
     const usgs = svc => L.tileLayer(`https://basemap.nationalmap.gov/arcgis/rest/services/${svc}/MapServer/tile/{z}/{y}/{x}`, { maxNativeZoom: 16, maxZoom: 19, attribution: 'USGS The National Map' });
-    const imagery = usgs('USGSImageryTopo'), topo = usgs('USGSTopo');
+    const imagery = usgs('USGSImageryOnly'), topo = usgs('USGSTopo');
     baseLayer = () => baseIsTopo ? topo : imagery;
     soilLayer = L.tileLayer.wms('https://SDMDataAccess.sc.egov.usda.gov/Spatial/SDM.wms', { layers: 'MapunitPoly', format: 'image/png', transparent: true, opacity: .9, attribution: 'USDA NRCS Soil Survey', maxZoom: 19 });
     countyLayer = L.geoJSON(geo, { style: countyStyle, onEachFeature: (f, layer) => {
