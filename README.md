@@ -47,13 +47,10 @@ The parcel check reads Land Finder's own copy of the USDA soil survey and the US
 hosted on Cloudflare R2 at `data.thelandfinder.org`, and falls back to the live agencies only if
 that copy is unreachable. The copy is built by `data/store/` with a private Python environment:
 
-```bash
-python -m venv data/.venv
-data/.venv/Scripts/python -m pip install rasterio pyogrio py7zr numpy boto3
-data/.venv/Scripts/python -I data/store/refresh.py     # what the monthly task runs
-```
-
-R2 credentials live outside the repository in `%USERPROFILE%\.landfinder\r2.env`.
+The GitHub Actions workflow `.github/workflows/data-refresh.yml` does this on the 1st of each
+month; run it by hand from the Actions tab (enter ALL to rebuild every soil state). Its keys are
+repository secrets: `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `USGS_API_KEY`.
+To run a step on a PC: `pip install -r data/store/requirements.txt`, then `python -I data/store/ci.py ...`.
 See `data/sources.md` for what is stored and how often it refreshes.
 
 ## How the score works

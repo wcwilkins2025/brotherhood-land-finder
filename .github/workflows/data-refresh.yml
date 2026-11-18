@@ -1,0 +1,103 @@
+# Monthly refresh of Land Finder's stored soil survey and well list on Cloudflare R2.
+# Keys are repository secrets (Settings > Secrets and variables > Actions):
+#   R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, USGS_API_KEY
+# The website never sees them; it reads the public copy at data.thelandfinder.org.
+name: Monthly data refresh
+
+on:
+  schedule:
+    - cron: '17 9 1 * *'          # the 1st of each month, 09:17 UTC
+  workflow_dispatch:
+    inputs:
+      states:
+        description: 'Soil states to rebuild, e.g. "TX OK", or ALL. Blank = only states USDA changed.'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: data-refresh
+  cancel-in-progress: false
+
+env:
+  R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+  R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+  R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+  R2_BUCKET: landfinder-data
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      states: ${{ steps.plan.outputs.states }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12', cache: pip, cache-dependency-path: data/store/requirements.txt }
+      - run: pip install -r data/store/requirements.txt
+      - id: plan
+        run: python -I data/store/ci.py plan ${{ inputs.states }}
+
+  soil:
+    needs: plan
+    if: needs.plan.outputs.states != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        st: ${{ fromJSON(needs.plan.outputs.states) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12', cache: pip, cache-dependency-path: data/store/requirements.txt }
+      - run: pip install -r data/store/requirements.txt
+      - run: python -I data/store/ci.py soil ${{ matrix.st }}
+
+  assemble:
+    needs: [plan, soil]
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12', cache: pip, cache-dependency-path: data/store/requirements.txt }
+      - run: pip install -r data/store/requirements.txt
+      - run: python -I data/store/ci.py assemble
+
+  wells:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    env:
+      USGS_API_KEY: ${{ secrets.USGS_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12', cache: pip, cache-dependency-path: data/store/requirements.txt }
+      - run: pip install -r data/store/requirements.txt
+      - run: python -I data/store/ci.py wells
+
+  status:
+    needs: [plan, soil, assemble, wells]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12', cache: pip, cache-dependency-path: data/store/requirements.txt }
+      - run: pip install -r data/store/requirements.txt
+      - run: python -I data/store/ci.py status plan=${{ needs.plan.result }} soil=${{ needs.soil.result }} assemble=${{ needs.assemble.result }} wells=${{ needs.wells.result }}
+      # GitHub pauses scheduled workflows after 60 days without repository activity;
+      # re-enabling this one each month keeps the schedule alive. No commits are made.
+      - name: Keep the monthly schedule alive
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/data-refresh.yml/enable"

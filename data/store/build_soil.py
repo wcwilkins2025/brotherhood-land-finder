@@ -27,7 +27,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import usda_box, sda_reasons
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
-STORE = os.path.join(ROOT, 'downloads', 'store')
+STORE = os.environ.get('LF_STORE') or os.path.join(ROOT, 'downloads', 'store')   # LF_STORE: a separate folder for tests
 RAW, WORK, OUT = (os.path.join(STORE, d) for d in ('raw', 'work', os.path.join('out', 'soil')))
 UNITS = os.path.join(STORE, 'units')          # per-state intermediate facts, not uploaded
 REASONS = os.path.join(STORE, 'reasons')      # rating reasons from Soil Data Access, per state
@@ -112,6 +112,8 @@ def _target(src):
     from rasterio.warp import transform_bounds
     from rasterio.transform import from_origin
     w, s, e, n = transform_bounds(src.crs, 'EPSG:4326', *src.bounds, densify_pts=21)
+    if e < w or e - w > 180:          # wraps the antimeridian (Alaska): keep the western hemisphere part
+        w, e = -180.0, -129.0
     w = np.floor(w / RES) * RES; n = np.ceil(n / RES) * RES
     e = np.ceil(e / RES) * RES; s = np.floor(s / RES) * RES
     width = int(round((e - w) / RES)); height = int(round((n - s) / RES))
@@ -190,13 +192,21 @@ def build_state(st, meta, keep_raw=False):
             'units': len(units), 'grid': grid, 'built': time.strftime('%Y-%m-%d')}
 
 
+SDA_DOWN = False
+
+
 def fetch_reasons(st, areas):
+    global SDA_DOWN
+    if SDA_DOWN:
+        log(st, 'reasons skipped this run (Soil Data Access was down earlier in the run)')
+        return None
     try:
         n = sda_reasons.fetch(st, areas, INTERPS, REASONS)
         log(st, f'reasons for {n} components from Soil Data Access')
         return time.strftime('%Y-%m-%d')
     except Exception as e:
         log(st, 'reasons not fetched (kept any earlier copy):', str(e)[:120])
+        SDA_DOWN = True
         return None
 
 

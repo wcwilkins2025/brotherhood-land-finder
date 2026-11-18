@@ -110,9 +110,10 @@ can't be reached. One agency being down no longer blanks the check.
 | Rating reasons | Soil Data Access, `cointerp` rule depth 1, per survey area (the download keeps only the rating itself) | merged into the shards | fetched at build time; if Soil Data Access is down the earlier copy is kept and the next monthly run tries again |
 | Wells | USGS Water Data API: `monitoring-locations` (site type GW), `latest-field-measurements` (72019), `aquifer-codes` | gzip JSON per 1-degree cell | every month |
 
-Scripts: `data/store/build_soil.py`, `sda_reasons.py`, `usda_box.py`, `build_wells.py`, `upload.py`
-(to Cloudflare R2, bucket served at `data.thelandfinder.org`), and `refresh.py`, which a Windows
-scheduled task runs on the 1st of each month. `status.json` in the bucket records each run.
+Scripts: `data/store/build_soil.py`, `sda_reasons.py`, `usda_box.py`, `build_wells.py`, `r2.py` and `ci.py`.
+The GitHub Actions workflow `.github/workflows/data-refresh.yml` runs them on the 1st of each month on
+GitHub's servers (one job per changed soil state, in parallel) and uploads to Cloudflare R2, served at
+`data.thelandfinder.org`. The R2 and USGS keys are repository secrets. `status.json` in the bucket records each run.
 
 ## Tax parcels: owner and lines (`parcels.js`, `data/parcels.json`)
 
