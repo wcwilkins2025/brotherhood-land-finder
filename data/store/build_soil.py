@@ -87,6 +87,7 @@ def load_manifest():
 
 
 def save_manifest(m):
+    os.makedirs(os.path.dirname(MANIFEST), exist_ok=True)      # a fresh GitHub runner starts with no store folder
     json.dump(m, open(MANIFEST, 'w', encoding='utf-8'), indent=1)
 
 
