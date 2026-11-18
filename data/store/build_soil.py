@@ -125,7 +125,7 @@ def build_grid_cli(src_path, dst, tmp):
     bw = np.floor(bw / RES) * RES; bn = np.ceil(bn / RES) * RES; be = np.ceil(be / RES) * RES; bs = np.floor(bs / RES) * RES
     width = int(round((be - bw) / RES)); height = int(round((bn - bs) / RES))
     subprocess.run(['gdalwarp', '-overwrite', '-multi', '-wo', 'NUM_THREADS=ALL_CPUS', '-t_srs', 'EPSG:4326',
-                    '-te', repr(bw), repr(bs), repr(be), repr(bn), '-ts', str(width), str(height), '-r', 'mode',
+                    '-te', f'{float(bw):.10f}', f'{float(bs):.10f}', f'{float(be):.10f}', f'{float(bn):.10f}', '-ts', str(width), str(height), '-r', 'mode',
                     '-dstnodata', '0', '-ot', 'Int32', '-of', 'COG', '-co', 'COMPRESS=DEFLATE', '-co', 'LEVEL=9',
                     '-co', 'BLOCKSIZE=256', '-co', 'OVERVIEWS=NONE', '-co', 'BIGTIFF=IF_SAFER', '-co', 'NUM_THREADS=ALL_CPUS',
                     src_path, tmp], check=True)
