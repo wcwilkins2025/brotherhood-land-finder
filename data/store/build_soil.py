@@ -99,6 +99,9 @@ def build_grid(gdb, st):
     try:
         src_test = rasterio.open(src_path); src_test.close()
     except rasterio.errors.RasterioIOError:
+        if not has_raster(gdb):
+            # the Pacific island files (AS, FM, GU, MH, MP, PW) ship soil map shapes but no grid
+            return build_grid_from_polygons(gdb, dst, tmp)
         # the rasterio wheels for Linux lack the FileGDB raster reader; GitHub's runner uses GDAL's own tools
         return build_grid_cli(src_path, dst, tmp)
     with rasterio.open(src_path) as src:
@@ -106,6 +109,59 @@ def build_grid(gdb, st):
                        **_target(src)) as vrt:
             rasterio.shutil.copy(vrt, tmp, driver='COG', COMPRESS='DEFLATE', LEVEL='9', BLOCKSIZE='256',
                                  OVERVIEWS='NONE', BIGTIFF='IF_SAFER', NUM_THREADS='ALL_CPUS')
+    os.replace(tmp, dst)
+    with rasterio.open(dst) as g:
+        b = g.bounds
+        return {'w': round(b.left, 5), 's': round(b.bottom, 5), 'e': round(b.right, 5), 'n': round(b.top, 5),
+                'width': g.width, 'height': g.height, 'bytes': os.path.getsize(dst)}
+
+
+def has_raster(gdb, name='MURASTER_10m'):
+    """the geodatabase's own catalog (a00000001) lists every table and raster by name"""
+    with open(os.path.join(gdb, 'a00000001.gdbtable'), 'rb') as f:
+        cat = f.read()
+    return any(('fras_ras_' + name).encode(enc) in cat for enc in ('ascii', 'utf-16-le'))
+
+
+def build_grid_from_polygons(gdb, dst, tmp, block=4096):
+    """burn the MUPOLYGON map-unit shapes into the same 1 arc-second grid, one block at a time"""
+    import shapely
+    from rasterio.features import rasterize
+    from rasterio.transform import from_origin
+    from rasterio.warp import transform_geom
+    from rasterio.windows import Window, transform as win_transform
+    meta, _, geoms, fields = pyogrio.raw.read(gdb, layer='MUPOLYGON', columns=['MUKEY'])
+    keys = np.array([int(k) for k in fields[0]], dtype=np.int64)
+    shapes = shapely.from_wkb(geoms)
+    crs = meta['crs']
+    if crs and crs.upper() not in ('EPSG:4326', 'OGC:CRS84'):
+        shapes = np.array([shapely.geometry.shape(transform_geom(crs, 'EPSG:4326', shapely.geometry.mapping(g))) for g in shapes])
+    w, s_, e, n = shapely.total_bounds(shapes)
+    w = np.floor(w / RES) * RES; n = np.ceil(n / RES) * RES
+    e = np.ceil(e / RES) * RES; s_ = np.floor(s_ / RES) * RES
+    width = int(round((e - w) / RES)); height = int(round((n - s_) / RES))
+    tr = from_origin(w, n, RES, RES)
+    tree = shapely.STRtree(shapes)
+    part = tmp + '.raw.tif'
+    with rasterio.open(part, 'w', driver='GTiff', width=width, height=height, count=1, dtype='int32', nodata=0,
+                       crs='EPSG:4326', transform=tr, tiled=True, blockxsize=256, blockysize=256,
+                       compress='DEFLATE', SPARSE_OK='TRUE', BIGTIFF='IF_SAFER') as out:
+        for row in range(0, height, block):
+            for col in range(0, width, block):
+                win = Window(col, row, min(block, width - col), min(block, height - row))
+                wt = win_transform(win, tr)
+                x0, y1 = wt * (0, 0); x1, y0 = wt * (win.width, win.height)
+                hits = tree.query(shapely.box(x0, y0, x1, y1))
+                if len(hits) == 0:
+                    continue
+                arr = rasterize(zip(shapes[hits], keys[hits].astype('int32').tolist()), out_shape=(win.height, win.width),
+                                transform=wt, fill=0, dtype='int32')
+                if arr.any():
+                    out.write(arr, 1, window=win)
+    with rasterio.open(part) as src:
+        rasterio.shutil.copy(src, tmp, driver='COG', COMPRESS='DEFLATE', LEVEL='9', BLOCKSIZE='256',
+                             OVERVIEWS='NONE', BIGTIFF='IF_SAFER', NUM_THREADS='ALL_CPUS')
+    os.remove(part)
     os.replace(tmp, dst)
     with rasterio.open(dst) as g:
         b = g.bounds

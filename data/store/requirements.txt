@@ -3,3 +3,4 @@ pyogrio==0.13.0
 py7zr==1.1.4
 numpy==2.5.5
 boto3==1.44.5
+shapely==2.1.1
