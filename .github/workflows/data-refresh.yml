@@ -56,6 +56,8 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: '3.12', cache: pip, cache-dependency-path: data/store/requirements.txt }
       - run: pip install -r data/store/requirements.txt
+      # GDAL's tools read USDA's FileGDB soil grid on Linux (the rasterio wheel cannot)
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq gdal-bin
       - run: python -I data/store/ci.py soil ${{ matrix.st }}
 
   assemble:

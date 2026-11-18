@@ -19,7 +19,7 @@ Output goes to downloads/store/out/soil/ (git-ignored); upload.py sends it to Cl
 import gzip, io, json, os, shutil, sys, time
 import numpy as np
 import py7zr, pyogrio, rasterio
-import rasterio.shutil
+import rasterio.shutil, rasterio.errors
 from rasterio.enums import Resampling
 from rasterio.vrt import WarpedVRT
 
@@ -95,11 +95,40 @@ def build_grid(gdb, st):
     dst = os.path.join(OUT, 'grid', f'{st}.tif')
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     tmp = dst + '.part.tif'
+    try:
+        src_test = rasterio.open(src_path); src_test.close()
+    except rasterio.errors.RasterioIOError:
+        # the rasterio wheels for Linux lack the FileGDB raster reader; GitHub's runner uses GDAL's own tools
+        return build_grid_cli(src_path, dst, tmp)
     with rasterio.open(src_path) as src:
         with WarpedVRT(src, crs='EPSG:4326', resampling=Resampling.mode, nodata=0, dtype='int32',
                        **_target(src)) as vrt:
             rasterio.shutil.copy(vrt, tmp, driver='COG', COMPRESS='DEFLATE', LEVEL='9', BLOCKSIZE='256',
                                  OVERVIEWS='NONE', BIGTIFF='IF_SAFER', NUM_THREADS='ALL_CPUS')
+    os.replace(tmp, dst)
+    with rasterio.open(dst) as g:
+        b = g.bounds
+        return {'w': round(b.left, 5), 's': round(b.bottom, 5), 'e': round(b.right, 5), 'n': round(b.top, 5),
+                'width': g.width, 'height': g.height, 'bytes': os.path.getsize(dst)}
+
+
+def build_grid_cli(src_path, dst, tmp):
+    import subprocess
+    from rasterio.crs import CRS
+    from rasterio.warp import transform_bounds
+    info = json.loads(subprocess.run(['gdalinfo', '-json', src_path], check=True, capture_output=True, text=True).stdout)
+    gt = info['geoTransform']; w, h = info['size']
+    xs = (gt[0], gt[0] + gt[1] * w); ys = (gt[3], gt[3] + gt[5] * h)
+    bw, bs, be, bn = transform_bounds(CRS.from_wkt(info['coordinateSystem']['wkt']), 'EPSG:4326', min(xs), min(ys), max(xs), max(ys), densify_pts=21)
+    if be < bw or be - bw > 180:
+        bw, be = -180.0, -129.0
+    bw = np.floor(bw / RES) * RES; bn = np.ceil(bn / RES) * RES; be = np.ceil(be / RES) * RES; bs = np.floor(bs / RES) * RES
+    width = int(round((be - bw) / RES)); height = int(round((bn - bs) / RES))
+    subprocess.run(['gdalwarp', '-overwrite', '-multi', '-wo', 'NUM_THREADS=ALL_CPUS', '-t_srs', 'EPSG:4326',
+                    '-te', repr(bw), repr(bs), repr(be), repr(bn), '-ts', str(width), str(height), '-r', 'mode',
+                    '-dstnodata', '0', '-ot', 'Int32', '-of', 'COG', '-co', 'COMPRESS=DEFLATE', '-co', 'LEVEL=9',
+                    '-co', 'BLOCKSIZE=256', '-co', 'OVERVIEWS=NONE', '-co', 'BIGTIFF=IF_SAFER', '-co', 'NUM_THREADS=ALL_CPUS',
+                    src_path, tmp], check=True)
     os.replace(tmp, dst)
     with rasterio.open(dst) as g:
         b = g.bounds
