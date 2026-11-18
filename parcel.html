@@ -7,7 +7,9 @@
 <meta name="description" content="Type an address or draw a border on the map and get the soil survey facts, the NRCS ratings for a house, septic, garden, pasture and pond, the seasonal water table, nearby well depths and the aquifer underneath. Free, no login, no tracking.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<script>if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.LF_DATA = 'http://127.0.0.1:8793';</script>
 <script src="parcels.js"></script>
+<script src="soilstore.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
   :root {
@@ -74,6 +76,7 @@
   .parcelbox .btn { margin-top: 10px; }
   .drawtip.bad { background: #5a1d10; color: #ffe6dd; }
   .drawtip { margin: 8px 0 0; padding: 8px 12px; background: #0b2530; color: #e6fbff; border-radius: 6px; font-weight: 600; font-size: 15px; }
+  .pixelated { image-rendering: pixelated; }
   .leaflet-container { font-family: var(--font-body); }
   .maphelp { font-size: 14.5px; color: var(--muted); margin: 8px 0 0; }
   .uses { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px 16px; margin: 8px 0 14px; }
@@ -259,7 +262,9 @@
   const usgs = (svc) => L.tileLayer(`https://basemap.nationalmap.gov/arcgis/rest/services/${svc}/MapServer/tile/{z}/{y}/{x}`, { maxZoom: 16, attribution: 'USGS The National Map' });
   const imagery = usgs('USGSImageryOnly'), topo = usgs('USGSTopo');
   imagery.addTo(map);
-  const soilLines = L.tileLayer.wms('https://SDMDataAccess.sc.egov.usda.gov/Spatial/SDM.wms', { layers: 'MapunitPoly', format: 'image/png', transparent: true, minZoom: 13, opacity: .9, attribution: 'USDA NRCS Soil Survey' }).addTo(map);
+  // soil map lines from the stored copy; USDA's live map service only if the stored copy is unreachable
+  let soilLines = SoilStore.lineLayer(L).addTo(map);
+  SoilStore.index().catch(() => { map.removeLayer(soilLines); soilLines = L.tileLayer.wms('https://SDMDataAccess.sc.egov.usda.gov/Spatial/SDM.wms', { layers: 'MapunitPoly', format: 'image/png', transparent: true, minZoom: 13, opacity: .9, attribution: 'USDA NRCS Soil Survey' }).addTo(map); });
   let baseIsTopo = false;
   $('#baseBtn').addEventListener('click', () => { baseIsTopo = !baseIsTopo; map.removeLayer(baseIsTopo ? imagery : topo); (baseIsTopo ? topo : imagery).addTo(map); soilLines.bringToFront(); $('#baseBtn').textContent = baseIsTopo ? 'Photo map' : 'Topo map'; });
 
@@ -391,6 +396,7 @@
   async function sda(query) {
     const r = await fetch(SDA, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query, format: 'JSON+COLUMNNAME' }) });
     const t = await r.text();
+    if (!r.ok && !t.startsWith('<?xml')) throw new Error(`USDA soil survey unavailable (${r.status})`);
     if (!r.ok || t.startsWith('<?xml')) throw new Error('The soil survey service refused the request: ' + t.replace(/<[^>]+>/g, ' ').trim().slice(0, 160));
     const d = JSON.parse(t); const rows = d.Table || []; if (!rows.length) return [];
     const cols = rows[0]; return rows.slice(1).map((row) => Object.fromEntries(cols.map((c, i) => [c, row[i]])));
@@ -406,16 +412,28 @@
   // ---------- the check
   $('#goBtn').addEventListener('click', run);
   let aquifers = null, wellRecords = null;
-  async function run() {
-    const usePoly = verts.length >= 3 && !drawing;
-    if (!usePoly && !pin) { say('Find the ground first: type an address, or click the spot on the map.', true); return; }
-    const center = usePoly ? verts.reduce((a, v) => [a[0] + v[0] / verts.length, a[1] + v[1] / verts.length], [0, 0]) : [pin.getLatLng().lat, pin.getLatLng().lng];
-    let ac = usePoly ? acres(verts) : 0;
-    if (ac > 3000) { say('That border is over 3,000 acres. Draw the piece you mean to buy.', true); return; }
-    const chosen = USES.filter((u) => $(`#uses input[value="${u.id}"]`).checked);
-    $('#goBtn').disabled = true; clearResultLayers(); $('#results').innerHTML = '';
-    try {
-      say('Asking the soil survey…');
+  // the soil survey part of the check; if USDA is down this throws and only the soil sections say so
+  async function soilLookup(usePoly, center, chosen) {
+    try { return await storedSoil(usePoly, center); }
+    catch (e) { console.warn('Stored soil copy unavailable; asking USDA live.', e); }
+    return liveSoil(usePoly, center, chosen);
+  }
+  const EMPTY_SOIL = (usePoly) => usePoly ? 'The soil survey has nothing inside that border. If its lines cross, press Redraw the border and click the corners in order going around. If the shape is fine, this ground has no detailed soil survey yet (some national forest and tribal land).' : 'The soil survey has no map unit at this spot. It may be open water, or ground with no detailed soil survey yet (some national forest and tribal land). Try a spot nearby.';
+  async function storedSoil(usePoly, center) {
+    let units, tot = 0, wins = null;
+    if (usePoly) { const r = await SoilStore.unitsIn(verts); units = r.units; tot = r.tot; wins = r.wins; }
+    else { const k = await SoilStore.mukeyAt(center[0], center[1]); units = k ? [{ mukey: k, share: 1, polys: [] }] : []; }
+    if (!units.length) return { empty: EMPTY_SOIL(usePoly) };
+    const { mu, comps, ratings, layersBy } = await SoilStore.units(units.map((u) => u.mukey));
+    const muBy = new Map(mu.map((r) => [r.mukey, r]));
+    const compBy = new Map(); comps.forEach((c) => { if (!compBy.has(c.mukey)) compBy.set(c.mukey, []); compBy.get(c.mukey).push(c); });
+    const dom = (compBy.get(units[0].mukey) || [])[0] || null;
+    const release = await SoilStore.release(center[0], center[1]).catch(() => null);
+    return { units, muBy, compBy, dom, layers: dom ? (layersBy.get(dom.cokey) || []) : [], ratings, tot, wins, source: `USDA NRCS soil survey (gSSURGO${release ? `, ${release.slice(0, 7)} release` : ''}), from Land Finder's stored copy, checked monthly for USDA updates` };
+  }
+  async function liveSoil(usePoly, center, chosen) {
+    let soilTot = 0;
+
       // 1. which map units, and how much of the parcel each one covers
       let units;
       if (usePoly) {
@@ -423,12 +441,12 @@
         const rows = await sda(`SELECT mukey, mupolygongeo.STIntersection(geometry::STGeomFromText('${w}',4326).MakeValid()).STAsText() AS wkt FROM mupolygon WHERE mupolygongeo.STIntersects(geometry::STGeomFromText('${w}',4326).MakeValid())=1`);
         const by = new Map();
         rows.forEach((r) => { const polys = parseWkt(r.wkt); let a = 0; polys.forEach((rings) => { a += m2(rings[0]); for (let i = 1; i < rings.length; i++) a -= m2(rings[i]); }); const u = by.get(r.mukey) || { mukey: r.mukey, m2: 0, polys: [] }; u.m2 += a; u.polys.push(...polys); by.set(r.mukey, u); });
-        units = [...by.values()]; const tot = units.reduce((s, u) => s + u.m2, 0) || 1; units.forEach((u) => { u.share = u.m2 / tot; }); if (tot > 1) ac = tot / 4046.86; units.sort((a, b) => b.share - a.share);
+        units = [...by.values()]; const tot = units.reduce((s, u) => s + u.m2, 0) || 1; units.forEach((u) => { u.share = u.m2 / tot; }); soilTot = tot; units.sort((a, b) => b.share - a.share);
       } else {
         const rows = await sda(`SELECT * FROM SDA_Get_Mukey_from_intersection_with_WktWgs84('point(${center[1].toFixed(6)} ${center[0].toFixed(6)})')`);
         units = rows.map((r) => ({ mukey: r.mukey, share: 1, polys: [] }));
       }
-      if (!units.length) { say(usePoly ? 'The soil survey returned nothing inside that border. If its lines cross, press Redraw the border and click the corners in order going around. If the shape is fine, this ground has no detailed soil survey yet (some national forest and tribal land); Web Soil Survey will say the same.' : 'The soil survey has no map unit at this spot. It may be open water, or ground with no detailed soil survey yet (some national forest and tribal land). Try a spot nearby.', true); $('#goBtn').disabled = false; return; }
+      if (!units.length) return { empty: usePoly ? 'The soil survey returned nothing inside that border. If its lines cross, press Redraw the border and click the corners in order going around. If the shape is fine, this ground has no detailed soil survey yet (some national forest and tribal land).' : 'The soil survey has no map unit at this spot. It may be open water, or ground with no detailed soil survey yet (some national forest and tribal land). Try a spot nearby.' };
       const keys = units.map((u) => `'${u.mukey}'`).join(',');
       // 2. map unit facts, 3. major components and their ratings, 4. soil layers of the biggest unit's main soil
       const interps = [...new Set(chosen.flatMap((u) => u.interps))];
@@ -442,10 +460,28 @@
       const big = units[0]; const dom = (compBy.get(big.mukey) || [])[0];
       const layers = dom ? await sda(`SELECT h.hzname, h.hzdept_r, h.hzdepb_r, h.sandtotal_r, h.claytotal_r, h.ph1to1h2o_r, h.awc_r, h.ksat_r, h.om_r, (SELECT TOP 1 texture FROM chtexturegrp t WHERE t.chkey=h.chkey AND t.rvindicator='Yes') AS texture FROM chorizon h WHERE h.cokey='${dom.cokey}' ORDER BY h.hzdept_r`) : [];
 
+      return { units, muBy, compBy, dom, layers, ratings, tot: soilTot, source: 'USDA NRCS soil survey (SSURGO) through Soil Data Access, read just now' };
+  }
+
+  async function run() {
+    const usePoly = verts.length >= 3 && !drawing;
+    if (!usePoly && !pin) { say('Find the ground first: type an address, or click the spot on the map.', true); return; }
+    const center = usePoly ? verts.reduce((a, v) => [a[0] + v[0] / verts.length, a[1] + v[1] / verts.length], [0, 0]) : [pin.getLatLng().lat, pin.getLatLng().lng];
+    let ac = usePoly ? acres(verts) : 0;
+    if (ac > 3000) { say('That border is over 3,000 acres. Draw the piece you mean to buy.', true); return; }
+    const chosen = USES.filter((u) => $(`#uses input[value="${u.id}"]`).checked);
+    $('#goBtn').disabled = true; clearResultLayers(); $('#results').innerHTML = '';
+    try {
+      say('Asking the soil survey…');
+      const S = await soilLookup(usePoly, center, chosen).catch((e) => ({ err: e }));
+      const { units = [], muBy = new Map(), compBy = new Map(), dom = null, layers = [], ratings = [], wins = null, source = '' } = S;
+      if (S.tot > 1) ac = S.tot / 4046.86;
+      const soilErr = S.err ? 'The USDA soil survey is not answering right now, so this part is missing. Everything below comes from other agencies and still works. Try the check again later for the soil.' : (S.empty || null);
       // draw the units
-      if (usePoly) {
+      if (usePoly && units.length) {
         const palette = ['#d98a4f', '#7fc3a4', '#d9b26a', '#8fb0d9', '#c98fd9', '#a0a0a0', '#e58a6a', '#6ab0b8'];
         unitLayer = L.layerGroup().addTo(map);
+        if (wins) { const colorOf = new Map(units.map((u, i) => [u.mukey, palette[i % palette.length]])); SoilStore.overlays(wins, (k) => colorOf.get(k), L).forEach((o) => o.addTo(unitLayer)); }
         units.forEach((u, i) => { u.color = palette[i % palette.length]; u.polys.forEach((rings) => L.polygon(rings, { color: u.color, weight: 1.5, fillColor: u.color, fillOpacity: .3 }).bindTooltip(muBy.get(u.mukey)?.muname || u.mukey).addTo(unitLayer)); });
       }
 
@@ -453,21 +489,23 @@
       // 5. water: USGS wells within about 10 miles (depth), latest water levels, the principal aquifer
       const d = 0.15, bbox = `${(center[1] - d).toFixed(4)},${(center[0] - d).toFixed(4)},${(center[1] + d).toFixed(4)},${(center[0] + d).toFixed(4)}`;
       const api = 'https://api.waterdata.usgs.gov/ogcapi/v0/collections';
+      const stw = await SoilStore.wells(center[0], center[1], d).catch((e) => { console.warn('Stored well copy unavailable; asking USGS live.', e); return null; });
       const [wellsRes, levelsRes, aq, wr] = await Promise.allSettled([
-        loadJSON(`${api}/monitoring-locations/items?bbox=${bbox}&site_type_code=GW&limit=300&f=json`),
-        loadJSON(`${api}/latest-field-measurements/items?bbox=${bbox}&parameter_code=72019&limit=300&f=json`),
+        stw ? Promise.resolve(null) : loadJSON(`${api}/monitoring-locations/items?bbox=${bbox}&site_type_code=GW&limit=300&f=json`),
+        stw ? Promise.resolve(null) : loadJSON(`${api}/latest-field-measurements/items?bbox=${bbox}&parameter_code=72019&limit=300&f=json`),
         aquifers ? Promise.resolve(aquifers) : loadJSON('data/aquifers.json').then((j) => (aquifers = j)),
         wellRecords ? Promise.resolve(wellRecords) : loadJSON('data/manual/well_records.json').then((j) => (wellRecords = j)).catch(() => null),
       ]);
-      const wells = wellsRes.status === 'fulfilled' ? wellsRes.value.features.map((f) => ({ id: f.properties.monitoring_location_number, name: f.properties.monitoring_location_name, lat: f.geometry.coordinates[1], lon: f.geometry.coordinates[0], depth: f.properties.well_constructed_depth, hole: f.properties.hole_constructed_depth, aq: f.properties.aquifer_code, naq: f.properties.national_aquifer_code, county: f.properties.county_name, st: f.properties.state_code })) : null;
-      const levels = new Map(); if (levelsRes.status === 'fulfilled') levelsRes.value.features.forEach((f) => { const p = f.properties; const id = (p.monitoring_location_id || '').replace(/^[A-Z0-9]+-/, ''); const prev = levels.get(id); if (!prev || p.time > prev.time) levels.set(id, { v: +p.value, time: p.time, unit: p.unit_of_measure }); });
-      if (wells) { wells.forEach((w) => { w.mi = hav(center[0], center[1], w.lat, w.lon); w.lev = levels.get(w.id) || null; }); wells.sort((a, b) => a.mi - b.mi); }
+      const wells = stw ? stw.wells : wellsRes.status === 'fulfilled' ? wellsRes.value.features.map((f) => ({ id: f.properties.monitoring_location_number, name: f.properties.monitoring_location_name, lat: f.geometry.coordinates[1], lon: f.geometry.coordinates[0], depth: f.properties.well_constructed_depth, hole: f.properties.hole_constructed_depth, aq: f.properties.aquifer_code, naq: f.properties.national_aquifer_code, county: f.properties.county_name, st: f.properties.state_code })) : null;
+      const levels = new Map(); if (levelsRes.status === 'fulfilled' && levelsRes.value) levelsRes.value.features.forEach((f) => { const p = f.properties; const id = (p.monitoring_location_id || '').replace(/^[A-Z0-9]+-/, ''); const prev = levels.get(id); if (!prev || p.time > prev.time) levels.set(id, { v: +p.value, time: p.time, unit: p.unit_of_measure }); });
+      if (wells) { wells.forEach((w) => { w.mi = hav(center[0], center[1], w.lat, w.lon); if (!stw) w.lev = levels.get(w.id) || null; }); wells.sort((a, b) => a.mi - b.mi); }
       // the local aquifer codes on the nearest wells, decoded through the USGS code table (one small call per code)
       const aqNames = new Map();
-      if (wells) { const codes = [...new Set(wells.slice(0, 15).map((w) => w.aq).filter(Boolean))].slice(0, 8); await Promise.allSettled(codes.map((c) => loadJSON(`${api}/aquifer-codes/items?f=json&id=${encodeURIComponent(c)}`).then((j) => { const n = j.features?.[0]?.properties?.aquifer_name; if (n) aqNames.set(c, n); }))); }
+      if (stw) { const names = await SoilStore.aquiferNames().catch(() => ({})); wells.slice(0, 15).forEach((w) => { if (w.aq && names[w.aq]) aqNames.set(w.aq, names[w.aq]); }); }
+      else if (wells) { const codes = [...new Set(wells.slice(0, 15).map((w) => w.aq).filter(Boolean))].slice(0, 8); await Promise.allSettled(codes.map((c) => loadJSON(`${api}/aquifer-codes/items?f=json&id=${encodeURIComponent(c)}`).then((j) => { const n = j.features?.[0]?.properties?.aquifer_name; if (n) aqNames.set(c, n); }))); }
       const aquifer = aq.status === 'fulfilled' ? aquiferAt(aq.value, center[0], center[1]) : null;
       const stateCode = wells?.[0]?.st || null;
-      render({ usePoly, ac, center, units, muBy, compBy, dom, layers, ratings, chosen, wells, aqNames, wellsOk: wellsRes.status === 'fulfilled', aquifer, aquiferOk: aq.status === 'fulfilled', wr: wr.status === 'fulfilled' ? wr.value : null, stateCode });
+      render({ soilErr, usePoly, ac, center, units, muBy, compBy, dom, layers, ratings, chosen, wells, aqNames, soilSource: source, wellsSource: stw ? `USGS well list (monitoring locations and latest field measurements), from Land Finder's stored copy, updated ${stw.built}` : 'USGS Water Data API, monitoring locations and latest field measurements, read just now', wellsOk: !!stw || wellsRes.status === 'fulfilled', aquifer, aquiferOk: aq.status === 'fulfilled', wr: wr.status === 'fulfilled' ? wr.value : null, stateCode });
       say('');
       $('#results').scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (e) { say(e.message || String(e), true); }
@@ -538,7 +576,7 @@
     // water
     const wtUnits = units.map((u) => ({ u, m: muBy.get(u.mukey) || {} }));
     const shallow = wtUnits.filter((x) => x.m.wtdepannmin != null && +x.m.wtdepannmin < 100).reduce((s, x) => s + x.u.share, 0);
-    const wtLine = wtUnits.every((x) => x.m.wtdepannmin == null) ? 'The soil survey found no seasonal water table within 6.5 feet of the surface here.'
+    const wtLine = R.soilErr ? '<span class="warn">Not available: the soil survey did not answer, and the seasonal water table comes from it.</span>' : wtUnits.every((x) => x.m.wtdepannmin == null) ? 'The soil survey found no seasonal water table within 6.5 feet of the surface here.'
       : usePoly ? `${pct(shallow)} of the parcel has a seasonal water table within about 3 feet of the surface. ` + wtUnits.filter((x) => x.m.wtdepannmin != null).map((x) => `${esc(x.m.muname)}: ${x.m.wtdepannmin == 0 ? 'at the surface' : ft(cmToFt(x.m.wtdepannmin))}`).join('; ') + '.'
       : `Seasonal high water table ${wtUnits[0].m.wtdepannmin == 0 ? 'at the surface' : ft(cmToFt(wtUnits[0].m.wtdepannmin)) + ' down'} in the wet season.`;
     const wellRows = wells ? wells.slice(0, 15).map((w) => `<tr><td>${esc(w.name)}<div class="src">${esc(w.county || '')}</div></td><td class="num">${w.mi.toFixed(1)} mi</td><td class="num">${w.depth != null ? Math.round(w.depth) + ' ft' : (w.hole != null ? Math.round(w.hole) + ' ft (hole)' : '–')}</td><td class="num">${w.lev ? `${w.lev.v.toFixed(0)} ft down<div class="src">${esc(w.lev.time.slice(0, 10))}</div>` : '–'}</td><td>${esc(aqNames.get(w.aq) || w.aq || '–')}${w.aq && aqNames.get(w.aq) ? `<div class="src">${esc(w.aq)}</div>` : ''}</td></tr>`).join('') : '';
@@ -557,9 +595,10 @@
     const ll = `${center[0].toFixed(5)},${center[1].toFixed(5)}`;
 
     $('#results').innerHTML = `
+      ${R.soilErr ? `<div class="card"><h2>Soil</h2><p class="warn">${esc(R.soilErr)}</p></div>` : `
       <div class="card">
         <h2>The soil on ${esc(where)}</h2>
-        <p class="sub">USDA NRCS soil survey (SSURGO) through Soil Data Access, read just now. Water table and bedrock depths are the survey's minimums for the unit.</p>
+        <p class="sub">${esc(R.soilSource || 'USDA NRCS soil survey')}. Water table and bedrock depths are the survey's minimums for the unit.</p>
         <div class="tablewrap"><table><thead><tr><th>Map unit</th><th class="num">${usePoly ? 'Share' : ''}</th><th>Drainage</th><th class="num">Slope</th><th class="num">Water table (wet season)</th><th class="num">Bedrock</th><th>Flooding</th><th class="num">Capability class</th></tr></thead><tbody>${unitRows}</tbody></table></div>
         <p class="note">Capability class: 1 is the best cropland, 4 is marginal, 6 to 7 is pasture or woods only, 8 is unusable. The drainage word says how fast water leaves the soil; "poorly drained" ground is wet for weeks at a time.</p>
       </div>
@@ -574,6 +613,7 @@
         <div class="tablewrap"><table><thead><tr><th>Layer</th><th class="num">Depth</th><th>Texture</th><th class="num">Clay</th><th class="num">pH</th><th class="num">Water moves</th><th class="num">Organic matter</th></tr></thead><tbody>${layerRows || '<tr><td colspan="7">No layer data.</td></tr>'}</tbody></table></div>
         <p class="note">Gardens want a loam with pH 6 to 7 and a few percent organic matter. Clay above 35% drains slowly and heaves. Water that moves "very slow" is the usual reason a septic field is refused.</p>
       </div>
+      `}
       <div class="card">
         <h2>Water</h2>
         <h3>Seasonal water table (from the soil survey)</h3>
@@ -581,7 +621,7 @@
         <p class="note">This is the shallow saturated layer within the top 6.5 feet, the thing that matters for septic, basements and fence posts. It is not the aquifer a well draws from.</p>
         <h3>Wells nearby (USGS)</h3>
         <p>${wellsLine}</p>
-        ${wells && wells.length ? `<div class="tablewrap"><table><thead><tr><th>Well</th><th class="num">Distance</th><th class="num">Well depth</th><th class="num">Water level</th><th>Aquifer the well taps</th></tr></thead><tbody>${wellRows}</tbody></table></div><p class="note">USGS Water Data API, monitoring locations and latest field measurements, read just now. Water level is depth below the land surface on the date shown; old dates are old. Well depth is the drilled depth, not the water level.</p>` : ''}
+        ${wells && wells.length ? `<div class="tablewrap"><table><thead><tr><th>Well</th><th class="num">Distance</th><th class="num">Well depth</th><th class="num">Water level</th><th>Aquifer the well taps</th></tr></thead><tbody>${wellRows}</tbody></table></div><p class="note">${esc(R.wellsSource)}. Water level is depth below the land surface on the date shown; old dates are old. Well depth is the drilled depth, not the water level.</p>` : ''}
         <h3>The aquifer underneath</h3>
         <p>${aqLine}</p>
         <p class="note">USGS Principal Aquifers of the United States, mapped at 1:2,500,000. It tells you the regional water-bearing rock, not whether a well on this parcel will make water.</p>
@@ -617,7 +657,7 @@
     return { html: `<div class="use"><h4>${esc(u.label)}</h4>${head}<p class="src">Our rule, not an NRCS rating: fruit and nut trees die in standing water, so this looks at water table, drainage, bedrock, flooding and topsoil pH.</p>${why_}</div>` };
   }
 
-  const TEX = { S: 'sand', LS: 'loamy sand', SL: 'sandy loam', L: 'loam', SIL: 'silt loam', SI: 'silt', SCL: 'sandy clay loam', CL: 'clay loam', SICL: 'silty clay loam', SC: 'sandy clay', SIC: 'silty clay', C: 'clay', FSL: 'fine sandy loam', VFSL: 'very fine sandy loam', LFS: 'loamy fine sand', FS: 'fine sand', COS: 'coarse sand', GR: 'gravel', 'GR-L': 'gravelly loam', 'GR-SL': 'gravelly sandy loam', 'GR-CL': 'gravelly clay loam', 'CB-L': 'cobbly loam', 'ST-L': 'stony loam', 'CN-L': 'channery loam', 'CN-SIL': 'channery silt loam', 'FL-SIL': 'flaggy silt loam', 'SH-SIL': 'shaly silt loam', 'GR-SIL': 'gravelly silt loam', WB: 'weathered bedrock', UWB: 'unweathered bedrock', BR: 'bedrock', MUCK: 'muck', PEAT: 'peat', MPT: 'mucky peat', 'V-GR-L': 'very gravelly loam' };
+  const TEX = { S: 'sand', LS: 'loamy sand', SL: 'sandy loam', L: 'loam', SIL: 'silt loam', SI: 'silt', SCL: 'sandy clay loam', CL: 'clay loam', SICL: 'silty clay loam', SC: 'sandy clay', SIC: 'silty clay', C: 'clay', FSL: 'fine sandy loam', VFSL: 'very fine sandy loam', LFS: 'loamy fine sand', FS: 'fine sand', COS: 'coarse sand', GR: 'gravel', 'GR-L': 'gravelly loam', 'GR-SL': 'gravelly sandy loam', 'GR-CL': 'gravelly clay loam', 'CB-L': 'cobbly loam', 'ST-L': 'stony loam', 'CN-L': 'channery loam', 'CN-SIL': 'channery silt loam', 'FL-SIL': 'flaggy silt loam', 'SH-SIL': 'shaly silt loam', 'GR-SIL': 'gravelly silt loam', WB: 'weathered bedrock', UWB: 'unweathered bedrock', BR: 'bedrock', MUCK: 'muck', SPM: 'slightly decomposed plant matter', MPM: 'moderately decomposed plant matter', HPM: 'highly decomposed plant matter', PEAT: 'peat', MPT: 'mucky peat', 'V-GR-L': 'very gravelly loam' };
   const ksatWord = (k) => k < 0.01 ? 'very slow' : k < 0.1 ? 'very slow' : k < 1 ? 'slow' : k < 4 ? 'moderate' : k < 14 ? 'moderately fast' : k < 42 ? 'fast' : 'very fast';
   const AQ_WORDS = {
     'Unconsolidated sand and gravel aquifers': 'Sand and gravel: usually the easiest water to find and the shallowest wells, but open to whatever soaks in from the surface.',

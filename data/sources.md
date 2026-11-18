@@ -97,6 +97,23 @@ spot or border they give it. Nothing is proxied or stored.
 | State well records | `data/manual/well_records.json`, one page per state, checked by hand on the date in the file (44 of 51 fetched and confirmed; the rest are marked unverified and the page says so) | Where the state's search tool is a map app that returns no text to a fetcher, the entry points at the agency's verified hub page and names the tool in the note. |
 | Links out | SoilWeb (UC Davis) at the coordinates; NRCS Web Soil Survey; USGS National Map viewer; FEMA Flood Map Service Center | all public, no login. |
 
+## Stored copies of the soil survey and the well list (`data/store/`, `soilstore.js`)
+
+Since 2026-11-18 the parcel check and the map's soil lines read Land Finder's own copy of the
+USDA soil survey and the USGS well list first, and ask the live agency services only if the copy
+can't be reached. One agency being down no longer blanks the check.
+
+| What | Source | How it is stored | Refresh |
+|---|---|---|---|
+| Soil map | USDA NRCS gSSURGO state databases, public Box folder `nrcs.app.box.com/v/soils` (State), 10 m map-unit grid | resampled (mode) to 1 arc-second, about 30 m, lat/lon Cloud-Optimized GeoTIFF per state; the page reads one spot or one border with HTTP range requests | monthly check of each state file's date; rebuilt when USDA changes it (about once a year, in October) |
+| Soil facts and ratings | same databases: `mapunit`, `muaggatt`, `component` (major), `cointerp` (12 ratings), `chorizon`, `chtexturegrp` | gzip JSON, 2,048 shards by map unit key | with the soil map |
+| Rating reasons | Soil Data Access, `cointerp` rule depth 1, per survey area (the download keeps only the rating itself) | merged into the shards | fetched at build time; if Soil Data Access is down the earlier copy is kept and the next monthly run tries again |
+| Wells | USGS Water Data API: `monitoring-locations` (site type GW), `latest-field-measurements` (72019), `aquifer-codes` | gzip JSON per 1-degree cell | every month |
+
+Scripts: `data/store/build_soil.py`, `sda_reasons.py`, `usda_box.py`, `build_wells.py`, `upload.py`
+(to Cloudflare R2, bucket served at `data.thelandfinder.org`), and `refresh.py`, which a Windows
+scheduled task runs on the 1st of each month. `status.json` in the bucket records each run.
+
 ## Tax parcels: owner and lines (`parcels.js`, `data/parcels.json`)
 
 Both pages ask the state's own free parcel service for the tax parcel at a clicked point, and the main

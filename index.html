@@ -16,7 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.LF_DATA = 'http://127.0.0.1:8793';</script>
 <script src="parcels.js"></script>
+<script src="soilstore.js"></script>
 <style>
   /* Same range-country palette and type as the Post Finder. */
   :root {
@@ -445,7 +447,9 @@
     const usgs = svc => L.tileLayer(`https://basemap.nationalmap.gov/arcgis/rest/services/${svc}/MapServer/tile/{z}/{y}/{x}`, { maxNativeZoom: 16, maxZoom: 19, attribution: 'USGS The National Map' });
     const imagery = usgs('USGSImageryOnly'), topo = usgs('USGSTopo');
     baseLayer = () => baseIsTopo ? topo : imagery;
-    soilLayer = L.tileLayer.wms('https://SDMDataAccess.sc.egov.usda.gov/Spatial/SDM.wms', { layers: 'MapunitPoly', format: 'image/png', transparent: true, opacity: .9, attribution: 'USDA NRCS Soil Survey', maxZoom: 19 });
+    // soil map lines from the stored copy; USDA's live map service only if the stored copy is unreachable
+    soilLayer = SoilStore.lineLayer(L);
+    SoilStore.index().catch(() => { const on = map.hasLayer(soilLayer); if (on) map.removeLayer(soilLayer); soilLayer = L.tileLayer.wms('https://SDMDataAccess.sc.egov.usda.gov/Spatial/SDM.wms', { layers: 'MapunitPoly', format: 'image/png', transparent: true, opacity: .9, attribution: 'USDA NRCS Soil Survey', maxZoom: 19 }); if (on) soilLayer.addTo(map); });
     countyLayer = L.geoJSON(geo, { style: countyStyle, onEachFeature: (f, layer) => {
       layer.on('click', e => { if (map.getZoom() >= Z_PARCEL) return; L.DomEvent.stopPropagation(e); select(f.id, false, true); });
       layer.bindTooltip(() => { const r = byFips.get(f.id); const sc = scores.get(f.id); return r ? `<b>${esc(r.name)}, ${r.st}</b><br>Score ${sc && sc.score != null ? sc.score : '–'}` : ''; }, { sticky: true, direction: 'top', offset: [0, -6] });

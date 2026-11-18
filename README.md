@@ -41,6 +41,21 @@ Only the Python standard library is needed, plus `pyshp` for the boundary file.
 No API keys and no accounts; anything that needed one was left out and is listed
 in `data/sources.md` under "Not included".
 
+## Stored soil and well data
+
+The parcel check reads Land Finder's own copy of the USDA soil survey and the USGS well list,
+hosted on Cloudflare R2 at `data.thelandfinder.org`, and falls back to the live agencies only if
+that copy is unreachable. The copy is built by `data/store/` with a private Python environment:
+
+```bash
+python -m venv data/.venv
+data/.venv/Scripts/python -m pip install rasterio pyogrio py7zr numpy boto3
+data/.venv/Scripts/python -I data/store/refresh.py     # what the monthly task runs
+```
+
+R2 credentials live outside the repository in `%USERPROFILE%\.landfinder\r2.env`.
+See `data/sources.md` for what is stored and how often it refreshes.
+
 ## How the score works
 
 Each factor becomes a 0 to 1 score per county (for example land under $2,000 an
