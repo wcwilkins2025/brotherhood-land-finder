@@ -88,7 +88,7 @@ HEAD = '''<!doctype html>
 FOOT = '''<footer>
   <div class="wrap">
     {family}
-    <p>Free, no login, no tracking. Every number comes from a public dataset; the sources and dates are listed in <a href="https://github.com/wcwilkins2025/brotherhood-land-finder/blob/main/data/sources.md" rel="noopener">data/sources.md</a>. Data built {built}. Check everything with the county before you buy.</p>
+    <p>Free, no login, no tracking. Every number comes from a public dataset; the sources and dates are listed in <a href="https://github.com/wcwilkins2025/land-finder/blob/main/data/sources.md" rel="noopener">data/sources.md</a>. Data built {built}. Check everything with the county before you buy.</p>
   </div>
 </footer>
 </body>

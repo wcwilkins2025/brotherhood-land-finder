@@ -211,7 +211,7 @@
     <div class="cautions">
       <div class="caution"><strong>No zoning does not mean no rules.</strong> An unzoned county still issues septic permits, enforces state well and floodplain rules, and may have subdivision or road regulations. Call the health department before you assume anything.</div>
       <div class="caution"><strong>Finder's fees are brokerage in most states.</strong> Being paid to find land for someone else is licensed real-estate activity almost everywhere. Help a brother for free, or refer him to a licensed agent. Do not take a fee you are not licensed to take.</div>
-      <div class="caution"><strong>One deed, several unrelated names, is how men lose land and friends.</strong> Going in together feels like brotherhood until one man divorces, dies or needs out. Buy separately, or form an entity with a written operating agreement and a buyout clause before any money moves.</div>
+      <div class="caution"><strong>One deed, several unrelated names, is how men lose land and friends.</strong> Going in together feels like friendship until one man divorces, dies or needs out. Buy separately, or form an entity with a written operating agreement and a buyout clause before any money moves.</div>
     </div>
   </section>
 
@@ -231,14 +231,14 @@
 <footer>
   <div class="wrap">
     <p class="hr-family">Part of <a href="https://homesteadready.org/">Homestead Ready</a>, free tools for land, homesteading, health, readiness and radio. <a href="https://www.facebook.com/groups/homesteadready" rel="noopener">Join the Facebook group</a>.</p>
-    <p>Free forever. No login, no tracking, nothing stored about you. Every number comes from a public dataset and every county panel names its source. Full list, dates and download links: <a href="https://github.com/wcwilkins2025/brotherhood-land-finder/blob/main/data/sources.md" target="_blank" rel="noopener">data/sources.md</a>. </p>
+    <p>Free forever. No login, no tracking, nothing stored about you. Every number comes from a public dataset and every county panel names its source. Full list, dates and download links: <a href="https://github.com/wcwilkins2025/land-finder/blob/main/data/sources.md" target="_blank" rel="noopener">data/sources.md</a>. </p>
     <p id="built"></p>
     <div class="feedback" id="feedback">
       <strong>Found a problem or have an idea?</strong>
       <div class="buttons">
-        <a class="btn ghost" id="fbBug" href="https://github.com/wcwilkins2025/brotherhood-land-finder/issues/new?template=bug.yml" target="_blank" rel="noopener">Report a bug<small>map, sliders, search or a button</small></a>
-        <a class="btn ghost" id="fbData" href="https://github.com/wcwilkins2025/brotherhood-land-finder/issues/new?template=wrong-county-data.yml" target="_blank" rel="noopener">Wrong county information<small>or open a county and use its button</small></a>
-        <a class="btn ghost" id="fbIdea" href="https://github.com/wcwilkins2025/brotherhood-land-finder/issues/new?template=feedback.yml" target="_blank" rel="noopener">Send feedback<small>a factor to add, anything else</small></a>
+        <a class="btn ghost" id="fbBug" href="https://github.com/wcwilkins2025/land-finder/issues/new?template=bug.yml" target="_blank" rel="noopener">Report a bug<small>map, sliders, search or a button</small></a>
+        <a class="btn ghost" id="fbData" href="https://github.com/wcwilkins2025/land-finder/issues/new?template=wrong-county-data.yml" target="_blank" rel="noopener">Wrong county information<small>or open a county and use its button</small></a>
+        <a class="btn ghost" id="fbIdea" href="https://github.com/wcwilkins2025/land-finder/issues/new?template=feedback.yml" target="_blank" rel="noopener">Send feedback<small>a factor to add, anything else</small></a>
       </div>
       <p>Reports go to the project's public issue page on GitHub, so you need a free GitHub account to post one. Nothing on this page asks who you are.</p>
     </div>
@@ -657,7 +657,7 @@
   }
 
   // Prefilled GitHub issue form. Only the county's public facts go in the link, nothing about the person.
-  const ISSUES = 'https://github.com/wcwilkins2025/brotherhood-land-finder/issues/new';
+  const ISSUES = 'https://github.com/wcwilkins2025/land-finder/issues/new';
   function reportUrl(r, stName) {
     const q = new URLSearchParams({
       template: 'wrong-county-data.yml',

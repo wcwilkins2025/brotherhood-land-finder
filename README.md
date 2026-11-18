@@ -68,7 +68,7 @@ everything else marked "verify" and scored from the state's general pattern.
 
 ## Bugs, wrong data and feedback
 
-Use the issue forms: https://github.com/wcwilkins2025/brotherhood-land-finder/issues/new/choose
+Use the issue forms: https://github.com/wcwilkins2025/land-finder/issues/new/choose
 
 - **Wrong information for a county.** Open the county on the live page and click
   "Report wrong information" under its link kit. The form arrives with the county,

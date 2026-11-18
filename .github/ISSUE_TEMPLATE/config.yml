@@ -1,5 +1,5 @@
 blank_issues_enabled: true
 contact_links:
   - name: Data sources and how each number was built
-    url: https://github.com/wcwilkins2025/brotherhood-land-finder/blob/main/data/sources.md
+    url: https://github.com/wcwilkins2025/land-finder/blob/main/data/sources.md
     about: Check here first. Every dataset, its date and its download link.
